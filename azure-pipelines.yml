@@ -97,31 +97,6 @@ steps:
 
   - script: |
       set -ex
-      docker-compose -f $(tutor config printroot)/env/local/docker-compose.yml --project-name tutor_local \
-        run lms sh -c "
-        echo -e '[https://www.transifex.com]\nhostname=https://www.transifex.com\nusername=${TRANSIFEX_USERNAME}\npassword=${TRANSIFEX_PASSWORD}' >  ~/.transifexrc
-        pip install transifex-client
-        set -ex
-        i18n_tool transifex pull
-        i18n_tool extract
-
-        for file in ( "django-partial.po" "djangojs-partial.po" )
-        do
-                sed -i -e "s/nplurals=INTEGER/nplurals=2/" "conf/locale/en/LC_MESSAGES/$file"
-                sed -i -e "s/plural=EXPRESSION/plural=\(n != 1\)/" "conf/locale/en/LC_MESSAGES/$file"
-        done
-
-        i18n_tool generate --strict
-        python manage.py lms compilemessages -v2
-        python manage.py lms compilejsi18n -v2
-        i18n_tool validate"
-    displayName: 'Download and compile updated translations from Transifex for LMS'
-    env:
-      TRANSIFEX_USERNAME: $(TRANSIFEX_USERNAME)
-      TRANSIFEX_PASSWORD: $(TRANSIFEX_PASSWORD)
-
-  - script: |
-      set -ex
       tutor local importdemocourse
       docker exec tutor_local_mysql_1 mysqldump --all-databases |xz > mysql_dump_demo.xz
     displayName: 'Generate demo database'

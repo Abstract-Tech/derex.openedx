@@ -1,0 +1,40 @@
+#!/bin/sh
+set -e
+set -x
+
+if [[ -z "$TRANSIFEX_USERNAME" || -z "$TRANSIFEX_PASSWORD" ]]; then
+        echo "Transifex credentials unset. Building without translations."
+        exit 0
+fi
+
+echo -e '[https://www.transifex.com]\nhostname=https://www.transifex.com\nusername=$TRANSIFEX_USERNAME\npassword=$TRANSIFEX_PASSWORD' >  ~/.transifexrc
+
+cd /openedx/edx-platform
+
+pip install transifex-client
+
+# Comment out broken languages
+for lang in "ru"
+do
+        sed -i -e "s/    - $lang/    # - $lang/" "conf/locale/config.yaml"
+done
+
+i18n_tool transifex pull
+i18n_tool extract
+
+# Fix broken plural expression header
+for file in "django-partial.po" "django-studio.po" "djangojs-partial.po" "djangojs-studio.po"
+do
+        sed -i -e "s/nplurals=INTEGER/nplurals=2/" "conf/locale/en/LC_MESSAGES/$file"
+        sed -i -e "s/plural=EXPRESSION/plural=\(n != 1\)/" "conf/locale/en/LC_MESSAGES/$file"
+done
+
+i18n_tool generate
+
+python manage.py lms compilemessages -v2
+python manage.py cms compilemessages -v2
+
+python manage.py lms compilejsi18n -v2
+python manage.py cms compilejsi18n -v2
+
+i18n_tool validate

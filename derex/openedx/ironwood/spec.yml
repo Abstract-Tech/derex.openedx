@@ -18,10 +18,11 @@ config:
     CONFIG_ROOT: /openedx/config
     PATH: /openedx/bin:${PATH}
     SERVICE_VARIANT: lms
-    SETTINGS: derex
+    SETTINGS: derex.base
 
 scripts:
   - install_openedx.sh
+  - translations.sh
   - compile_assets.sh
 
 dest: derex/openedx-ironwood
