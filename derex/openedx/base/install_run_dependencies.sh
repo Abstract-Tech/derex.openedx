@@ -17,6 +17,10 @@ apk add \
     lapack \
     libjpeg \
     libxslt \
-    mariadb-client-libs \
+    mariadb-connector-c-dev \
+    py2-pip \
+    python2 \
     sqlite \
     xmlsec
+
+pip install -U pip

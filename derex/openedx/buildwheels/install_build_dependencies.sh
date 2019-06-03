@@ -24,7 +24,7 @@ apk add \
     make \
     mariadb-dev \
     pkgconfig \
-    python-dev \
+    python2-dev \
     sqlite-dev \
     swig \
     xmlsec-dev

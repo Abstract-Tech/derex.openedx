@@ -3,7 +3,7 @@ set -e
 set -x
 
 apk add nodejs
-nodeenv /openedx/nodeenv --node=8.9.3 --prebuilt
+nodeenv /openedx/nodeenv --node=10.16.0 --prebuilt
 
 cd /openedx/edx-platform
 /openedx/nodeenv/bin/npm set progress=false

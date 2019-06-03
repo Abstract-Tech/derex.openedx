@@ -7,5 +7,6 @@ source:
 
 scripts:
   - install_build_dependencies.sh
+  - patch_mariadb.sh
 
 dest: derex/openedx-alpine-buildwheels
