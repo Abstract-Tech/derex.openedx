@@ -26,3 +26,8 @@ These are the image names:
 * `openedx-alpine-base`: just runtime dependencies
 * `openedx-alpine-wheels`: wheels preinstalled for a specific edx-platform version, but no python code from edx-platform
 * `openedx-alpine`: edx-platform code included
+
+
+### Build with translations
+
+In order to build with translations from Transifex the `TRANSIFEX_USERNAME` and `TRANSIFEX_PASSWORD` environment variables must be set in the shell environment running the build.
