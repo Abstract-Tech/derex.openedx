@@ -1,13 +1,14 @@
 #!/bin/sh
 set -e
-set -x
 
-if [[ -z "$TRANSIFEX_USERNAME" || -z "$TRANSIFEX_PASSWORD" ]]; then
+if [[ -z $TRANSIFEX_USERNAME || -z $TRANSIFEX_PASSWORD ]]; then
         echo "Transifex credentials unset. Building without translations."
         exit 0
 fi
 
-echo -e '[https://www.transifex.com]\nhostname=https://www.transifex.com\nusername=$TRANSIFEX_USERNAME\npassword=$TRANSIFEX_PASSWORD' >  ~/.transifexrc
+echo -e "[https://www.transifex.com]\nhostname=https://www.transifex.com\nusername=$TRANSIFEX_USERNAME\npassword=$TRANSIFEX_PASSWORD" >  ~/.transifexrc
+
+set -x
 
 cd /openedx/edx-platform
 
