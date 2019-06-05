@@ -20,6 +20,10 @@ config:
     SERVICE_VARIANT: lms
     SETTINGS: derex.base
 
+build_env:
+  - TRANSIFEX_USERNAME
+  - TRANSIFEX_PASSWORD
+
 scripts:
   - install_openedx.sh
   - translations.sh
