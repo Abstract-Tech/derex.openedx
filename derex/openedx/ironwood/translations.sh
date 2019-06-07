@@ -32,11 +32,11 @@ done
 
 i18n_tool generate
 
-python manage.py lms compilemessages -v2
-python manage.py cms compilemessages -v2
+python manage.py lms --settings=derex.assets compilemessages -v2
+python manage.py cms --settings=derex.assets compilemessages -v2
 
-python manage.py lms compilejsi18n -v2
-python manage.py cms compilejsi18n -v2
+python manage.py lms --settings=derex.assets compilejsi18n -v2
+python manage.py cms --settings=derex.assets compilejsi18n -v2
 
 i18n_tool validate
 
