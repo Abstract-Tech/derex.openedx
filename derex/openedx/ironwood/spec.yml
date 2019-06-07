@@ -28,5 +28,6 @@ scripts:
   - install_openedx.sh
   - translations.sh
   - compile_assets.sh
+  - install_custom.sh
 
 dest: derex/openedx-ironwood
