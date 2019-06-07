@@ -39,3 +39,5 @@ python manage.py lms compilejsi18n -v2
 python manage.py cms compilejsi18n -v2
 
 i18n_tool validate
+
+rm ~/.transifexrc
