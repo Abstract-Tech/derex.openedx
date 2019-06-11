@@ -14,8 +14,8 @@ cd /openedx/edx-platform
 
 pip install transifex-client
 
-# Comment out broken languages
-for lang in "ru"
+# Comment out broken languages (Chinese and Russian as of 11-06-2019)
+for lang in "zh" "ru"
 do
         sed -i -e "s/    - $lang/    # - $lang/" "conf/locale/config.yaml"
 done
