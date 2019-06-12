@@ -26,4 +26,7 @@ echo > /openedx/edx-platform/cms/envs/derex/__init__.py
 
 # We prefer to do all tasks required for execution in advance,
 # so we accept the additional 57 Mb this brings
+pip install whitenoise
+mv /tmp/wsgi.py /openedx/edx-platform/
+
 python -m compileall /openedx  # +57 Mb

@@ -9,6 +9,7 @@ copy:
   assets.py: /tmp
   openedx-assets: /tmp/
   entrypoint.sh: /entrypoint.sh
+  wsgi.py: /tmp/
 
 config:
   cmd: gunicorn --name ${SERVICE_VARIANT} --bind=0.0.0.0:8000 --max-requests=1000 ${SERVICE_VARIANT}.wsgi:application
