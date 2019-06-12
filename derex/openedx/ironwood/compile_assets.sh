@@ -23,6 +23,7 @@ sys.argv[1:] = ['common/static/xmodule']
 from xmodule import static_content as xmodule_static_content
 print('Compiling xmodules')
 xmodule_static_content.main()
+from pavelib import assets
 print('Processing npm assets')
 assets.process_npm_assets()
 "
