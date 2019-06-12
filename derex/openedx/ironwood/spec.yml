@@ -7,7 +7,6 @@ source:
 
 copy:
   assets.py: /tmp
-  openedx-assets: /tmp/
   entrypoint.sh: /entrypoint.sh
   wsgi.py: /tmp/
 
