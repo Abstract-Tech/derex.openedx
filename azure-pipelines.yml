@@ -68,6 +68,7 @@ steps:
           pip3 install -r requirements.txt
           pip3 install .
           sudo buildah images
+          sudo buildah push \$(derex.builder image derex/openedx/ironwood)
           sudo buildah push \$(derex.builder image derex/openedx/ironwood-tutor)
           LATEST_IMAGE=\$(derex.builder image derex/openedx/ironwood-tutor)
           echo '#''#vso[task.setvariable variable=LATEST_IMAGE]'\$LATEST_IMAGE
@@ -90,7 +91,7 @@ steps:
         --set DOCKER_IMAGE_OPENEDX=$LATEST_IMAGE \
         --set LMS_HOST=localhost
       tutor local databases
-      docker exec tutor_local_mysql_1 bash -c "echo -e '[mysqldump]\nuser=root\npassword='$(cat $(tutor config printroot)/config.yml |grep MYSQL_ROOT_PASS|awk '{print $2}')>  ~/.my.cnf"
+      docker exec tutor_local_mysql_1 bash -c "echo -e '[mysqldump]\nuser=root\npassword='$(tutor config printvalue MYSQL_ROOT_PASSWORD)>  ~/.my.cnf"
       docker exec tutor_local_mysql_1 mysqldump --all-databases |xz > mysql_dump.xz
       tutor local logs
     displayName: 'Try out the built image using tutor'
