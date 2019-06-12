@@ -7,9 +7,6 @@ EDX_PLATFORM_VERSION=open-release/ironwood.1
 
 mkdir -p /openedx/themes /openedx/locale /openedx/bin/
 
-wget -O - https://github.com/regisb/openedx-i18n/archive/hawthorn.tar.gz \
-    |tar xzf - --strip-components=3 --directory /openedx/locale/ openedx-i18n-hawthorn/edx-platform/locale/
-
 git clone ${EDX_PLATFORM_REPOSITORY} --branch ${EDX_PLATFORM_VERSION} --depth 1 /openedx/edx-platform
 cd /openedx/edx-platform
 
