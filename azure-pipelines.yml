@@ -83,6 +83,7 @@ steps:
   - script: |
       set -ex
       python -m pip install --upgrade pip
+      export LATEST_IMAGE=$(echo "$MYVAR" | sed -e 's/[a-zA-Z]/X/g' -e 's/[0-9]/N/g')
       pip install git+https://github.com/regisb/tutor.git@v3.3.10
       tutor config save --silent \
         --set ACTIVATE_NOTES=false \
