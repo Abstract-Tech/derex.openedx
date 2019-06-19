@@ -7,6 +7,12 @@ variables:
 
 steps:
   - script: |
+      set -ex
+      sudo systemctl stop mysql
+      docker run -d -p 3306:3306 --name mysql --rm -e MYSQL_ALLOW_EMPTY_PASSWORD=True mysql:5.6.44
+    displayName: Setup Mysql server
+
+  - script: |
       docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
     displayName: 'Log into docker registry'
     env:
