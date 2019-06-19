@@ -45,7 +45,6 @@ steps:
           cp -r '${PWD}/.cache/wheels_cache' /
           export WHEELS_CACHE=/wheels_cache
           derex.builder resolve derex/openedx/ironwood -v DEBUG
-          derex.builder resolve derex/openedx/ironwood-tutor -v DEBUG
           cp /wheels_cache/* '${PWD}/.cache/wheels_cache/' || true"
     displayName: 'Install derex.builder and build images'
     env:
@@ -69,8 +68,7 @@ steps:
           pip3 install .
           sudo buildah images
           sudo buildah push \$(derex.builder image derex/openedx/ironwood)
-          sudo buildah push \$(derex.builder image derex/openedx/ironwood-tutor)
-          LATEST_IMAGE=\$(derex.builder image derex/openedx/ironwood-tutor)
+          LATEST_IMAGE=\$(derex.builder image derex/openedx/ironwood)
           echo '#''#vso[task.setvariable variable=LATEST_IMAGE]'\$LATEST_IMAGE
           echo Made variable LATEST_IMAGE available for the following tasks. Value is \$LATEST_IMAGE"
     displayName: 'Push built docker images'
@@ -84,34 +82,15 @@ steps:
       set -ex
       python -m pip install --upgrade pip
       export LATEST_IMAGE=$(echo "$MYVAR" | sed -e 's/[a-zA-Z]/X/g' -e 's/[0-9]/N/g')
-      pip install git+https://github.com/regisb/tutor.git@v3.3.10
-      tutor config save --silent \
-        --set ACTIVATE_NOTES=false \
-        --set ACTIVATE_XQUEUE=false \
-        --set ACTIVATE_FORUM=false \
-        --set DOCKER_IMAGE_OPENEDX=$LATEST_IMAGE \
-        --set LMS_HOST=localhost
-      tutor local databases
-      docker exec tutor_local_mysql_1 bash -c "echo -e '[mysqldump]\nuser=root\npassword='$(tutor config printvalue MYSQL_ROOT_PASSWORD)>  ~/.my.cnf"
-      docker exec tutor_local_mysql_1 mysqldump --all-databases |xz > mysql_dump.xz
-      tutor local logs
-    displayName: 'Try out the built image using tutor'
-
-  - task: PublishPipelineArtifact@0
-    inputs:
-      artifactName: 'Mysql dump'
-      targetPath: 'mysql_dump.xz'
-
-  - script: |
-      set -ex
-      tutor local importdemocourse
-      docker exec tutor_local_mysql_1 mysqldump --all-databases |xz > mysql_dump_demo.xz
-    displayName: 'Generate demo database'
-
-  - task: PublishPipelineArtifact@0
-    inputs:
-      artifactName: 'Mysql demo dump'
-      targetPath: 'mysql_dump_demo.xz'
+      mysql -h localhost --protocol tcp -u root -e "CREATE DATABASE derex"
+      docker run --add-host="mysql:$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')" --rm ${LATEST_IMAGE} ./manage.py cms --settings derex.base migrate
+      docker run --add-host="mysql:$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')" --rm ${LATEST_IMAGE} ./manage.py lms --settings derex.base migrate
+      mkdir /tmp/image
+      sudo mysqldump derex|bzip2 > /tmp/image/empty_dump.sql.bz2
+      echo -e "FROM ${LATEST_IMAGE}\nCOPY empty_dump.sql.bz2 /openedx/" > /tmp/image/Dockerfile
+      docker build /tmp/image -t ${LATEST_IMAGE}
+      docker push ${LATEST_IMAGE}
+    displayName: 'Run migrations and save dump inside image'
 
   - script: |
       BEFORE=$(docker run --rm derex/wheelhouse:latest du /wheelhouse -s|cut -f1)
