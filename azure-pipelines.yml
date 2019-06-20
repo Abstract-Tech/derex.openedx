@@ -59,7 +59,6 @@ steps:
           else
             derex.builder resolve derex/openedx/ironwood -v DEBUG
             cp /wheels_cache/* '${PWD}/.cache/wheels_cache/' || true
-            sudo buildah push \$LATEST_IMAGE
             sudo buildah push \$LATEST_IMAGE docker-daemon:\$LATEST_IMAGE
           fi"
     displayName: 'Install derex.builder, build images and push'
