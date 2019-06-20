@@ -9,6 +9,8 @@ copy:
   assets.py: /tmp
   entrypoint.sh: /entrypoint.sh
   wsgi.py: /tmp/
+  base.py: /tmp/
+  restore_dump.py: /tmp/
 
 config:
   cmd: gunicorn --name ${SERVICE_VARIANT} --bind=0.0.0.0:8000 --max-requests=1000 ${SERVICE_VARIANT}.wsgi:application

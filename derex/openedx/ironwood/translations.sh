@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-if [[ -z $TRANSIFEX_USERNAME || -z $TRANSIFEX_PASSWORD ]]; then
+if [ -z $TRANSIFEX_USERNAME ] || [ -z $TRANSIFEX_PASSWORD ]; then
         echo "Transifex credentials unset. Building without translations."
         exit 0
 fi
