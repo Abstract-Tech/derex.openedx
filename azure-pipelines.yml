@@ -91,7 +91,9 @@ steps:
       docker push ${LATEST_IMAGE}
     displayName: 'Test the users fixture'
 
-  - script: docker push ${LATEST_IMAGE}
+  - script: |
+      export LATEST_IMAGE=$(echo "$LATEST_IMAGE" | sed -e "s/'//g")
+      docker push ${LATEST_IMAGE}
     displayName: 'Push the image'
 
   - script: |
