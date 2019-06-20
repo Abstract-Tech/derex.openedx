@@ -6,7 +6,7 @@ if [ -z $TRANSIFEX_USERNAME ] || [ -z $TRANSIFEX_PASSWORD ]; then
         exit 0
 fi
 
-echo -e "[https://www.transifex.com]\nhostname=https://www.transifex.com\nusername=$TRANSIFEX_USERNAME\npassword=$TRANSIFEX_PASSWORD" |tee ~/.transifexrc
+echo -e "[https://www.transifex.com]\nhostname=https://www.transifex.com\nusername=$TRANSIFEX_USERNAME\npassword=$TRANSIFEX_PASSWORD" > ~/.transifexrc
 
 set -x
 
