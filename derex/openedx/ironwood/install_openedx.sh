@@ -1,6 +1,5 @@
 #!/bin/sh
-set -e
-set -x
+set -ex
 
 EDX_PLATFORM_REPOSITORY=https://github.com/edx/edx-platform.git
 EDX_PLATFORM_VERSION=open-release/ironwood.1
@@ -14,7 +13,7 @@ pip install --src /openedx/packages -r requirements/edx/base.txt
 find /openedx/ -type d -name .git -exec rm -r {} +  # 70 Mb
 
 # Copy the assets.py config file in place
-mkdir -p /openedx/edx-platform/lms/envs/derex /openedx/edx-platform/cms/envs/derex
+mkdir /openedx/edx-platform/lms/envs/derex /openedx/edx-platform/cms/envs/derex
 cp /tmp/assets.py /openedx/edx-platform/lms/envs/derex
 echo > /openedx/edx-platform/lms/envs/derex/__init__.py
 mv /tmp/assets.py /openedx/edx-platform/cms/envs/derex
