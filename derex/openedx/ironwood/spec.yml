@@ -11,7 +11,7 @@ copy:
   wsgi.py: /tmp/
   base.py: /tmp/
   restore_dump.py: /tmp/
-  fixtures: /tmp/
+  fixtures: /tmp/fixtures
   compile_assets.sh: /openedx/bin/
   cleanup_assets.sh: /openedx/bin/
 
