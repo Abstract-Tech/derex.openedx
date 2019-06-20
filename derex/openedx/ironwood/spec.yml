@@ -14,6 +14,7 @@ copy:
   fixtures: /tmp/fixtures
   compile_assets.sh: /openedx/bin/
   cleanup_assets.sh: /openedx/bin/
+  translations.sh: /openedx/bin/
 
 config:
   #cmd: gunicorn --name ${SERVICE_VARIANT} --bind=0.0.0.0:8000 --max-requests=1000 ${SERVICE_VARIANT}.wsgi:application
@@ -32,7 +33,6 @@ build_env:
 
 scripts:
   - install_openedx.sh
-  - translations.sh
   - install_custom.sh
 
 dest: derex/openedx-ironwood
