@@ -70,12 +70,13 @@ steps:
       set -ex
       export LATEST_IMAGE=$(echo "$LATEST_IMAGE" | sed -e "s/'//g")
       mysql -h localhost --protocol tcp -u root -e "CREATE DATABASE derex"
-      docker run --add-host="mysql:$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')" --rm ${LATEST_IMAGE} ./manage.py cms --settings derex.base migrate
-      docker run --add-host="mysql:$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')" --rm ${LATEST_IMAGE} ./manage.py lms --settings derex.base migrate
+      DOCKER_RUN="docker run --add-host=mysql:$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+') --rm ${LATEST_IMAGE}"
+      $DOCKER_RUN ./manage.py cms --settings derex.base migrate
+      $DOCKER_RUN ./manage.py lms --settings derex.base migrate
       mkdir /tmp/image
       sudo mysqldump -h localhost --protocol tcp -u root derex > /tmp/image/empty_dump.sql
-      xz /tmp/image/empty_dump.sql
-      echo -e "FROM ${LATEST_IMAGE}\nCOPY empty_dump.sql.xz /openedx/" > /tmp/image/Dockerfile
+      bzip2 /tmp/image/empty_dump.sql
+      echo -e "FROM ${LATEST_IMAGE}\nCOPY empty_dump.sql.bz2 /openedx/" > /tmp/image/Dockerfile
       docker build /tmp/image -t ${LATEST_IMAGE}
       docker push ${LATEST_IMAGE}
     displayName: 'Run migrations and save dump inside image'
