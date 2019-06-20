@@ -78,12 +78,21 @@ steps:
       bzip2 /tmp/image/empty_dump.sql
       echo -e "FROM ${LATEST_IMAGE}\nCOPY empty_dump.sql.bz2 /openedx/" > /tmp/image/Dockerfile
       docker build /tmp/image -t ${LATEST_IMAGE}
+      docker push ${LATEST_IMAGE}
+    displayName: 'Run migrations and save dump inside image'
+
+  - script: |
+      set -ex
+      export LATEST_IMAGE=$(echo "$LATEST_IMAGE" | sed -e "s/'//g")
       # Run the restore_dump.py script: it should work and add the users fixture to the db
       docker run --add-host=mysql:$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+') --rm derex/openedx-ironwood:3513bff9af restore_dump.py
       # Make sure the fixtures ran and created test users
       mysql -h localhost --protocol tcp -u root derex -e "SELECT * from auth_user WHERE username='superuser'"|grep superuser
       docker push ${LATEST_IMAGE}
-    displayName: 'Run migrations and save dump inside image'
+    displayName: 'Test the users fixture'
+
+  - script: docker push ${LATEST_IMAGE}
+    displayName: 'Push the image'
 
   - script: |
       BEFORE=$(docker run --rm derex/wheelhouse:latest du /wheelhouse -s|cut -f1)
