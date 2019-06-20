@@ -32,7 +32,9 @@ def restore_dump():
         "DROP DATABASE IF EXISTS {}".format(settings.DATABASES["default"]["NAME"])
     )
     admin_cursor.execute(
-        "CREATE DATABASE {}".format(settings.DATABASES["default"]["NAME"])
+        "CREATE DATABASE {} CHARACTER SET utf8".format(
+            settings.DATABASES["default"]["NAME"]
+        )
     )
     sql = get_dump_file_contents()
     cursor = get_connection().cursor()
