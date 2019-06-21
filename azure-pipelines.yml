@@ -69,6 +69,8 @@ steps:
   - script: |
       set -ex
       export LATEST_IMAGE=$(echo "$LATEST_IMAGE" | sed -e "s/'//g")
+      # If the dump is already there skip this step
+      docker run --rm ${LATEST_IMAGE} ls -l /openedx/empty_dump.sql.bz2 && exit 0
       mysql -h localhost --protocol tcp -u root -e "CREATE DATABASE derex"
       DOCKER_RUN="docker run --add-host=mysql:$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+') --rm ${LATEST_IMAGE}"
       $DOCKER_RUN ./manage.py cms --settings derex.base migrate
