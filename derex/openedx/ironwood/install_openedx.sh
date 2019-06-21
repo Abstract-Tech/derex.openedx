@@ -23,4 +23,4 @@ mv /tmp/wsgi.py /openedx/edx-platform/
 
 # We prefer to do all tasks required for execution in advance,
 # so we accept the additional 57 Mb this brings
-python -m compileall /openedx  # +57 Mb
+python -m compileall -q /openedx  # +57 Mb
