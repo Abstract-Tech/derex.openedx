@@ -2,7 +2,7 @@
 set -ex
 
 EDX_PLATFORM_REPOSITORY=https://github.com/edx/edx-platform.git
-EDX_PLATFORM_VERSION=open-release/ironwood.1
+EDX_PLATFORM_VERSION=open-release/ironwood.2
 
 mkdir -p /openedx/themes /openedx/locale /openedx/bin/
 
