@@ -5,7 +5,7 @@ set -x
 export STATIC_ROOT_LMS="/openedx/staticfiles"
 export STATIC_ROOT_CMS=${STATIC_ROOT_LMS}/studio
 export THEME_DIR="/openedx/themes"
-export NODE_ENV=production
+export NODE_ENV=${NODE_ENV:-production}
 
 apk add nodejs
 nodeenv /openedx/nodeenv --node=8.9.3 --prebuilt
@@ -49,19 +49,3 @@ for theme in path(THEME_DIR).listdir():
 echo Collecting assets
 python manage.py lms --settings=derex.assets collectstatic --ignore "fixtures" --ignore "karma_*.js" --ignore "spec" --ignore "spec_helpers" --ignore "spec-helpers" --ignore "xmodule_js" --ignore "geoip" --ignore "sass" --noinput
 python manage.py cms --settings=derex.assets collectstatic --ignore "fixtures" --ignore "karma_*.js" --ignore "spec" --ignore "spec_helpers" --ignore "spec-helpers" --ignore "xmodule_js" --ignore "geoip" --ignore "sass" --noinput
-
-# Free up some space
-echo Freeing up some space. Before:
-du / -sch
-rm -r \
-    /openedx/nodeenv/ `# 137.3M` \
-    /openedx/edx-platform/node_modules/ `# 368.9M` \
-    /usr/lib/node_modules/ `# 30.4M` \
-    /openedx/staticfiles/studio-frontend/node_modules `# 24.3M` \
-    /openedx/staticfiles/cookie-policy-banner/node_modules `# 5.7M` \
-    /openedx/staticfiles/edx-bootstrap/node_modules `# 10.9M` \
-    /openedx/staticfiles/paragon/node_modules `# 13.3M`
-apk del nodejs # 52M
-
-echo After:
-du / -sch

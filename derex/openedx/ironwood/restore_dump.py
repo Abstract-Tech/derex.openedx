@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 import bz2
+import os
 
 import MySQLdb
 from django.conf import settings
+from path import Path as path
 
 DUMP_FILE_PATH = "/openedx/empty_dump.sql.bz2"
+FIXTURES_DIR = "/openedx/fixtures/"
 
 
 def get_dump_file_contents():
@@ -23,17 +26,35 @@ def get_connection(include_db=True):
     return MySQLdb.connect(**kwargs)
 
 
-def main():
+def restore_dump():
     admin_cursor = get_connection(include_db=False).cursor()
     admin_cursor.execute(
         "DROP DATABASE IF EXISTS {}".format(settings.DATABASES["default"]["NAME"])
     )
     admin_cursor.execute(
-        "CREATE DATABASE {}".format(settings.DATABASES["default"]["NAME"])
+        "CREATE DATABASE {} CHARACTER SET utf8".format(
+            settings.DATABASES["default"]["NAME"]
+        )
     )
     sql = get_dump_file_contents()
     cursor = get_connection().cursor()
     cursor.execute(sql)
+
+
+def run_fixtures():
+    fixtures_dir = path(FIXTURES_DIR)
+    for variant in ("cms", "lms"):
+        variant_dir = fixtures_dir / variant
+        if not variant_dir.exists():
+            continue
+        for file in variant_dir.listdir():
+            path("/openedx/edx-platform").chdir()
+            os.system("./manage.py {} loaddata {}".format(variant, file))
+
+
+def main():
+    restore_dump()
+    run_fixtures()
 
 
 if __name__ == "__main__":

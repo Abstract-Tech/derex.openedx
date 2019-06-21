@@ -11,9 +11,15 @@ copy:
   wsgi.py: /tmp/
   base.py: /tmp/
   restore_dump.py: /tmp/
+  fixtures: /tmp/fixtures
+  compile_assets.sh: /openedx/bin/
+  cleanup_assets.sh: /openedx/bin/
+  translations.sh: /openedx/bin/
+  symlink_duplicates.py: /openedx/bin/
 
 config:
-  cmd: gunicorn --name ${SERVICE_VARIANT} --bind=0.0.0.0:8000 --max-requests=1000 ${SERVICE_VARIANT}.wsgi:application
+  #cmd: gunicorn --name ${SERVICE_VARIANT} --bind=0.0.0.0:8000 --max-requests=1000 ${SERVICE_VARIANT}.wsgi:application
+  cmd: sh -c "DEBUG=True ./manage.py ${SERVICE_VARIANT} runserver 0.0.0.0:8000"
   entrypoint: '["/entrypoint.sh"]'
   workingdir: /openedx/edx-platform
   env:
@@ -21,15 +27,14 @@ config:
     PATH: /openedx/bin:${PATH}
     SERVICE_VARIANT: lms
     SETTINGS: derex.base
-
+    DEBUG: "True"
 build_env:
   - TRANSIFEX_USERNAME
   - TRANSIFEX_PASSWORD
 
 scripts:
   - install_openedx.sh
-  - translations.sh
-  - compile_assets.sh
   - install_custom.sh
+  - prepare_assets.sh
 
 dest: derex/openedx-ironwood
