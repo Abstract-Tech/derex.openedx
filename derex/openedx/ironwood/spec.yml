@@ -18,7 +18,7 @@ copy:
 
 config:
   #cmd: gunicorn --name ${SERVICE_VARIANT} --bind=0.0.0.0:8000 --max-requests=1000 ${SERVICE_VARIANT}.wsgi:application
-  cmd: ./manage.py ${SERVICE_VARIANT} runserver 0.0.0.0:8001
+  cmd: sh -c "DEBUG=True ./manage.py ${SERVICE_VARIANT} runserver 0.0.0.0:8000"
   entrypoint: '["/entrypoint.sh"]'
   workingdir: /openedx/edx-platform
   env:
