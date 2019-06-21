@@ -5,7 +5,7 @@ set -x
 export STATIC_ROOT_LMS="/openedx/staticfiles"
 export STATIC_ROOT_CMS=${STATIC_ROOT_LMS}/studio
 export THEME_DIR="/openedx/themes"
-export NODE_ENV=production
+export NODE_ENV=${NODE_ENV:-production}
 
 apk add nodejs
 nodeenv /openedx/nodeenv --node=8.9.3 --prebuilt

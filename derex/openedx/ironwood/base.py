@@ -1,13 +1,16 @@
-import os
-
 from openedx.core.lib.derived import derive_settings
 from path import Path as path
 from xmodule.modulestore.modulestore_settings import update_module_store_settings
+
+import os
+
 
 SERVICE_VARIANT = os.environ["SERVICE_VARIANT"]
 assert SERVICE_VARIANT in ("lms", "cms")
 
 exec("from {}.envs.common import *".format(SERVICE_VARIANT), globals(), locals())
+
+PLATFORM_NAME = "TestEdX"
 
 DATABASES = {
     "default": {
@@ -31,8 +34,8 @@ update_module_store_settings(MODULESTORE, doc_store_settings=DOC_STORE_CONFIG)
 XQUEUE_INTERFACE = {"url": None, "django_auth": None}
 ALLOWED_HOSTS = ["*"]
 
-DEBUG = bool(os.environ.get("DEBUG", False))
-if DEBUG:  # In debug mode serve static files from `runserver`
+if "runserver" in sys.argv:
+    DEBUG = True
     PIPELINE_ENABLED = False
     STATICFILES_STORAGE = "openedx.core.storage.DevelopmentStorage"
     # Revert to the default set of finders as we don't want the production pipeline
