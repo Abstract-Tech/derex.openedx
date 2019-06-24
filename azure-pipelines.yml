@@ -9,7 +9,7 @@ steps:
   - script: |
       set -ex
       sudo systemctl stop mysql
-      docker run -d -p 3306:3306 --name mysql --rm -e MYSQL_ALLOW_EMPTY_PASSWORD=True mysql:5.6.44 mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+      docker run -d -p 3306:3306 --name mysql --rm -e MYSQL_ROOT_PASSWORD=secret mysql:5.6.44 mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
     displayName: Setup Mysql server
 
   - script: |

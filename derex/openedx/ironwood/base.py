@@ -16,11 +16,11 @@ DATABASES = {
     "default": {
         "ATOMIC_REQUESTS": True,
         "ENGINE": "django.db.backends.mysql",
-        "HOST": "mysql",
-        "NAME": "derex",
-        "PASSWORD": "",
-        "PORT": "3306",
-        "USER": "root",
+        "HOST": os.environ.get("MYSQL_HOST", "mysql"),
+        "NAME": os.environ.get("MYSQL_DB", "derex"),
+        "PASSWORD": os.environ.get("MYSQL_PASSWORD", ""),
+        "PORT": os.environ.get("MYSQL_PORT", "3306"),
+        "USER": os.environ.get("MYSQL_USER", "root"),
     }
 }
 
