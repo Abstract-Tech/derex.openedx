@@ -60,4 +60,7 @@ if SERVICE_VARIANT == "cms":
     LOGIN_URL = "/signin"
     FRONTEND_LOGIN_URL = LOGIN_URL
 
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp")
+EMAIL_PORT = os.environ.get("EMAIL_PORT", "25")
+
 derive_settings(__name__)
