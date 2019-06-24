@@ -52,6 +52,22 @@ if "runserver" in sys.argv:
     # Load development webpack donfiguration
     WEBPACK_CONFIG_PATH = "webpack.dev.config.js"
 
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp")
+EMAIL_PORT = os.environ.get("EMAIL_PORT", "25")
+
+##################### Celery #######################
+CELERY_BROKER_TRANSPORT = os.environ.get("CELERY_BROKER_TRANSPORT", "amqp")
+CELERY_BROKER_HOSTNAME = os.environ.get("CELERY_BROKER_HOSTNAME", "rabbitmq")
+CELERY_BROKER_USER = os.environ.get("CELERY_BROKER_USER", "guest")
+CELERY_BROKER_PASSWORD = os.environ.get("CELERY_BROKER_PASSWORD", "guest")
+CELERY_BROKER_VHOST = os.environ.get("CELERY_BROKER_VHOST", "/")
+BROKER_URL = "{0}://{1}:{2}@{3}/{4}".format(
+    CELERY_BROKER_TRANSPORT,
+    CELERY_BROKER_USER,
+    CELERY_BROKER_PASSWORD,
+    CELERY_BROKER_HOSTNAME,
+    CELERY_BROKER_VHOST,
+)
 
 ##################### CMS Settings ###################
 
@@ -59,8 +75,5 @@ if SERVICE_VARIANT == "cms":
     CMS_SEGMENT_KEY = "foobar"
     LOGIN_URL = "/signin"
     FRONTEND_LOGIN_URL = LOGIN_URL
-
-EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp")
-EMAIL_PORT = os.environ.get("EMAIL_PORT", "25")
 
 derive_settings(__name__)
