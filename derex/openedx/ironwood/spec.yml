@@ -27,6 +27,7 @@ config:
     PATH: /openedx/bin:${PATH}
     SERVICE_VARIANT: lms
     SETTINGS: derex.base
+    MYSQL_PASSWORD: secret
     DEBUG: "True"
 build_env:
   - TRANSIFEX_USERNAME
