@@ -28,6 +28,7 @@ config:
     SERVICE_VARIANT: lms
     SETTINGS: derex.base
     MYSQL_PASSWORD: secret
+    EMAIL_HOST: smtp
     DEBUG: "True"
 build_env:
   - TRANSIFEX_USERNAME

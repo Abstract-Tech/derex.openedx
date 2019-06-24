@@ -54,6 +54,7 @@ if "runserver" in sys.argv:
 
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp")
 EMAIL_PORT = os.environ.get("EMAIL_PORT", "25")
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 ##################### Celery #######################
 CELERY_BROKER_TRANSPORT = os.environ.get("CELERY_BROKER_TRANSPORT", "amqp")
