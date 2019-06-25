@@ -104,7 +104,6 @@ steps:
       docker tag "${LATEST_IMAGE}" "${IMAGE_TO_PUSH}"
       docker push "${IMAGE_TO_PUSH}"
     displayName: 'Also tag the image with the :latest tag and push it (only on master)'
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
   - script: |
       BEFORE=$(docker run --rm derex/wheelhouse:latest du /wheelhouse -s|cut -f1)
