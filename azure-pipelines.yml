@@ -99,6 +99,14 @@ steps:
     displayName: 'Push the image'
 
   - script: |
+      export LATEST_IMAGE="$(echo "$LATEST_IMAGE" | sed -e "s/'//g")"
+      export IMAGE_TO_PUSH="$(echo ${LATEST_IMAGE}|sed -e 's/:.*/:latest/')"
+      docker tag "${LATEST_IMAGE}" "${IMAGE_TO_PUSH}"
+      docker push "${IMAGE_TO_PUSH}"
+    displayName: 'Also tag the image with the :latest tag and push it (only on master)'
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+
+  - script: |
       BEFORE=$(docker run --rm derex/wheelhouse:latest du /wheelhouse -s|cut -f1)
       AFTER=$(du .cache/wheels_cache -s|cut -f1)
       echo Current wheel house image is ${BEFORE} bytes. Now we have ${AFTER} bytes in the wheel cache.
