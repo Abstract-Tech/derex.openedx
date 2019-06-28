@@ -4,10 +4,11 @@ set -x
 
 echo Freeing up some space. Before:
 du / -sch
-# Saving @edx directory
-if [ -d /openedx/edx-platform/node_modules/@edx ]; then
-    mv /openedx/edx-platform/node_modules/@edx /
-fi
+# Saving come directories symlinked from /openedx/edx-platform/common/static/
+to_save='@edx edx-pattern-library edx-ui-toolkit'
+for saveme in $to_save; do
+    mv /openedx/edx-platform/node_modules/"${saveme}" /
+done
 rm -r \
     /openedx/nodeenv/ `# 137.3M` \
     /openedx/edx-platform/node_modules/ `# 368.9M` \
@@ -18,10 +19,11 @@ rm -r \
     /openedx/staticfiles/paragon/node_modules `# 13.3M`
 apk del nodejs # 52M
 
-if [ -d /@edx ]; then
-    mkdir /openedx/edx-platform/node_modules
-    mv /@edx /openedx/edx-platform/node_modules
-fi
+
+mkdir /openedx/edx-platform/node_modules
+for saveme in $to_save; do
+    mv /"${saveme}" /openedx/edx-platform/node_modules
+done
 
 
 echo After:
