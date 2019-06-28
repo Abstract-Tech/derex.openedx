@@ -75,6 +75,7 @@ steps:
       DOCKER_RUN="docker run --add-host=mysql:$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+') --rm ${LATEST_IMAGE}"
       $DOCKER_RUN ./manage.py cms --settings derex.base migrate
       $DOCKER_RUN ./manage.py lms --settings derex.base migrate
+      $DOCKER_RUN ./manage.py migrate
       mkdir /tmp/image
       sudo mysqldump -h localhost -psecret --protocol tcp -u root derex > /tmp/image/empty_dump.sql
       bzip2 /tmp/image/empty_dump.sql
