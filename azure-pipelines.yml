@@ -72,9 +72,9 @@ steps:
       # If the dump is already there skip this step
       docker run --rm ${LATEST_IMAGE} ls -l /openedx/empty_dump.sql.bz2 && exit 0
       mysql -h localhost -psecret --protocol tcp -u root -e "CREATE DATABASE derex"
-      DOCKER_RUN="docker run --add-host=mysql:$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+') --rm ${LATEST_IMAGE}"
-      $DOCKER_RUN ./manage.py cms --settings derex.base migrate
-      $DOCKER_RUN ./manage.py lms --settings derex.base migrate
+      DOCKER_RUN="docker run --add-host=mysql:$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+') --rm"
+      $DOCKER_RUN ${LATEST_IMAGE} ./manage.py lms --settings derex.base migrate
+      $DOCKER_RUN -e SERVICE_VARIANT=cms ${LATEST_IMAGE} ./manage.py cms --settings derex.base migrate
       mkdir /tmp/image
       sudo mysqldump -h localhost -psecret --protocol tcp -u root derex > /tmp/image/empty_dump.sql
       bzip2 /tmp/image/empty_dump.sql
