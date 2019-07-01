@@ -11,24 +11,29 @@ assert SERVICE_VARIANT in ("lms", "cms")
 exec("from {}.envs.common import *".format(SERVICE_VARIANT), globals(), locals())
 
 PLATFORM_NAME = "TestEdX"
-
+MYSQL_HOST = os.environ.get("MYSQL_HOST", "mysql")
+MYSQL_PORT = os.environ.get("MYSQL_PORT", "3306")
+MYSQL_DB = os.environ.get("MYSQL_DB", "derex")
+MYSQL_USER = os.environ.get("MYSQL_USER", "root")
+MYSQL_PASSWORD = os.environ.get("MYSQL_PASSWORD", "secret")
 DATABASES = {
     "default": {
         "ATOMIC_REQUESTS": True,
         "ENGINE": "django.db.backends.mysql",
-        "HOST": os.environ.get("MYSQL_HOST", "mysql"),
-        "NAME": os.environ.get("MYSQL_DB", "derex"),
-        "PASSWORD": os.environ.get("MYSQL_PASSWORD", "secret"),
-        "PORT": os.environ.get("MYSQL_PORT", "3306"),
-        "USER": os.environ.get("MYSQL_USER", "root"),
+        "HOST": MYSQL_HOST,
+        "NAME": MYSQL_DB,
+        "PASSWORD": MYSQL_PASSWORD,
+        "PORT": MYSQL_PORT,
+        "USER": MYSQL_USER,
     }
 }
-
+MONGODB_HOST = "mongodb"
+MONGODB_DB = "mongoedx"
 CONTENTSTORE = {
     "ENGINE": "xmodule.contentstore.mongo.MongoContentStore",
-    "DOC_STORE_CONFIG": {"host": "mongodb", "db": "mongoedx"},
+    "DOC_STORE_CONFIG": {"host": MONGODB_HOST, "db": MONGODB_DB},
 }
-DOC_STORE_CONFIG = {"host": "mongodb", "db": "mongoedx"}
+DOC_STORE_CONFIG = {"host": MONGODB_HOST, "db": MONGODB_DB}
 update_module_store_settings(MODULESTORE, doc_store_settings=DOC_STORE_CONFIG)
 
 XQUEUE_INTERFACE = {"url": None, "django_auth": None}
@@ -69,9 +74,19 @@ BROKER_URL = "{0}://{1}:{2}@{3}/{4}".format(
     CELERY_BROKER_HOSTNAME,
     CELERY_BROKER_VHOST,
 )
-CELERY_RESULT_BACKEND = "file:///openedx/data"
+CELERY_RESULT_BACKEND = "db+mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}".format(
+    **locals()
+)
+CELERY_RESULT_BACKEND = "mongodb://{MONGODB_HOST}/".format(**locals())
+CELERY_MONGODB_BACKEND_SETTINGS = {
+    "database": MONGODB_DB,
+    "taskmeta_collection": "taskmeta_collection",
+}
 
+CELERY_RESULT_DB_TABLENAMES = {"task": "celery_edx_task", "group": "celery_edx_group"}
 ##################### CMS Settings ###################
+
+LMS_BASE = "http://localhost:4700"
 
 if SERVICE_VARIANT == "cms":
     CMS_SEGMENT_KEY = "foobar"
