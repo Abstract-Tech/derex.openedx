@@ -30,7 +30,7 @@ config:
     MYSQL_PASSWORD: secret
     EMAIL_HOST: smtp
     DEBUG: "True"
-    DUMMY_INCR: "2"  # Increment to refresh image generation
+    DUMMY_INCR: "3"  # Increment to refresh image generation
 build_env:
   - TRANSIFEX_USERNAME
   - TRANSIFEX_PASSWORD
