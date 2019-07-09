@@ -9,7 +9,7 @@ steps:
   - script: |
       set -ex
       sudo systemctl stop mysql
-      docker run -d -p 3306:3306 --name mysql --rm -e MYSQL_ALLOW_EMPTY_PASSWORD=True mysql:5.6.44 mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+      docker run -d -p 3306:3306 --name mysql --rm -e MYSQL_ROOT_PASSWORD=secret mysql:5.6.44 mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
     displayName: Setup Mysql server
 
   - script: |
@@ -71,12 +71,12 @@ steps:
       export LATEST_IMAGE=$(echo "$LATEST_IMAGE" | sed -e "s/'//g")
       # If the dump is already there skip this step
       docker run --rm ${LATEST_IMAGE} ls -l /openedx/empty_dump.sql.bz2 && exit 0
-      mysql -h localhost --protocol tcp -u root -e "CREATE DATABASE derex"
-      DOCKER_RUN="docker run --add-host=mysql:$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+') --rm ${LATEST_IMAGE}"
-      $DOCKER_RUN ./manage.py cms --settings derex.base migrate
-      $DOCKER_RUN ./manage.py lms --settings derex.base migrate
+      mysql -h localhost -psecret --protocol tcp -u root -e "CREATE DATABASE derex"
+      DOCKER_RUN="docker run --add-host=mysql:$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+') --rm"
+      $DOCKER_RUN ${LATEST_IMAGE} ./manage.py lms --settings derex.base migrate
+      $DOCKER_RUN -e SERVICE_VARIANT=cms ${LATEST_IMAGE} ./manage.py cms --settings derex.base migrate
       mkdir /tmp/image
-      sudo mysqldump -h localhost --protocol tcp -u root derex > /tmp/image/empty_dump.sql
+      sudo mysqldump -h localhost -psecret --protocol tcp -u root derex > /tmp/image/empty_dump.sql
       bzip2 /tmp/image/empty_dump.sql
       echo -e "FROM ${LATEST_IMAGE}\nCOPY empty_dump.sql.bz2 /openedx/" > /tmp/image/Dockerfile
       docker build /tmp/image -t ${LATEST_IMAGE}
@@ -89,7 +89,7 @@ steps:
       # Run the restore_dump.py script: it should work and add the users fixture to the db
       docker run --add-host=mysql:$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+') --rm ${LATEST_IMAGE} restore_dump.py
       # Make sure the fixtures ran and created test users
-      mysql -h localhost --protocol tcp -u root derex -e "SELECT * from auth_user WHERE username='superuser'"|grep superuser
+      mysql -h localhost --protocol tcp -u root -psecret derex -e "SELECT * from auth_user WHERE username='superuser'"|grep superuser
       docker push ${LATEST_IMAGE}
     displayName: 'Test the users fixture'
 
@@ -97,6 +97,14 @@ steps:
       export LATEST_IMAGE=$(echo "$LATEST_IMAGE" | sed -e "s/'//g")
       docker push ${LATEST_IMAGE}
     displayName: 'Push the image'
+
+  - script: |
+      export LATEST_IMAGE="$(echo "$LATEST_IMAGE" | sed -e "s/'//g")"
+      export IMAGE_TO_PUSH="$(echo ${LATEST_IMAGE}|sed -e 's/:.*/:latest/')"
+      docker tag "${LATEST_IMAGE}" "${IMAGE_TO_PUSH}"
+      docker push "${IMAGE_TO_PUSH}"
+    displayName: 'Also tag the image with the :latest tag and push it (only on master)'
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
   - script: |
       BEFORE=$(docker run --rm derex/wheelhouse:latest du /wheelhouse -s|cut -f1)

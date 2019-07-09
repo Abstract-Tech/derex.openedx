@@ -27,7 +27,10 @@ config:
     PATH: /openedx/bin:${PATH}
     SERVICE_VARIANT: lms
     SETTINGS: derex.base
+    MYSQL_PASSWORD: secret
+    EMAIL_HOST: smtp
     DEBUG: "True"
+    DUMMY_INCR: "5"  # Increment to refresh image generation
 build_env:
   - TRANSIFEX_USERNAME
   - TRANSIFEX_PASSWORD
