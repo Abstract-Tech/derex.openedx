@@ -22,7 +22,8 @@ curl -s https://raw.githubusercontent.com/edx/edx-platform/open-release/ironwood
     .direnv/python-2.7/bin/pip install pip-tools
 )
 echo Running pip-compile
-.direnv/python-2.7/bin/pip-compile --Upgrade --quiet --no-header --no-emit-find-links derex/openedx/wheels/constraints.txt derex/openedx/wheels/base.in -o derex/openedx/wheels/requirements.txt
+.direnv/python-2.7/bin/pip-compile --upgrade --quiet --no-header --no-emit-find-links derex/openedx/wheels/constraints.txt derex/openedx/wheels/base.in -o derex/openedx/wheels/requirements.txt
+cp derex/openedx/wheels/requirements.txt derex/openedx/ironwood/requirements.txt
 echo Done. Cleaning up.
 rm derex/openedx/wheels/base.in
 rm derex/openedx/wheels/constraints.txt

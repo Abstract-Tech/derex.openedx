@@ -6,6 +6,7 @@ source:
   path: wheels
 
 copy:
+  requirements.txt: /tmp
   assets.py: /tmp
   entrypoint.sh: /entrypoint.sh
   wsgi.py: /tmp/

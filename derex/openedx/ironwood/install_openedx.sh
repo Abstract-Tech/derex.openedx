@@ -9,6 +9,8 @@ mkdir -p /openedx/themes /openedx/locale /openedx/bin/
 git clone ${EDX_PLATFORM_REPOSITORY} --branch ${EDX_PLATFORM_VERSION} --depth 1 /openedx/edx-platform
 cd /openedx/edx-platform
 
+# Combine our updated requirements with the edx ones
+(grep "^-" requirements/edx/base.txt; cat /tmp/requirements.txt) > requirements/edx/requirements_derex.txt
 pip install --src /openedx/packages -r requirements/edx/base.txt
 find /openedx/ -type d -name .git -exec rm -r {} +  # 70 Mb
 

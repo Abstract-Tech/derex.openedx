@@ -1,0 +1,219 @@
+amqp==1.4.9               # via kombu
+analytics-python==1.2.9
+aniso8601==7.0.0          # via tincan
+anyjson==0.3.3            # via kombu
+appdirs==1.4.3            # via fs
+asn1crypto==0.24.0        # via cryptography
+astroid==1.6.6            # via pylint
+attrs==17.4.0
+babel==1.3
+backports.functools-lru-cache==1.5  # via astroid, isort, pylint, soupsieve
+backports.os==0.1.1       # via path.py
+beautifulsoup4==4.8.0     # via pynliner
+billiard==3.3.0.23        # via celery
+bleach==2.1.4
+boto3==1.4.8
+boto==2.39.0
+botocore==1.8.17
+celery==3.1.25
+certifi==2019.6.16        # via requests
+cffi==1.12.3              # via cryptography
+chardet==3.0.4            # via pysrt, requests
+click==7.0                # via code-annotations, user-util
+code-annotations==0.3.2   # via edx-enterprise
+configparser==3.8.1       # via importlib-metadata, pylint
+contextlib2==0.5.5        # via importlib-metadata
+coreapi==2.3.3            # via django-rest-swagger, openapi-codec
+coreschema==0.0.4         # via coreapi
+cryptography==2.7         # via django-fernet-fields, edx-enterprise
+cssutils==1.0.2           # via pynliner
+decorator==4.4.0          # via dogapi, pycontracts
+defusedxml==0.4.1
+django-appconf==1.0.3     # via django-statici18n
+django-babel-underscore==0.5.2
+django-babel==0.6.2       # via django-babel-underscore
+django-celery==3.3.1      # via edx-celeryutils
+django-classy-tags==0.9.0  # via django-sekizai
+django-config-models==1.0.1
+django-cors-headers==2.1.0
+django-countries==4.6.1
+django-crum==0.7.3
+django-fernet-fields==0.6
+django-filter==1.0.4
+django-ipware==2.1.0
+django-memcached-hashring==0.1.2
+django-method-override==0.1.0
+django-model-utils==3.0.0
+django-mptt==0.8.7
+django-multi-email-field==0.5.1  # via edx-enterprise
+django-mysql==2.5.0
+django-oauth-toolkit==1.1.3
+django-object-actions==1.1.0  # via edx-enterprise
+django-pyfs==2.0
+django-ratelimit-backend==1.1.1
+django-ratelimit==2.0.0
+django-require==1.0.11
+django-rest-swagger==2.2.0
+django-sekizai==1.0.0
+django-ses==0.8.4
+django-simple-history==2.7.3
+django-splash==0.2.2
+django-statici18n==1.4.0
+django-storages==1.4.1
+django-user-tasks==0.1.9
+django-waffle==0.12.0
+django-webpack-loader==0.6.0
+django==1.11.23
+djangorestframework-jwt==1.11.0
+djangorestframework-oauth==1.1.0  # via edx-organizations
+djangorestframework-xml==1.4.0  # via edx-enterprise
+djangorestframework==3.7.7  # via django-config-models, django-rest-swagger, django-user-tasks, edx-completion, edx-drf-extensions, edx-enterprise, edx-organizations, edx-proctoring, edxval, rest-condition
+dm.xmlsec.binding==1.3.3  # via python-saml
+docutils==0.15.2          # via botocore
+dogapi==1.2.1
+edx-ace==0.1.10
+edx-analytics-data-api-client==0.15.3
+edx-ccx-keys==0.2.2
+edx-celeryutils==0.3.0
+edx-completion==2.0.0
+edx-django-oauth2-provider==1.3.5
+edx-django-release-util==0.3.1
+edx-django-sites-extensions==2.3.1
+edx-django-utils==2.0.0
+edx-drf-extensions==2.4.0
+edx-enterprise==1.9.9
+edx-milestones==0.2.3
+edx-oauth2-provider==1.3.0
+edx-opaque-keys[django]==1.0.1  # via edx-ccx-keys, edx-completion, edx-drf-extensions, edx-enterprise, edx-milestones, edx-organizations, edx-proctoring, edx-user-state-client, edx-when
+edx-organizations==2.1.0
+edx-proctoring-proctortrack==1.0.5
+edx-proctoring==2.0.7
+edx-rbac==1.0.2           # via edx-enterprise
+edx-rest-api-client==1.9.2
+edx-search==1.3.0
+edx-submissions==3.0.1
+edx-user-state-client==1.1.1
+edx-when==0.3             # via edx-proctoring
+edxval==1.1.27
+elasticsearch==1.9.0      # via edx-search
+enum34==1.1.6
+event-tracking==0.2.9
+feedparser==5.1.3
+firebase-token-generator==1.3.2
+fs-s3fs==0.1.8
+fs==2.0.18
+funcsigs==1.0.2           # via mock
+future==0.17.1            # via backports.os, edx-celeryutils, edx-enterprise, pyjwkest
+futures==3.3.0 ; python_version == "2.7"
+glob2==0.3
+gunicorn==19.0
+hash-ring==1.3.1          # via django-memcached-hashring
+help-tokens==1.0.4
+html5lib==1.0.1
+httplib2==0.13.1          # via zendesk
+idna==2.8                 # via requests
+importlib-metadata==0.19  # via path.py
+ipaddr==2.1.11
+ipaddress==1.0.22         # via cryptography
+isodate==0.6.0            # via python-saml
+isort==4.3.21             # via pylint
+itypes==1.1.0             # via coreapi
+jinja2==2.10.1            # via code-annotations, coreschema
+jmespath==0.9.4           # via boto3, botocore
+jsondiff==1.2.0           # via edx-enterprise
+jsonfield==2.0.2
+kombu==3.0.37             # via celery
+lazy-object-proxy==1.4.2  # via astroid
+lepl==5.1.3               # via rfc6266-parser
+lxml==4.4.1               # via dm.xmlsec.binding, edxval, xblock
+mailsnake==1.6.2
+mako==1.0.2
+markdown==2.6.11
+markey==0.8               # via django-babel-underscore
+markupsafe==1.1.1         # via jinja2, mako, xblock
+mccabe==0.6.1             # via pylint
+mock==3.0.5               # via edx-ace
+mongoengine==0.10.0
+more-itertools==5.0.0     # via zipp
+mysql-python==1.2.5
+newrelic==5.0.2.126
+nodeenv==1.1.1
+numpy==1.6.2
+oauthlib==2.1.0
+openapi-codec==1.3.2      # via django-rest-swagger
+path.py==11.5.2           # via edx-enterprise
+pathlib2==2.3.4           # via importlib-metadata
+pbr==5.4.2                # via stevedore
+pdfminer==20140328
+piexif==1.0.2
+pillow==6.1.0
+psutil==1.2.1             # via edx-django-utils, edx-drf-extensions
+py2neo==3.1.2
+pycontracts==1.7.1
+pycountry==1.20
+pycparser==2.19           # via cffi
+pycryptodomex==3.4.7
+pygments==2.4.2
+pygraphviz==1.1
+pyjwkest==1.3.2
+pyjwt==1.5.2
+pylint-plugin-utils==0.3
+pylint==1.9.5             # via pylint-plugin-utils
+pymongo==3.9.0
+pynliner==0.8.0
+pyparsing==2.4.2          # via pycontracts
+pysrt==1.1.1
+python-dateutil==2.4.0
+python-levenshtein==0.12.0
+python-memcached==1.59    # via django-memcached-hashring
+python-openid==2.2.5
+python-saml==2.4.0
+python-slugify==3.0.3     # via code-annotations
+pytz==2019.2
+pyuca==1.1
+pyyaml==5.1.2
+redis==2.10.6
+reportlab==3.5.23
+requests-oauthlib==1.1.0
+requests==2.22.0          # via analytics-python, coreapi, django-oauth-toolkit, edx-analytics-data-api-client, edx-drf-extensions, edx-enterprise, edx-rest-api-client, mailsnake, pyjwkest, requests-oauthlib, sailthru-client, slumber, social-auth-core
+rest-condition==1.0.3
+rfc6266-parser==0.0.5.post2
+rules==2.1
+s3transfer==0.1.13        # via boto3
+sailthru-client==2.2.3
+scandir==1.10.0           # via pathlib2
+selenium==3.141.0         # via splinter
+semantic-version==2.8.1   # via edx-drf-extensions
+shapely==1.2.16
+shortuuid==0.5.0          # via edx-django-oauth2-provider
+simplejson==3.16.0        # via django-rest-swagger, dogapi, mailsnake, sailthru-client, zendesk
+singledispatch==3.4.0.3   # via astroid, pylint
+six==1.11.0
+slumber==0.7.1            # via edx-enterprise, edx-rest-api-client
+social-auth-app-django==2.1.0
+social-auth-core==1.7.0
+sorl-thumbnail==12.3
+sortedcontainers==0.9.2
+soupsieve==1.9.3          # via beautifulsoup4
+splinter==0.9.0
+sqlparse==0.3.0
+stevedore==1.30.1
+testfixtures==6.10.0      # via edx-enterprise
+text-unidecode==1.2       # via python-slugify
+tincan==0.0.5             # via edx-enterprise
+unicodecsv==0.14.1
+uritemplate==3.0.0        # via coreapi
+urllib3==1.25.3           # via elasticsearch, requests, selenium
+user-util==0.1.5
+web-fragments==0.3.0
+webencodings==0.5.1       # via html5lib
+webob==1.8.5              # via xblock
+wrapt==1.11.2             # via astroid
+xblock-review==1.1.5
+xblock-utils==1.2.2
+xblock==1.2.4
+zendesk==1.1.1
+zipp==0.6.0               # via importlib-metadata
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools==41.2.0        # via dm.xmlsec.binding, fs, python-levenshtein
