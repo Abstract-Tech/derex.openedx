@@ -11,7 +11,7 @@ cd /openedx/edx-platform
 
 # Combine our updated requirements with the edx ones
 (grep "^-" requirements/edx/base.txt; cat /tmp/requirements.txt) > requirements/edx/requirements_derex.txt
-pip install --src /openedx/packages -r requirements/edx/base.txt
+pip install --src /openedx/packages -r requirements/edx/requirements_derex.txt
 find /openedx/ -type d -name .git -exec rm -r {} +  # 70 Mb
 
 # Copy the assets.py config file in place
