@@ -28,7 +28,7 @@ DATABASES = {
     }
 }
 MONGODB_HOST = "mongodb"
-MONGODB_DB = "mongoedx"
+MONGODB_DB = os.environ.get("MONGO_DB", "mongoedx")
 CONTENTSTORE = {
     "ENGINE": "xmodule.contentstore.mongo.MongoContentStore",
     "DOC_STORE_CONFIG": {"host": MONGODB_HOST, "db": MONGODB_DB},
