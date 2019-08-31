@@ -31,7 +31,7 @@ pip install -r requirements/edx/pip-tools.txt >&2
 pip-compile -v --no-emit-trusted-host --no-index --upgrade -o requirements/edx/pip-tools.txt requirements/edx/pip-tools.in
 # Install our numpy version. Otherwise 'python setup.py egg_info' (run by pip-compile)
 # fails for matplotlib
-pip install $(grep numpy  requirements/edx/base.in|awk '{print $1}') >&2
+pip install \$(grep numpy requirements/edx/base.in|awk '{print $1}') >&2
 make upgrade >&2
 sed -e s@file:///openedx/edx-platform/@@ -i requirements/edx/*.txt
 sed -e 's@-e git+https://@git+https://@' -i requirements/edx/*.txt
