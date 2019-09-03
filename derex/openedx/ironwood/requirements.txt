@@ -65,6 +65,7 @@ coreapi==2.3.3            # via django-rest-swagger, openapi-codec
 coreschema==0.0.4         # via coreapi
 cryptography==2.7
 cssutils==1.0.2           # via pynliner
+cycler==0.10.0            # via matplotlib
 ddt==1.2.1
 decorator==4.4.0          # via dogapi, pycontracts
 defusedxml==0.4.1
@@ -168,7 +169,7 @@ mako==1.0.2
 markdown==2.6.11
 markey==0.8               # via django-babel-underscore
 markupsafe==1.1.1
-matplotlib==2.2.4
+matplotlib==1.5.3
 mock==1.0.1
 mongoengine==0.10.0
 mysql-python==1.2.5
