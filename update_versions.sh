@@ -37,4 +37,4 @@ sed -e s@file:///openedx/edx-platform/@@ -i requirements/edx/*.txt
 sed -e 's@-e git+https://@git+https://@' -i requirements/edx/*.txt
 cat requirements/edx-sandbox/base.txt
 " > derex/openedx/ironwood/requirements.txt
-grep -v ^-e derex/openedx/ironwood/requirements.txt > derex/openedx/wheels/requirements.txt
+grep -v -E \(^-e|^git\+https\) derex/openedx/ironwood/requirements.txt > derex/openedx/wheels/requirements.txt
