@@ -117,3 +117,4 @@ steps:
         docker push derex/wheelhouse:latest
       fi;
     displayName: 'Build and push wheels image if necessary'
+    condition: always()
