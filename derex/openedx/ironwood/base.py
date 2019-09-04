@@ -93,4 +93,7 @@ if SERVICE_VARIANT == "cms":
     LOGIN_URL = "/signin"
     FRONTEND_LOGIN_URL = LOGIN_URL
 
+# enterprise.views tries to access settings.ECOMMERCE_PUBLIC_URL_ROOT,
+ECOMMERCE_PUBLIC_URL_ROOT = None
+
 derive_settings(__name__)

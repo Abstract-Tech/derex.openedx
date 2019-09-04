@@ -27,4 +27,6 @@ DATABASES = {"default": {}}  # type: ignore
 # https://github.com/treyhunner/django-simple-history/blob/b1d9adbd838836246b052b4c9c4598e02f6471c5/simple_history/models.py#L213
 INSTALLED_APPS.append("integrated_channels.cornerstone")
 
+# enterprise.views tries to access settings.ECOMMERCE_PUBLIC_URL_ROOT,
+ECOMMERCE_PUBLIC_URL_ROOT = None
 derive_settings(__name__)

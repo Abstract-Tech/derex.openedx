@@ -25,10 +25,16 @@ sed -i 's/edx-opaque-keys.*/edx-opaque-keys<1.0.0/' requirements/edx/paver.in
 sed -i 's/edx-milestones.*/edx-milestones<0.2.3/' requirements/edx/base.in
 sed -i 's/edx-organizations.*/edx-organizations<2.1.0/' requirements/edx/base.in
 
+# fix ImportError: Module 'xmodule.modulestore.django' does not define a 'COURSE_PUBLISHED' attribute/class
+sed -i 's/edx-when.*/edx-when<0.1.1/' requirements/edx/base.in
+
 # We don't need the testing or development versions, so we can speed up the
 # process by removing them
 sed /requirements.edx.testing/d -i Makefile
 sed /requirements.edx.development/d -i Makefile
+
+# Document this command to update versions
+sed -i s/CUSTOM_COMPILE_COMMAND=.*/CUSTOM_COMPILE_COMMAND='.\\/update_versions.sh'/ Makefile
 
 # scripts/post-pip-compile.sh specifies bash in its shebang. Make sure it's present
 apk add bash >&2
@@ -37,15 +43,12 @@ apk add bash >&2
 pip install -r requirements/edx/pip-tools.txt >&2
 pip-compile -v --no-emit-trusted-host --no-index --upgrade -o requirements/edx/pip-tools.txt requirements/edx/pip-tools.in >&2
 
-# Document this command to update versions
-export CUSTOM_COMPILE_COMMAND='./update_versions.sh'
-
 # This is our goal: all these preparations were just so we could run this
 make upgrade >&2
 
-sed -e s@file:///openedx/edx-platform/@@ -i requirements/edx/*.txt
-sed -e s@file:///openedx/edx-platform@.@ -i requirements/edx/*.txt
 cat requirements/edx-sandbox/base.txt
 " > derex/openedx/ironwood/requirements.txt
 
+sed -e s@file:///openedx/edx-platform/@@ -i derex/openedx/ironwood/requirements.txt
+sed -e s@file:///openedx/edx-platform@.@ -i derex/openedx/ironwood/requirements.txt
 grep -E -v '^-e|^git.https://' derex/openedx/ironwood/requirements.txt > derex/openedx/wheels/requirements.txt
