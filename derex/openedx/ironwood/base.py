@@ -101,4 +101,6 @@ INSTALLED_APPS.append("integrated_channels.cornerstone")
 # enterprise.views tries to access settings.ECOMMERCE_PUBLIC_URL_ROOT,
 ECOMMERCE_PUBLIC_URL_ROOT = None
 
+SITE_NAME = os.environ.get("SITE_NAME", SITE_NAME)
+
 derive_settings(__name__)
