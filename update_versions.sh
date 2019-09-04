@@ -27,6 +27,9 @@ sed -i 's/edx-organizations.*/edx-organizations<2.1.0/' requirements/edx/base.in
 
 # fix ImportError: Module 'xmodule.modulestore.django' does not define a 'COURSE_PUBLISHED' attribute/class
 sed -i 's/edx-when.*/edx-when<0.1.1/' requirements/edx/base.in
+grep -q edx-when requirements/edx/base.in || echo 'edx-when<0.1.1' >> requirements/edx/base.in
+sed -i 's/edx-proctoring>=1.5.3.*/edx-proctoring>=1.5.3,<=1.6.2/' requirements/edx/base.in
+
 
 # We don't need the testing or development versions, so we can speed up the
 # process by removing them
@@ -46,9 +49,10 @@ pip-compile -v --no-emit-trusted-host --no-index --upgrade -o requirements/edx/p
 # This is our goal: all these preparations were just so we could run this
 make upgrade >&2
 
-cat requirements/edx-sandbox/base.txt
+cat requirements/edx/base.txt
 " > derex/openedx/ironwood/requirements.txt
 
 sed -e s@file:///openedx/edx-platform/@@ -i derex/openedx/ironwood/requirements.txt
 sed -e s@file:///openedx/edx-platform@.@ -i derex/openedx/ironwood/requirements.txt
+sed 's/^-e git/git/' -i derex/openedx/ironwood/requirements.txt
 grep -E -v '^-e|^git.https://' derex/openedx/ironwood/requirements.txt > derex/openedx/wheels/requirements.txt
