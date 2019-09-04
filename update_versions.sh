@@ -7,7 +7,6 @@ if [ ! -z "$PIP_TOOLS_CACHE" ]; then
 fi
 # shellcheck disable=SC2086
 docker run $PIP_DOCKER_OPTION --rm "$(derex.builder image derex/openedx/buildwheels/)" sh -c "
-pip install pip==18.1 >&2
 git clone ${EDX_PLATFORM_REPOSITORY} --branch ${EDX_PLATFORM_VERSION} --depth 1 /openedx/edx-platform >&2
 cd /openedx/edx-platform
 
@@ -24,6 +23,12 @@ sed -i 's/edx-opaque-keys.*/edx-opaque-keys<1.0.0/' requirements/edx/base.in
 sed -i 's/edx-opaque-keys.*/edx-opaque-keys<1.0.0/' requirements/edx/paver.in
 sed -i 's/edx-milestones.*/edx-milestones<0.2.3/' requirements/edx/base.in
 sed -i 's/edx-organizations.*/edx-organizations<2.1.0/' requirements/edx/base.in
+
+# Unpin urllib3: we don't use transifex client here
+sed -i '/urllib3/d' requirements/constraints.txt
+
+# Unpin gunicorn
+sed -i 's/gunicorn.*/gunicorn/' requirements/edx/base.in
 
 # fix ImportError: Module 'xmodule.modulestore.django' does not define a 'COURSE_PUBLISHED' attribute/class
 sed -i 's/edx-when.*/edx-when<0.1.1/' requirements/edx/base.in
@@ -42,8 +47,8 @@ sed -i s/CUSTOM_COMPILE_COMMAND=.*/CUSTOM_COMPILE_COMMAND='.\\/update_versions.s
 # scripts/post-pip-compile.sh specifies bash in its shebang. Make sure it's present
 apk add bash >&2
 
-# Upgrade pip-tools befor running make
-pip install -r requirements/edx/pip-tools.txt >&2
+# Upgrade pip-tools before running make
+pip install pip-tools >&2
 pip-compile -v --no-emit-trusted-host --no-index --upgrade -o requirements/edx/pip-tools.txt requirements/edx/pip-tools.in >&2
 
 # This is our goal: all these preparations were just so we could run this
