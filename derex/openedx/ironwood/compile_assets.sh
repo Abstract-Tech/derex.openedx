@@ -55,6 +55,4 @@ apk add rsync --no-cache
 # Careful to include a trailing slash for the source dir: rsync is sensitive to this
 rsync -a "${STATIC_ROOT_LMS}"/ "${FINAL_STATIC_ROOT}"
 
-echo Clean up
-apk del nodejs rsync
-rm -r "${STATIC_ROOT_LMS}"
+# Cleanup is done in cleanup_assets.sh
