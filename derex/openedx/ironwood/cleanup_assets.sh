@@ -4,6 +4,9 @@ set -x
 
 echo Freeing up some space. Before:
 du / -sch
+
+apk del nodejs rsync --force-broken-world # 52M
+
 # Saving come directories symlinked from /openedx/edx-platform/common/static/
 to_save='@edx edx-pattern-library edx-ui-toolkit'
 for saveme in $to_save; do
@@ -18,8 +21,6 @@ rm -r \
     /openedx/staticfiles/edx-bootstrap/node_modules `# 10.9M` \
     /openedx/staticfiles/paragon/node_modules `# 13.3M` \
     /tmp/*
-apk del nodejs rsync # 52M
-
 
 mkdir /openedx/edx-platform/node_modules
 for saveme in $to_save; do
