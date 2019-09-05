@@ -14,7 +14,6 @@ for saveme in $to_save; do
 done
 touch /tmp/make_sure_the_star_below_matches_something
 rm -r \
-    /openedx/nodeenv/ `# 137.3M` \
     /openedx/edx-platform/node_modules/ `# 368.9M` \
     /openedx/staticfiles/studio-frontend/node_modules `# 24.3M` \
     /openedx/staticfiles/cookie-policy-banner/node_modules `# 5.7M` \

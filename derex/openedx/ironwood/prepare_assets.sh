@@ -1,7 +1,7 @@
 #!/bin/sh
 set -ex
 
-PATH=/openedx/edx-platform/node_modules/.bin:/openedx/nodeenv/bin:/openedx/bin:${PATH}
+PATH=/openedx/edx-platform/node_modules/.bin:/openedx/bin:${PATH}
 
 rm -rvf /openedx/edx-platform/themes/[!p]*
 compile_assets.sh
