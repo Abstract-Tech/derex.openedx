@@ -56,6 +56,7 @@ python manage.py cms --settings=derex.assets collectstatic --ignore "fixtures" -
 echo Rsync assets in place to avoid replacing the same file
 apk add rsync --no-cache
 # Careful to include a trailing slash for the source dir: rsync is sensitive to this
-rsync -a "${STATIC_ROOT_LMS}"/ "${FINAL_STATIC_ROOT}"
+rsync --delete -a "${STATIC_ROOT_LMS}"/ "${FINAL_STATIC_ROOT}"
 
-# Cleanup is done in cleanup_assets.sh
+# Cleanup is done in cleanup_assets.sh, but we remove /tmp/staticfiles here
+rm -rf /tmp/staticfiles
