@@ -80,8 +80,10 @@ steps:
         derex/buildah \
         bash -c "
           if (buildah images | grep $(echo $WHEELS_IMAGE|sed s/:/.*/)); then
-            buildah tag localhost/$WHEELS_IMAGE docker.io/$WHEELS_IMAGE
-            buildah push docker.io/$WHEELS_IMAGE
+            if curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo $WHEELS_IMAGE |sed -e 's|:|/tags/|'); then
+              buildah tag localhost/$WHEELS_IMAGE docker.io/$WHEELS_IMAGE
+              buildah push docker.io/$WHEELS_IMAGE
+            fi
           fi"
     condition: always()
     displayName: 'Push the openedx-wheels image'
