@@ -8,14 +8,17 @@ export STATIC_ROOT_CMS=${STATIC_ROOT_LMS}/studio
 export THEME_DIR="/openedx/themes"
 export NODE_ENV=${NODE_ENV:-production}
 
-apk add nodejs --no-cache
-nodeenv /openedx/nodeenv --node=8.9.3 --prebuilt
+[ -x /usr/bin/node ] || apk add nodejs --no-cache
+[ -x /usr/bin/npm ] || apk add npm --no-cache
+[ -x /usr/bin/rsync ] || apk add rsync --no-cache
+[ -x /usr/bin/make ] || apk add make --no-cache
+[ -x /usr/bin/g++ ] || apk add g++ --no-cache
 
 cd /openedx/edx-platform
-/openedx/nodeenv/bin/npm set progress=false
-/openedx/nodeenv/bin/npm install
-echo PATH=/openedx/edx-platform/node_modules/.bin:/openedx/nodeenv/bin:/openedx/bin:\$\{PATH\}>>~/.profile
-PATH=/openedx/edx-platform/node_modules/.bin:/openedx/nodeenv/bin:/openedx/bin:${PATH}
+npm set progress=false
+npm install
+echo PATH=/openedx/edx-platform/node_modules/.bin:/openedx/bin:\$\{PATH\}>>~/.profile
+PATH=/openedx/edx-platform/node_modules/.bin:/openedx/bin:${PATH}
 
 python -c "
 import sys
