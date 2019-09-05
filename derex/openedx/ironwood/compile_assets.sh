@@ -56,5 +56,5 @@ apk add rsync --no-cache
 rsync -a "${STATIC_ROOT_LMS}"/ "${FINAL_STATIC_ROOT}"
 
 echo Clean up
-apk remove nodejs rsync
+apk del nodejs rsync
 rm -r "${STATIC_ROOT_LMS}"
