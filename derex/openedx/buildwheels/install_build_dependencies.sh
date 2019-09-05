@@ -22,7 +22,7 @@ apk add \
     libxslt-dev \
     linux-headers \
     make \
-    mariadb-dev \
+    mariadb-connector-c-dev \
     pkgconfig \
     python-dev \
     sqlite-dev \

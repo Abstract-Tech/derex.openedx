@@ -17,6 +17,6 @@ apk add \
     lapack \
     libjpeg \
     libxslt \
-    mariadb-client-libs \
+    mariadb-connector-c \
     sqlite \
     xmlsec
