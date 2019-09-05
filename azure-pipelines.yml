@@ -60,9 +60,8 @@ steps:
             echo Image already present. Pulling.
             docker pull \$LATEST_IMAGE
           else
-            derex.builder resolve derex/openedx/ironwood -v DEBUG
+            derex.builder resolve derex/openedx/wheels -v DEBUG
             cp /wheels_cache/* '${PWD}/.cache/wheels_cache/' || true
-            sudo buildah push \$LATEST_IMAGE docker-daemon:\$LATEST_IMAGE
           fi"
     displayName: 'Install derex.builder, build images and push'
     env:
