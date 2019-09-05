@@ -32,6 +32,7 @@ config:
     EMAIL_HOST: smtp
     DEBUG: "True"
     DUMMY_INCR: "5"  # Increment to refresh image generation
+    ENV: /etc/profile
 build_env:
   - TRANSIFEX_USERNAME
   - TRANSIFEX_PASSWORD
