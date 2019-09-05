@@ -77,6 +77,7 @@ steps:
         --rm --privileged --security-opt="seccomp=unconfined" \
         --cap-add=ALL \
         -v /var/lib/containers/:/var/lib/containers/:rw,Z \
+        -v /var/run/docker.sock:/var/run/docker.sock \
         derex/buildah \
         bash -c "
           if (buildah images | grep $(echo $WHEELS_IMAGE|sed s/:/.*/)); then
