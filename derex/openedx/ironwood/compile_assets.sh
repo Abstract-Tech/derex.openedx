@@ -2,12 +2,13 @@
 set -e
 set -x
 
-export STATIC_ROOT_LMS="/openedx/staticfiles"
+export FINAL_STATIC_ROOT="/openedx/staticfiles"
+export STATIC_ROOT_LMS="/tmp/staticfiles"
 export STATIC_ROOT_CMS=${STATIC_ROOT_LMS}/studio
 export THEME_DIR="/openedx/themes"
 export NODE_ENV=${NODE_ENV:-production}
 
-apk add nodejs
+apk add nodejs --no-cache
 nodeenv /openedx/nodeenv --node=8.9.3 --prebuilt
 
 cd /openedx/edx-platform
@@ -16,7 +17,6 @@ cd /openedx/edx-platform
 echo PATH=/openedx/edx-platform/node_modules/.bin:/openedx/nodeenv/bin:/openedx/bin:\$\{PATH\}>>~/.profile
 PATH=/openedx/edx-platform/node_modules/.bin:/openedx/nodeenv/bin:/openedx/bin:${PATH}
 
-cd /openedx/edx-platform
 python -c "
 import sys
 sys.argv[1:] = ['common/static/xmodule']
@@ -49,3 +49,12 @@ for theme in path(THEME_DIR).listdir():
 echo Collecting assets
 python manage.py lms --settings=derex.assets collectstatic --ignore "fixtures" --ignore "karma_*.js" --ignore "spec" --ignore "spec_helpers" --ignore "spec-helpers" --ignore "xmodule_js" --ignore "geoip" --ignore "sass" --noinput
 python manage.py cms --settings=derex.assets collectstatic --ignore "fixtures" --ignore "karma_*.js" --ignore "spec" --ignore "spec_helpers" --ignore "spec-helpers" --ignore "xmodule_js" --ignore "geoip" --ignore "sass" --noinput
+
+echo Rsync assets in place to avoid replacing the same file
+apk add rsync --no-cache
+# Careful to include a trailing slash for the source dir: rsync is sensitive to this
+rsync -a "${STATIC_ROOT_LMS}"/ "${FINAL_STATIC_ROOT}"
+
+echo Clean up
+apk remove nodejs rsync
+rm -r "${STATIC_ROOT_LMS}"

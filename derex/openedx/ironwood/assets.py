@@ -10,7 +10,7 @@ import os
 
 
 COMPREHENSIVE_THEME_DIRS.append("/openedx/themes")  # type: ignore
-STATIC_ROOT_BASE = "/openedx/staticfiles"
+STATIC_ROOT_BASE = os.environ.get("STATIC_ROOT_LMS", "/openedx/staticfiles")
 STATIC_ROOT = {  # type: ignore
     "lms": path(STATIC_ROOT_BASE),
     "cms": path(STATIC_ROOT_BASE) / "studio",
