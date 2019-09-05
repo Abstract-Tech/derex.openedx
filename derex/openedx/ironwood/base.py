@@ -103,4 +103,6 @@ ECOMMERCE_PUBLIC_URL_ROOT = None
 
 SITE_NAME = os.environ.get("SITE_NAME", SITE_NAME)
 
+COMPREHENSIVE_THEME_DIRS.append("/openedx/themes")  # type: ignore
+
 derive_settings(__name__)
