@@ -60,4 +60,5 @@ cat requirements/edx/base.txt
 sed -e s@file:///openedx/edx-platform/@@ -i derex/openedx/ironwood/requirements.txt
 sed -e s@file:///openedx/edx-platform@.@ -i derex/openedx/ironwood/requirements.txt
 sed 's/^-e git/git/' -i derex/openedx/ironwood/requirements.txt
+echo "--find-links http://pypi.abzt.de/alpine-3.10" >> derex/openedx/ironwood/requirements.txt
 grep -E -v '^-e|^git.https://' derex/openedx/ironwood/requirements.txt > derex/openedx/wheels/requirements.txt

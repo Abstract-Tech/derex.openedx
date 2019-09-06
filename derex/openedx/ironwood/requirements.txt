@@ -258,3 +258,4 @@ zendesk==1.1.1
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools==41.2.0        # via dm.xmlsec.binding, fs, lazy, python-levenshtein
+--find-links http://pypi.abzt.de/alpine-3.10
