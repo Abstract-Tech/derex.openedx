@@ -29,8 +29,10 @@ else
 fi
 paver update_assets --settings derex.assets --themes "$THEMES"
 
+echo Symlinking files with the same content
+symlink_duplicates.py "${STATIC_ROOT_LMS}"
+
 echo Rsync assets in place to avoid replacing the same file
-apk add rsync --no-cache
 # Careful to include a trailing slash for the source dir: rsync is sensitive to this
 rsync --delete -a "${STATIC_ROOT_LMS}"/ "${FINAL_STATIC_ROOT}"
 
