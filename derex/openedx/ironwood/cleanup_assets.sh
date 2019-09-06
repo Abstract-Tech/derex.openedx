@@ -19,8 +19,11 @@ rm -r \
     /openedx/staticfiles/cookie-policy-banner/node_modules `# 5.7M` \
     /openedx/staticfiles/edx-bootstrap/node_modules `# 10.9M` \
     /openedx/staticfiles/paragon/node_modules `# 13.3M` \
-    /root/.npm `# 52.5M` \
     /tmp/*
+
+if ! mount | grep /root/.npm; then
+    rm -r /root/.npm # 52.5M
+fi
 
 mkdir /openedx/edx-platform/node_modules
 for saveme in $to_save; do
