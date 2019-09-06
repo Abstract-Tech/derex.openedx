@@ -22,7 +22,7 @@ rm -r \
     /tmp/*
 
 if ! mount | grep /root/.npm; then
-    rm -r /root/.npm # 52.5M
+    rm -rf /root/.npm/* # 52.5M
 fi
 
 mkdir /openedx/edx-platform/node_modules
