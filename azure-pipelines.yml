@@ -71,7 +71,7 @@ steps:
     timeoutInMinutes: 180
 
   - script: |
-      set -ex
+      set -x
       export WHEELS_IMAGE=$(echo "$WHEELS_IMAGE" | sed -e "s/'//g")
       docker run \
         --rm --privileged --security-opt="seccomp=unconfined" \
@@ -83,6 +83,7 @@ steps:
           if (buildah images | grep $(echo $WHEELS_IMAGE|sed s/:/.*/)); then
             if ! curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo $WHEELS_IMAGE |sed -e 's|:|/tags/|'); then
               buildah tag localhost/$WHEELS_IMAGE docker.io/$WHEELS_IMAGE
+              buildah push docker.io/$WHEELS_IMAGE
               buildah push $WHEELS_IMAGE docker-daemon:$WHEELS_IMAGE
               docker push $WHEELS_IMAGE
             fi
