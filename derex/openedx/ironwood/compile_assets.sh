@@ -22,7 +22,12 @@ PATH=/openedx/edx-platform/node_modules/.bin:/openedx/bin:${PATH}
 
 export NO_PREREQ_INSTALL=True
 export NO_PYTHON_UNINSTALL=True
-paver update_assets --settings derex.assets
+if [ -z "$1" ]; then
+    THEMES=open-edx
+else
+    THEMES="$1"
+fi
+paver update_assets --settings derex.assets --themes "$THEMES"
 
 echo Rsync assets in place to avoid replacing the same file
 apk add rsync --no-cache
