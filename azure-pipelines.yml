@@ -78,6 +78,7 @@ steps:
         --cap-add=ALL \
         -v /var/lib/containers/:/var/lib/containers/:rw,Z \
         -v /var/run/docker.sock:/var/run/docker.sock \
+        --mount type=bind,source=$HOME/.docker,target=/root/.docker \
         derex/buildah \
         bash -c "
           if (buildah images | grep $(echo $WHEELS_IMAGE|sed s/:/.*/)); then
@@ -87,7 +88,8 @@ steps:
               buildah push $WHEELS_IMAGE docker-daemon:$WHEELS_IMAGE
               docker push $WHEELS_IMAGE
             fi
-          fi"
+          fi
+          true"
     condition: always()
     displayName: 'Push the openedx-wheels image'
 
