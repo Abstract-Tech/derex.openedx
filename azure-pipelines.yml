@@ -39,6 +39,9 @@ steps:
         --mount type=bind,source=${PWD},target=${PWD} \
         -e TRANSIFEX_USERNAME=$TRANSIFEX_USERNAME \
         -e TRANSIFEX_PASSWORD=$TRANSIFEX_PASSWORD \
+        -e APK_CACHE=/var/cache/apk \
+        -e NPM_CACHE=/var/cache/npm \
+        -e PIP_CACHE=/var/cache/pip-alpine \
         derex/buildah \
         bash -c "
           set -ex
