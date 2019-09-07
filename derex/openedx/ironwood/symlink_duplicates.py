@@ -19,7 +19,7 @@ def prune_dir(directory):
                 continue
             if replacement.bytes() == canonical.bytes():
                 replacement.remove()
-                canonical.symlink(replacement)
+                canonical.basename().symlink(replacement)
     for el in directory.listdir():
         if el.isdir():
             prune_dir(el)
