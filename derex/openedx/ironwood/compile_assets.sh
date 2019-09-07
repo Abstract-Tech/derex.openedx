@@ -34,7 +34,8 @@ symlink_duplicates.py "${STATIC_ROOT_LMS}"
 
 echo Rsync assets in place to avoid replacing the same file
 # Careful to include a trailing slash for the source dir: rsync is sensitive to this
-rsync -a "${STATIC_ROOT_LMS}"/ "${FINAL_STATIC_ROOT}"
+# -a is equivalento to -rlptgoD, but we want to omit ptgo and are not interested in D
+rsync -rl "${STATIC_ROOT_LMS}"/ "${FINAL_STATIC_ROOT}"
 
 # Cleanup is done in cleanup_assets.sh, but we remove /tmp/staticfiles here
 rm -rf /tmp/staticfiles
