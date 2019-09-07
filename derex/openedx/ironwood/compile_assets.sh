@@ -22,12 +22,7 @@ PATH=/openedx/edx-platform/node_modules/.bin:/openedx/bin:${PATH}
 
 export NO_PREREQ_INSTALL=True
 export NO_PYTHON_UNINSTALL=True
-if [ -z "$1" ]; then
-    THEMES=open-edx
-else
-    THEMES="$1"
-fi
-paver update_assets --settings derex.assets --themes "$THEMES"
+paver update_assets --settings derex.assets --themes open-edx "$1"
 
 echo Symlinking files with the same content
 symlink_duplicates.py "${STATIC_ROOT_LMS}"
