@@ -84,6 +84,16 @@ CELERY_MONGODB_BACKEND_SETTINGS = {
 }
 
 CELERY_RESULT_DB_TABLENAMES = {"task": "celery_edx_task", "group": "celery_edx_group"}
+
+# XXX for some reason celery is not able to load the bookmarks app
+# If we specify the plugin app celery is then not able to load the tasks.py file from
+# the bookmarks app
+if "celery" in sys.argv and "worker" in sys.argv:
+    INSTALLED_APPS = [
+        el if "bookmarks" not in el else "openedx.core.djangoapps.bookmarks"
+        for el in INSTALLED_APPS
+    ]
+
 ##################### CMS Settings ###################
 
 LMS_BASE = "http://localhost:4700"
