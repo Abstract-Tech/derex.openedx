@@ -53,7 +53,14 @@ steps:
             echo Image already present. Pulling.
             docker pull \$LATEST_IMAGE
           else
+            derex.builder resolve derex/openedx/nostatic -v DEBUG
+            sudo buildah push \$(derex.builder image derex/openedx/nostatic) docker.io/\$(derex.builder image derex/openedx/nostatic)
+            derex.builder resolve derex/openedx/nostatic-dev -v DEBUG
+            sudo buildah push \$(derex.builder image derex/openedx/nostatic-dev) docker.io/\$(derex.builder image derex/openedx/nostatic-dev)
+            derex.builder resolve derex/openedx/dev -v DEBUG
+            sudo buildah push \$(derex.builder image derex/openedx/dev) docker.io/\$(derex.builder image derex/openedx/dev)
             derex.builder resolve derex/openedx/ironwood -v DEBUG
+            sudo buildah push \$LATEST_IMAGE docker.io/\$LATEST_IMAGE
             sudo buildah push \$LATEST_IMAGE docker-daemon:\$LATEST_IMAGE
           fi"
     displayName: 'Install derex.builder, build images and push'
