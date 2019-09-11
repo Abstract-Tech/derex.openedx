@@ -19,3 +19,7 @@ paver update_assets --settings derex.assets --themes open-edx "$1"
 
 echo Symlinking files with the same content
 symlink_duplicates.py "${STATIC_ROOT_LMS}"
+
+# Avoid dulicates
+npm install -g flatten-packages
+flatten-packages # saves 83 Mb
