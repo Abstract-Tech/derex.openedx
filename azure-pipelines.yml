@@ -24,12 +24,6 @@ steps:
     displayName: 'Pull Buildah image'
 
   - script: |
-      pwd
-      mkdir .cache/wheels_cache
-      docker run --rm --mount type=bind,source=${PWD}/.cache/wheels_cache,target=/dest derex/wheelhouse sh -c "cp -v /wheelhouse/*.whl /dest/; chown $(id -u):$(id -g) /dest/ -R"
-    displayName: 'Put wheels cache in place'
-
-  - script: |
       set -ex
       docker run \
         --rm --privileged --security-opt="seccomp=unconfined" \
@@ -50,10 +44,6 @@ steps:
           pip3 install -r requirements.txt
           pip3 install .
           # Sometimes azure has a colon in ${PWD}. Buildah does not like it.
-          # Also, Buildah only accepts absolute paths. So we temporarily
-          # move wheels_cache to the root.
-          cp -r '${PWD}/.cache/wheels_cache' /
-          export WHEELS_CACHE=/wheels_cache
           export LATEST_IMAGE=\$(derex.builder image derex/openedx/ironwood)
           echo '#''#vso[task.setvariable variable=LATEST_IMAGE]'\$LATEST_IMAGE
           export WHEELS_IMAGE=\$(derex.builder image derex/openedx/wheels)
@@ -64,7 +54,6 @@ steps:
             docker pull \$LATEST_IMAGE
           else
             derex.builder resolve derex/openedx/ironwood -v DEBUG
-            cp /wheels_cache/* '${PWD}/.cache/wheels_cache/' || true
             sudo buildah push \$LATEST_IMAGE docker-daemon:\$LATEST_IMAGE
           fi"
     displayName: 'Install derex.builder, build images and push'
@@ -133,16 +122,3 @@ steps:
       docker push "${IMAGE_TO_PUSH}"
     displayName: 'Also tag the image with the :latest tag and push it (only on master)'
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-
-  - script: |
-      BEFORE=$(docker run --rm derex/wheelhouse:latest du /wheelhouse -s|cut -f1)
-      AFTER=$(du .cache/wheels_cache -s|cut -f1)
-      echo Current wheel house image is ${BEFORE} bytes. Now we have ${AFTER} bytes in the wheel cache.
-      # Only act if we have at least one more Mb worth of wheels
-      if  [ "${AFTER}" -gt "$((${BEFORE}+1000))" ]; then
-        echo "${AFTER} is greater than ${BEFORE} plus one thousand";
-        docker build .cache -t derex/wheelhouse:latest
-        docker push derex/wheelhouse:latest
-      fi;
-    displayName: 'Build and push wheels image if necessary'
-    condition: always()
