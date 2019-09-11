@@ -9,7 +9,7 @@ export NODE_ENV=${NODE_ENV:-production}
 
 cd /openedx/edx-platform
 npm set progress=false
-npm install
+npm install --no-cache
 grep -q ^export\ PATH=/openedx /etc/profile || echo export PATH=/openedx/edx-platform/node_modules/.bin:/openedx/bin:\$\{PATH\}>>/etc/profile
 PATH=/openedx/edx-platform/node_modules/.bin:/openedx/bin:${PATH}
 
@@ -21,5 +21,5 @@ echo Symlinking files with the same content
 symlink_duplicates.py "${STATIC_ROOT_LMS}"
 
 # Avoid dulicates
-npm install -g flatten-packages
+npm install -g flatten-packages --no-cache
 flatten-packages # saves 83 Mb
