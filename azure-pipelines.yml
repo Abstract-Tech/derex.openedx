@@ -30,6 +30,7 @@ steps:
         --cap-add=ALL \
         -v /var/lib/containers/:/var/lib/containers/:rw,Z \
         -v /var/run/docker.sock:/var/run/docker.sock \
+        --mount type=bind,source=${HOME}/.docker,target=/root/.docker \
         --mount type=bind,source=${PWD},target=${PWD} \
         -e TRANSIFEX_USERNAME=$TRANSIFEX_USERNAME \
         -e TRANSIFEX_PASSWORD=$TRANSIFEX_PASSWORD \
