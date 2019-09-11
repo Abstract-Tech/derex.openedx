@@ -90,7 +90,9 @@ CELERY_RESULT_DB_TABLENAMES = {"task": "celery_edx_task", "group": "celery_edx_g
 # the bookmarks app
 if "celery" in sys.argv and "worker" in sys.argv:
     INSTALLED_APPS = [
-        el if "bookmarks" not in el else "openedx.core.djangoapps.bookmarks"
+        el
+        if el == "openedx.core.djangoapps.bookmarks.apps.BookmarksConfig"
+        else "openedx.core.djangoapps.bookmarks"
         for el in INSTALLED_APPS
     ]
 

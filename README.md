@@ -4,6 +4,14 @@ Alpine docker image
 This directory contains scripts to build an openedx image based
 on Alpine Linux. The goal is to have a small image and fast image build.
 
+`derex.builder` is used to build the images. In turn, it uses buildah.
+This setup is more complex than a classic Dockerfile, but allows more flexibility
+resulting in faster image build.
+
+In particular `derex.builder` can use (if instructed via the env vars `PIP_CACHE`,
+`APK_CACHE` and `NPM_CACHE`) caches persistent across builds to avoid recompiling the
+same python wheel over and over again.
+
 Images used in intermediate steps
 ---------------------------------
 
@@ -22,10 +30,13 @@ The last image bundles edx-platform.
 
 These are the image names:
 
-* `openedx-alpine-buildwheels`: build dependencies included
-* `openedx-alpine-base`: just runtime dependencies
-* `openedx-alpine-wheels`: wheels preinstalled for a specific edx-platform version, but no python code from edx-platform
-* `openedx-alpine`: edx-platform code included
+* `openedx-ironwood-buildwheels`: build dependencies included
+* `openedx-ironwood-base`: just runtime dependencies
+* `openedx-ironwood-wheels`: wheels preinstalled for a specific edx-platform version, but no python code from edx-platform
+* `openedx-ironwood-nostatic`: everything to run openedx, except javascript/css tools and staticfiles
+* `openedx-ironwood-nostatic-dev`: like nostatic, but includes also all dev tools to generate static files
+* `openedx-ironwood-dev`: all edx code and static assets, with javascript dev tools installed
+* `openedx-ironwood`: all edx code and static assets, with no dev tools
 
 
 ### Build with translations

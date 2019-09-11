@@ -1,6 +1,7 @@
+from whitenoise import WhiteNoise
+
 import os
 
-from whitenoise import WhiteNoise
 
 service = os.environ["SERVICE_VARIANT"]
 assert service in ("lms", "cms")

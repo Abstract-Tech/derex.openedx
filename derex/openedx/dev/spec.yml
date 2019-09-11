@@ -1,0 +1,14 @@
+builder:
+  class: derex.builder.builders.BuildahBuilder
+
+source:
+  type: derex-relative
+  path: nostatic-dev
+
+copy:
+  symlink_duplicates.py: /openedx/bin
+
+scripts:
+  - compile_assets.sh
+
+dest: derex/openedx-nostatic-dev

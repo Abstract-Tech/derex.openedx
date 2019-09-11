@@ -3,43 +3,12 @@ builder:
 
 source:
   type: derex-relative
-  path: wheels
+  path: dev
 
-copy:
-  requirements.txt: /tmp
-  assets.py: /tmp
-  entrypoint.sh: /entrypoint.sh
-  wsgi.py: /tmp/
-  base.py: /tmp/
-  restore_dump.py: /tmp/
-  fixtures: /tmp/fixtures
-  compile_assets.sh: /openedx/bin/
-  cleanup_assets.sh: /openedx/bin/
-  translations.sh: /openedx/bin/
-  symlink_duplicates.py: /openedx/bin/
-
-config:
-  #cmd: gunicorn --name ${SERVICE_VARIANT} --bind=0.0.0.0:8000 --max-requests=1000 ${SERVICE_VARIANT}.wsgi:application
-  cmd: sh -c "DEBUG=True ./manage.py ${SERVICE_VARIANT} runserver 0.0.0.0:8000"
-  entrypoint: '["/entrypoint.sh"]'
-  workingdir: /openedx/edx-platform
-  env:
-    CONFIG_ROOT: /openedx/config
-    PATH: /openedx/bin:${PATH}
-    SERVICE_VARIANT: lms
-    SETTINGS: derex.base
-    MYSQL_PASSWORD: secret
-    EMAIL_HOST: smtp
-    DEBUG: "True"
-    DUMMY_INCR: "5"  # Increment to refresh image generation
-    ENV: /etc/profile
-build_env:
-  - TRANSIFEX_USERNAME
-  - TRANSIFEX_PASSWORD
-
+# This image is temporary.
+# It should be generated from openedx-ironwood-nostatic and openedx-ironwood-dev
+# but we'll do it in a second step
 scripts:
-  - install_openedx.sh
-  - install_custom.sh
-  - prepare_assets.sh
+  - noop.sh
 
 dest: derex/openedx-ironwood
