@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v2.2.1
+  rev: v2.3.0
   hooks:
   - id: trailing-whitespace
   - id: debug-statements
@@ -9,17 +9,17 @@ repos:
   - id: check-yaml
 
 -   repo: https://github.com/ambv/black
-    rev: stable
+    rev: 19.3b0
     hooks:
     - id: black
-      language_version: python3.6
+      language_version: python3.7
 
 -   repo: https://github.com/pre-commit/mirrors-isort
-    rev: 'v4.3.18'
+    rev: v4.3.21
     hooks:
     -   id: isort
 
 -   repo: git://github.com/detailyang/pre-commit-shell
-    sha: 1.0.4
+    rev: 1.0.5
     hooks:
     - id: shell-lint
