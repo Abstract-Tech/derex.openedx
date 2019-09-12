@@ -7,8 +7,11 @@ source:
 
 copy:
   symlink_duplicates.py: /openedx/bin
+  base.py: /openedx/edx-platform/lms/envs/derex/
+
 
 scripts:
   - compile_assets.sh
+  - prepare_conf_files.sh
 
 dest: derex/openedx-nostatic-dev
