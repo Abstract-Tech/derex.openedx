@@ -20,5 +20,9 @@ paver update_assets --settings derex.assets --themes open-edx "$1"
 echo Symlinking files with the same content
 symlink_duplicates.py "${STATIC_ROOT_LMS}"
 
-# Avoid dulicates
-# TODO: use rmlint
+# Avoid dulicates: rmlint finds files with the same conents, keeps the oldest
+# and symlinks the other copies
+rmlint -g /openedx
+# Do not remove empty files/directories
+sed "/# empty /d" -i rmlint.sh
+./rmlint.sh -d > /dev/null
