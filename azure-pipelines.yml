@@ -65,8 +65,7 @@ steps:
             buildah pull \$IMAGE
           else
             derex.builder resolve \$IMAGE_DIR -v DEBUG
-            buildah push \$IMAGE docker-daemon:\$IMAGE
-            docker push \$IMAGE
+            buildah push \$IMAGE docker://docker.io/\$IMAGE
           fi"
     displayName: 'Build wheels image'
 
@@ -81,8 +80,7 @@ steps:
             buildah pull \$IMAGE
           else
             derex.builder resolve \$IMAGE_DIR -v DEBUG
-            buildah push \$IMAGE docker-daemon:\$IMAGE
-            docker push \$IMAGE
+            buildah push \$IMAGE docker://docker.io/\$IMAGE
           fi"
     displayName: 'Build nostatic image'
 
@@ -97,8 +95,7 @@ steps:
             buildah pull \$IMAGE
           else
             derex.builder resolve \$IMAGE_DIR -v DEBUG
-            buildah push \$IMAGE docker-daemon:\$IMAGE
-            docker push \$IMAGE
+            buildah push \$IMAGE docker://docker.io/\$IMAGE
           fi"
     displayName: 'Build nostatic-dev image'
 
@@ -113,8 +110,7 @@ steps:
             buildah pull \$IMAGE
           else
             derex.builder resolve \$IMAGE_DIR -v DEBUG
-            buildah push \$IMAGE docker-daemon:\$IMAGE
-            docker push \$IMAGE
+            buildah push \$IMAGE docker://docker.io/\$IMAGE
           fi"
     displayName: 'Build dev image'
 
