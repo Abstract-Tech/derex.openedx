@@ -6,7 +6,6 @@ source:
   path: nostatic-dev
 
 copy:
-  symlink_duplicates.py: /openedx/bin
   base.py: /openedx/edx-platform/lms/envs/derex/
 
 
