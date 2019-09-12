@@ -21,5 +21,4 @@ echo Symlinking files with the same content
 symlink_duplicates.py "${STATIC_ROOT_LMS}"
 
 # Avoid dulicates
-npm install -g flatten-packages --no-cache
-flatten-packages # saves 83 Mb
+# TODO: use rmlint
