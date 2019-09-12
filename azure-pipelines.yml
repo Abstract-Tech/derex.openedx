@@ -58,41 +58,82 @@ steps:
       docker exec buildah \
         bash -c "
           set -ex; cd ${PWD}
-          export LATEST_IMAGE=\$(derex.builder image derex/openedx/ironwood)
-          echo '#''#vso[task.setvariable variable=LATEST_IMAGE]'\$LATEST_IMAGE
-          export WHEELS_IMAGE=\$(derex.builder image derex/openedx/wheels)
-          echo '#''#vso[task.setvariable variable=WHEELS_IMAGE]'\$WHEELS_IMAGE
-          echo Made variables LATEST_IMAGE and WHEELS_IMAGE available for the following tasks. Values are \$LATEST_IMAGE and \$WHEELS_IMAGE
-          if curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo \$LATEST_IMAGE |sed -e 's|:|/tags/|'); then
+          IMAGE_DIR=derex/openedx/wheels
+          IMAGE=\$(derex.builder image \$IMAGE_DIR)
+          if curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo \$IMAGE |sed -e 's|:|/tags/|'); then
             echo Image already present. Pulling.
-            docker pull \$LATEST_IMAGE
+            buildah pull \$IMAGE
           else
-            derex.builder resolve derex/openedx/nostatic -v DEBUG
-            sudo buildah push \$(derex.builder image derex/openedx/nostatic) docker.io/\$(derex.builder image derex/openedx/nostatic)
-            derex.builder resolve derex/openedx/nostatic-dev -v DEBUG
-            sudo buildah push \$(derex.builder image derex/openedx/nostatic-dev) docker.io/\$(derex.builder image derex/openedx/nostatic-dev)
-            derex.builder resolve derex/openedx/dev -v DEBUG
-            sudo buildah push \$(derex.builder image derex/openedx/dev) docker.io/\$(derex.builder image derex/openedx/dev)
-            derex.builder resolve derex/openedx/ironwood -v DEBUG
-            sudo buildah push \$LATEST_IMAGE docker.io/\$LATEST_IMAGE
-            sudo buildah push \$LATEST_IMAGE docker-daemon:\$LATEST_IMAGE
+            derex.builder resolve \$IMAGE_DIR -v DEBUG
+            buildah tag \$IMAGE docker.io/\$IMAGE
+            buildah push docker.io/\$IMAGE
           fi"
-    displayName: 'Build images'
+    displayName: 'Build wheels image'
 
   - script: |
-      set -x
-      export WHEELS_IMAGE=$(echo "$WHEELS_IMAGE" | sed -e "s/'//g")
-      docker exec buildah
+      docker exec buildah \
         bash -c "
-          if (buildah images | grep $(echo $WHEELS_IMAGE|sed s/:/.*/)); then
-            if ! curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo $WHEELS_IMAGE |sed -e 's|:|/tags/|'); then
-              buildah tag localhost/$WHEELS_IMAGE docker.io/$WHEELS_IMAGE
-              buildah push docker.io/$WHEELS_IMAGE
-            fi
-          fi
-          true"
-    condition: always()
-    displayName: 'Push the openedx-wheels image'
+          set -ex; cd ${PWD}
+          IMAGE_DIR=derex/openedx/nostatic
+          IMAGE=\$(derex.builder image \$IMAGE_DIR)
+          if curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo \$IMAGE |sed -e 's|:|/tags/|'); then
+            echo Image already present. Pulling.
+            buildah pull \$IMAGE
+          else
+            derex.builder resolve \$IMAGE_DIR -v DEBUG
+            buildah tag \$IMAGE docker.io/\$IMAGE
+            buildah push docker.io/\$IMAGE
+          fi"
+    displayName: 'Build nostatic image'
+
+  - script: |
+      docker exec buildah \
+        bash -c "
+          set -ex; cd ${PWD}
+          IMAGE_DIR=derex/openedx/nostatic-dev
+          IMAGE=\$(derex.builder image \$IMAGE_DIR)
+          if curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo \$IMAGE |sed -e 's|:|/tags/|'); then
+            echo Image already present. Pulling.
+            buildah pull \$IMAGE
+          else
+            derex.builder resolve \$IMAGE_DIR -v DEBUG
+            buildah tag \$IMAGE docker.io/\$IMAGE
+            buildah push docker.io/\$IMAGE
+          fi"
+    displayName: 'Build nostatic-dev image'
+
+  - script: |
+      docker exec buildah \
+        bash -c "
+          set -ex; cd ${PWD}
+          IMAGE_DIR=derex/openedx/dev
+          IMAGE=\$(derex.builder image \$IMAGE_DIR)
+          if curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo \$IMAGE |sed -e 's|:|/tags/|'); then
+            echo Image already present. Pulling.
+            buildah pull \$IMAGE
+          else
+            derex.builder resolve \$IMAGE_DIR -v DEBUG
+            buildah tag \$IMAGE docker.io/\$IMAGE
+            buildah push docker.io/\$IMAGE
+          fi"
+    displayName: 'Build dev image'
+
+  - script: |
+      docker exec buildah \
+        bash -c "
+          set -ex; cd ${PWD}
+          IMAGE_DIR=derex/openedx/ironwood
+          IMAGE=\$(derex.builder image \$IMAGE_DIR)
+          echo '#''#vso[task.setvariable variable=LATEST_IMAGE]'\$IMAGE
+          echo Made variable LATEST_IMAGE available for the following tasks. Value is \$IMAGE
+          if curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo \$IMAGE |sed -e 's|:|/tags/|'); then
+            echo Image already present. Pulling.
+            docker pull \$IMAGE
+          else
+            derex.builder resolve \$IMAGE_DIR -v DEBUG
+            # DO not push the image yet: the next step is going to add an empty db dump
+          fi"
+    displayName: 'Build ironwood image'
 
   - script: |
       set -ex
