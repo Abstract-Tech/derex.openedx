@@ -127,6 +127,7 @@ steps:
             docker pull \$IMAGE
           else
             derex.builder resolve \$IMAGE_DIR -v DEBUG
+            buildah push \$IMAGE docker-daemon:\$IMAGE
             # DO not push the image yet: the next step is going to add an empty db dump
           fi"
     displayName: 'Build ironwood image'
