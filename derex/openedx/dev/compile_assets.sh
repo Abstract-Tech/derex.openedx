@@ -22,7 +22,7 @@ symlink_duplicates.py "${STATIC_ROOT_LMS}"
 
 # Avoid dulicates: rmlint finds files with the same conents, keeps the oldest
 # and symlinks the other copies
-rmlint -g /openedx
+rmlint -g -D -pp /openedx
 # Do not remove empty files/directories
 sed "/# empty /d" -i rmlint.sh
 ./rmlint.sh -d > /dev/null
