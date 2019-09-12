@@ -155,7 +155,6 @@ steps:
       docker run --add-host=mysql:$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+') --rm ${LATEST_IMAGE} restore_dump.py
       # Make sure the fixtures ran and created test users
       mysql -h localhost --protocol tcp -u root -psecret derex -e "SELECT * from auth_user WHERE username='superuser'"|grep superuser
-      docker push ${LATEST_IMAGE}
     displayName: 'Test the users fixture'
 
   - script: |
