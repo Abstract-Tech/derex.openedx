@@ -1,7 +1,7 @@
 from openedx.core.djangoapps.plugins import constants as plugin_constants
 from openedx.core.djangoapps.plugins import plugin_settings
 from openedx.core.lib.derived import derive_settings
-from path import Path as path
+from path import Path
 from xmodule.modulestore.modulestore_settings import update_module_store_settings
 
 import os
