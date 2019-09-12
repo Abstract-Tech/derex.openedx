@@ -14,4 +14,4 @@ scripts:
   - compile_assets.sh
   - prepare_conf_files.sh
 
-dest: derex/openedx-nostatic-dev
+dest: derex/openedx-dev
