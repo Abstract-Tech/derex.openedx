@@ -12,6 +12,6 @@ copy:
 
 scripts:
   - compile_assets.sh
-  - prepare_conf_files.sh
+  - install_dev_goodies.sh
 
 dest: derex/openedx-dev
