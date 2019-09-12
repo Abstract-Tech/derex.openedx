@@ -1,3 +1,5 @@
+from openedx.core.djangoapps.plugins import constants as plugin_constants
+from openedx.core.djangoapps.plugins import plugin_settings
 from openedx.core.lib.derived import derive_settings
 from path import Path as path
 from xmodule.modulestore.modulestore_settings import update_module_store_settings
@@ -123,6 +125,7 @@ VIDEO_IMAGE_SETTINGS["STORAGE_KWARGS"]["location"] = MEDIA_ROOT  # type: ignore 
 PROFILE_IMAGE_BACKEND["options"]["location"] = MEDIA_ROOT  # type: ignore  # noqa
 COMPREHENSIVE_THEME_DIRS.append(Path("/openedx/themes"))  # type: ignore  # noqa
 # STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+PROJECT_TYPE = getattr(plugin_constants.ProjectType, SERVICE_VARIANT.upper())
 
 plugin_settings.add_plugins(
     __name__, PROJECT_TYPE, plugin_constants.SettingsType.PRODUCTION
