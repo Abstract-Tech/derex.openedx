@@ -25,4 +25,4 @@ symlink_duplicates.py "${STATIC_ROOT_LMS}"
 rmlint -g -D -pp /openedx
 # Do not remove empty files/directories
 sed "/# empty /d" -i rmlint.sh
-./rmlint.sh -d > /dev/null
+#./rmlint.sh -d > /dev/null
