@@ -55,11 +55,12 @@ pip-compile -v --no-emit-trusted-host --no-index --upgrade -o requirements/edx/p
 make upgrade >&2
 
 cat requirements/edx/base.txt
-" > derex/openedx/ironwood/requirements.txt
+" > derex/openedx/nostatic/requirements_all.txt
 
-sed -e s@file:///openedx/edx-platform/@@ -i derex/openedx/ironwood/requirements.txt
-sed -e s@file:///openedx/edx-platform@.@ -i derex/openedx/ironwood/requirements.txt
-sed 's/^-e git/git/' -i derex/openedx/ironwood/requirements.txt
-echo "--find-links http://pypi.abzt.de/alpine-3.10" >> derex/openedx/ironwood/requirements.txt
-echo "--trusted-host pypi.abzt.de" >> derex/openedx/ironwood/requirements.txt
-grep -E -v '^-e|^git.https://' derex/openedx/ironwood/requirements.txt > derex/openedx/wheels/requirements.txt
+sed -e s@file:///openedx/edx-platform/@@ -i derex/openedx/nostatic/requirements_all.txt
+sed -e s@file:///openedx/edx-platform@.@ -i derex/openedx/nostatic/requirements_all.txt
+sed 's/^-e git/git/' -i derex/openedx/nostatic/requirements_all.txt
+echo "--find-links http://pypi.abzt.de/alpine-3.10" >> derex/openedx/nostatic/requirements_all.txt
+echo "--trusted-host pypi.abzt.de" >> derex/openedx/nostatic/requirements_all.txt
+grep -E -v '^-e|^git.https://' derex/openedx/nostatic/requirements_all.txt > derex/openedx/wheels/requirements.txt
+grep -E '^-e|^git.https://' derex/openedx/nostatic/requirements_all.txt > derex/openedx/nostatic/requirements.txt
