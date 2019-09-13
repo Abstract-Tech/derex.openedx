@@ -4,9 +4,39 @@ set -ex
 export STATIC_ROOT_LMS="/openedx/staticfiles"
 export STATIC_ROOT_CMS=${STATIC_ROOT_LMS}/studio
 export THEME_DIR="/openedx/themes"
-export NODE_ENV=${NODE_ENV:-production}
+export NODE_ENV=production
 
-export NO_PREREQ_INSTALL=True
-export NO_PYTHON_UNINSTALL=True
 cd /openedx/edx-platform
-paver update_assets --settings derex.assets --themes open-edx "$1"
+
+python -c "
+import sys
+sys.argv[1:] = ['common/static/xmodule']
+from xmodule import static_content as xmodule_static_content
+print('Compiling xmodules')
+xmodule_static_content.main()
+from pavelib import assets
+print('Processing npm assets')
+assets.process_npm_assets()
+"
+webpack --config=webpack.prod.config.js
+python -c "
+from pavelib import assets
+assets._compile_sass('lms', None, False, False, [])
+assets._compile_sass('cms', None, False, False, [])
+"
+python -c "
+from path import Path as path
+from pavelib import assets
+import os
+
+THEME_DIR = os.environ.get('THEME_DIR')
+for theme in path(THEME_DIR).listdir():
+    if theme.basename().startswith('.'):
+        continue
+    for system in ('lms', 'cms'):
+        print('Compiling theme {} ({})'.format(theme.basename(), system))
+        assets._compile_sass('lms', theme, False, False, [])
+"
+echo Collecting assets
+SERVICE_VARIANT=lms python manage.py lms --settings=derex.assets collectstatic --ignore "fixtures" --ignore "karma_*.js" --ignore "spec" --ignore "spec_helpers" --ignore "spec-helpers" --ignore "xmodule_js" --ignore "geoip" --ignore "sass" --noinput
+SERVICE_VARIANT=cms python manage.py cms --settings=derex.assets collectstatic --ignore "fixtures" --ignore "karma_*.js" --ignore "spec" --ignore "spec_helpers" --ignore "spec-helpers" --ignore "xmodule_js" --ignore "geoip" --ignore "sass" --noinput
