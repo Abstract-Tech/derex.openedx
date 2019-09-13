@@ -176,7 +176,7 @@ steps:
       docker push "${IMAGE_TO_PUSH}"
       DEV_IMAGE=$(docker exec buildah sh -c "cd ${PWD} && derex.builder image derex/openedx/dev")
       export DEV_IMAGE_TO_PUSH="$(echo ${DEV_IMAGE}|sed -e 's/:.*/:latest/')"
-      docker tag "${DEV_IMAGE}" "${DEV_IMAGE_TO_PUSH}"
-      docker push "${DEV_IMAGE_TO_PUSH}"
-    displayName: 'Also tag the image with the :latest tag and push it (only on master)'
+      docker exec buildah sh -c "buildah push $DEV_IMAGE docker://docker.io/$DEV_IMAGE_TO_PUSH"
+    displayName: 'Also tag the `-ironwood` and `-dev` images with the :latest tag and push them'
+    # Only run on master
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
