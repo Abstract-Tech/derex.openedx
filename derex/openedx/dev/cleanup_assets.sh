@@ -10,7 +10,7 @@ du /openedx -sch
 rmlint -g -D /openedx
 # Do not remove empty files/directories
 sed "/# empty /d" -i rmlint.sh
-./rmlint.sh -d > /dev/null
+./rmlint.sh -d
 
 echo After:
 du /openedx -sch
