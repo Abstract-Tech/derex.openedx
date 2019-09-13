@@ -65,9 +65,9 @@ steps:
             buildah pull \$IMAGE
           else
             derex.builder resolve \$IMAGE_DIR -v DEBUG
-            buildah push \$IMAGE docker-daemon:\$IMAGE
+            buildah push \$IMAGE docker://docker.io:\$IMAGE
           fi"
-          docker push $(docker exec buildah sh -c "cd ${PWD} && derex.builder image derex/openedx/wheels") || true
+
     displayName: 'Build wheels image and push it'
 
   - script: |
@@ -81,9 +81,9 @@ steps:
             buildah pull \$IMAGE
           else
             derex.builder resolve \$IMAGE_DIR -v DEBUG
-            buildah push \$IMAGE docker-daemon:\$IMAGE
+            buildah push \$IMAGE docker://docker.io:\$IMAGE
           fi"
-          docker push $(docker exec buildah sh -c "cd ${PWD} && derex.builder image derex/openedx/nostatic") || true
+
     displayName: 'Build nostatic image and push it'
 
   - script: |
@@ -97,9 +97,9 @@ steps:
             buildah pull \$IMAGE
           else
             derex.builder resolve \$IMAGE_DIR -v DEBUG
-            buildah push \$IMAGE docker-daemon:\$IMAGE
+            buildah push \$IMAGE docker://docker.io:\$IMAGE
           fi"
-          docker push $(docker exec buildah sh -c "cd ${PWD} && derex.builder image derex/openedx/nostatic-dev") || true
+
     displayName: 'Build nostatic-dev image and push it'
 
   - script: |
@@ -113,9 +113,9 @@ steps:
             buildah pull \$IMAGE
           else
             derex.builder resolve \$IMAGE_DIR -v DEBUG
-            buildah push \$IMAGE docker-daemon:\$IMAGE
+            buildah push \$IMAGE docker://docker.io:\$IMAGE
           fi"
-          docker push $(docker exec buildah sh -c "cd ${PWD} && derex.builder image derex/openedx/dev") || true
+
     displayName: 'Build dev image and push it'
 
   - script: |
