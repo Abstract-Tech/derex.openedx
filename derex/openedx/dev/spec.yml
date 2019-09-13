@@ -10,7 +10,8 @@ copy:
   derex-profile.sh: /etc/profile.d/
 
 scripts:
-  - compile_assets.sh
   - install_dev_goodies.sh
+  - compile_assets.sh
+  - cleanup_assets.sh
 
 dest: derex/openedx-dev
