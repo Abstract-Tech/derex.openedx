@@ -7,7 +7,7 @@ source:
 
 copy:
   base.py: /openedx/edx-platform/lms/envs/derex/
-
+  derex-profile.sh: /etc/profile.d/
 
 scripts:
   - compile_assets.sh
