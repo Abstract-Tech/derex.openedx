@@ -7,6 +7,7 @@ export THEME_DIR="/openedx/themes"
 export NODE_ENV=production
 
 cd /openedx/edx-platform
+export PATH=/openedx/edx-platform/node_modules/.bin:/openedx/bin:${PATH}
 
 python -c "
 import sys
