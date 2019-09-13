@@ -163,6 +163,7 @@ steps:
     displayName: 'Test the users fixture'
 
   - script: |
+      set -ex
       export LATEST_IMAGE=$(echo "$LATEST_IMAGE" | sed -e "s/'//g")
       docker push ${LATEST_IMAGE}
     displayName: 'Push the image'
@@ -172,5 +173,8 @@ steps:
       export IMAGE_TO_PUSH="$(echo ${LATEST_IMAGE}|sed -e 's/:.*/:latest/')"
       docker tag "${LATEST_IMAGE}" "${IMAGE_TO_PUSH}"
       docker push "${IMAGE_TO_PUSH}"
+      DEV_IMAGE=$(docker exec buildah sh -c "cd ${PWD} && derex.builder image derex/openedx/dev")
+      export DEV_IMAGE_TO_PUSH="$(echo ${DEV_IMAGE}|sed -e 's/:.*/:latest/')"
+      docker push "${DEV_IMAGE_TO_PUSH}"
     displayName: 'Also tag the image with the :latest tag and push it (only on master)'
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
