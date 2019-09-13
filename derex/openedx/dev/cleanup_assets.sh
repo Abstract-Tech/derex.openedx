@@ -5,10 +5,6 @@ set -x
 echo Freeing up some space. Before:
 du /openedx -sch
 
-if ! mount | grep /root/.npm; then
-    rm -rf /root/.npm/* # 52.5M
-fi
-
 # Avoid dulicates: rmlint finds files with the same conents, keeps the oldest
 # and symlinks the other copies
 rmlint -g -D /openedx
