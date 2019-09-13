@@ -3,9 +3,7 @@ set -e
 set -x
 
 echo Freeing up some space. Before:
-du / -sch
-
-apk del coreutils nodejs make g++ npm --no-cache
+du /openedx -sch
 
 if ! mount | grep /root/.npm; then
     rm -rf /root/.npm/* # 52.5M
@@ -19,4 +17,4 @@ sed "/# empty /d" -i rmlint.sh
 ./rmlint.sh -d > /dev/null
 
 echo After:
-du / -sch
+du /openedx -sch
