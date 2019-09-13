@@ -10,8 +10,6 @@ export NODE_ENV=${NODE_ENV:-production}
 cd /openedx/edx-platform
 npm set progress=false
 npm install --no-cache
-grep -q ^export\ PATH=/openedx /etc/profile || echo export PATH=/openedx/edx-platform/node_modules/.bin:/openedx/bin:\$\{PATH\}>>/etc/profile
-PATH=/openedx/edx-platform/node_modules/.bin:/openedx/bin:${PATH}
 
 export NO_PREREQ_INSTALL=True
 export NO_PYTHON_UNINSTALL=True
