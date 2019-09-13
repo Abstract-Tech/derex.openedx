@@ -1,0 +1,41 @@
+builder:
+  class: derex.builder.builders.BuildahBuilder
+
+source:
+  type: derex-relative
+  path: wheels
+
+copy:
+  requirements.txt: /tmp
+  assets.py: /tmp
+  entrypoint.sh: /entrypoint.sh
+  wsgi.py: /tmp/
+  restore_dump.py: /tmp/
+  fixtures: /tmp/fixtures
+  translations.sh: /openedx/bin/
+  rmlint: /usr/local/bin/
+
+config:
+  #cmd: gunicorn --name ${SERVICE_VARIANT} --bind=0.0.0.0:8000 --max-requests=1000 ${SERVICE_VARIANT}.wsgi:application
+  cmd: sh -c "DEBUG=True ./manage.py ${SERVICE_VARIANT} runserver 0.0.0.0:8000"
+  entrypoint: '["/entrypoint.sh"]'
+  workingdir: /openedx/edx-platform
+  env:
+    CONFIG_ROOT: /openedx/config
+    PATH: /openedx/bin:${PATH}
+    SERVICE_VARIANT: lms
+    SETTINGS: derex.base
+    MYSQL_PASSWORD: secret
+    EMAIL_HOST: smtp
+    DEBUG: "True"
+    DUMMY_INCR: "5"  # Increment to refresh image generation
+    ENV: /etc/profile
+build_env:
+  - TRANSIFEX_USERNAME
+  - TRANSIFEX_PASSWORD
+
+scripts:
+  - install_openedx.sh
+  - install_custom.sh
+
+dest: derex/openedx-nostatic

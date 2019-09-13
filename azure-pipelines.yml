@@ -24,18 +24,13 @@ steps:
     displayName: 'Pull Buildah image'
 
   - script: |
-      pwd
-      mkdir .cache/wheels_cache
-      docker run --rm --mount type=bind,source=${PWD}/.cache/wheels_cache,target=/dest derex/wheelhouse sh -c "cp -v /wheelhouse/*.whl /dest/; chown $(id -u):$(id -g) /dest/ -R"
-    displayName: 'Put wheels cache in place'
-
-  - script: |
-      set -ex
-      docker run \
-        --rm --privileged --security-opt="seccomp=unconfined" \
+      docker run -d \
+        --name buildah \
+        --privileged --security-opt="seccomp=unconfined" \
         --cap-add=ALL \
         -v /var/lib/containers/:/var/lib/containers/:rw,Z \
         -v /var/run/docker.sock:/var/run/docker.sock \
+        --mount type=bind,source=${HOME}/.docker,target=/root/.docker \
         --mount type=bind,source=${PWD},target=${PWD} \
         -e TRANSIFEX_USERNAME=$TRANSIFEX_USERNAME \
         -e TRANSIFEX_PASSWORD=$TRANSIFEX_PASSWORD \
@@ -43,56 +38,103 @@ steps:
         -e NPM_CACHE=/var/cache/npm \
         -e PIP_CACHE=/var/cache/pip-alpine \
         derex/buildah \
+        sleep 86400
+    displayName: 'Start a docker image with buildah'
+    env:
+      TRANSIFEX_USERNAME: $(TRANSIFEX_USERNAME)
+      TRANSIFEX_PASSWORD: $(TRANSIFEX_PASSWORD)
+
+  - script: |
+      docker exec buildah \
         bash -c "
           set -ex
           cd ${PWD}
           python3 -m pip install --upgrade pip
           pip3 install -r requirements.txt
-          pip3 install .
-          # Sometimes azure has a colon in ${PWD}. Buildah does not like it.
-          # Also, Buildah only accepts absolute paths. So we temporarily
-          # move wheels_cache to the root.
-          cp -r '${PWD}/.cache/wheels_cache' /
-          export WHEELS_CACHE=/wheels_cache
-          export LATEST_IMAGE=\$(derex.builder image derex/openedx/ironwood)
-          echo '#''#vso[task.setvariable variable=LATEST_IMAGE]'\$LATEST_IMAGE
-          export WHEELS_IMAGE=\$(derex.builder image derex/openedx/wheels)
-          echo '#''#vso[task.setvariable variable=WHEELS_IMAGE]'\$WHEELS_IMAGE
-          echo Made variables LATEST_IMAGE and WHEELS_IMAGE available for the following tasks. Values are \$LATEST_IMAGE and \$WHEELS_IMAGE
-          if curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo \$LATEST_IMAGE |sed -e 's|:|/tags/|'); then
-            echo Image already present. Pulling.
-            docker pull \$LATEST_IMAGE
-          else
-            derex.builder resolve derex/openedx/ironwood -v DEBUG
-            cp /wheels_cache/* '${PWD}/.cache/wheels_cache/' || true
-            sudo buildah push \$LATEST_IMAGE docker-daemon:\$LATEST_IMAGE
-          fi"
-    displayName: 'Install derex.builder, build images and push'
-    env:
-      TRANSIFEX_USERNAME: $(TRANSIFEX_USERNAME)
-      TRANSIFEX_PASSWORD: $(TRANSIFEX_PASSWORD)
-    timeoutInMinutes: 180
+          pip3 install ."
+    displayName: 'Install derex.runner'
 
   - script: |
-      set -x
-      export WHEELS_IMAGE=$(echo "$WHEELS_IMAGE" | sed -e "s/'//g")
-      docker run \
-        --rm --privileged --security-opt="seccomp=unconfined" \
-        --cap-add=ALL \
-        -v /var/lib/containers/:/var/lib/containers/:rw,Z \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        --mount type=bind,source=$HOME/.docker,target=/root/.docker \
-        derex/buildah \
+      docker exec buildah \
         bash -c "
-          if (buildah images | grep $(echo $WHEELS_IMAGE|sed s/:/.*/)); then
-            if ! curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo $WHEELS_IMAGE |sed -e 's|:|/tags/|'); then
-              buildah tag localhost/$WHEELS_IMAGE docker.io/$WHEELS_IMAGE
-              buildah push docker.io/$WHEELS_IMAGE
-            fi
-          fi
-          true"
-    condition: always()
-    displayName: 'Push the openedx-wheels image'
+          set -ex; cd ${PWD}
+          IMAGE_DIR=derex/openedx/wheels
+          IMAGE=\$(derex.builder image \$IMAGE_DIR)
+          if curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo \$IMAGE |sed -e 's|:|/tags/|'); then
+            echo Image already present. Pulling.
+            buildah pull \$IMAGE
+          else
+            derex.builder resolve \$IMAGE_DIR -v DEBUG
+            buildah push \$IMAGE docker-daemon:\$IMAGE
+          fi"
+          docker push $(docker exec buildah derex.builder image derex/openedx/wheels) || true
+    displayName: 'Build wheels image and push it'
+
+  - script: |
+      docker exec buildah \
+        bash -c "
+          set -ex; cd ${PWD}
+          IMAGE_DIR=derex/openedx/nostatic
+          IMAGE=\$(derex.builder image \$IMAGE_DIR)
+          if curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo \$IMAGE |sed -e 's|:|/tags/|'); then
+            echo Image already present. Pulling.
+            buildah pull \$IMAGE
+          else
+            derex.builder resolve \$IMAGE_DIR -v DEBUG
+            buildah push \$IMAGE docker-daemon:\$IMAGE
+          fi"
+          docker push $(docker exec buildah derex.builder image derex/openedx/nostatic) || true
+    displayName: 'Build nostatic image and push it'
+
+  - script: |
+      docker exec buildah \
+        bash -c "
+          set -ex; cd ${PWD}
+          IMAGE_DIR=derex/openedx/nostatic-dev
+          IMAGE=\$(derex.builder image \$IMAGE_DIR)
+          if curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo \$IMAGE |sed -e 's|:|/tags/|'); then
+            echo Image already present. Pulling.
+            buildah pull \$IMAGE
+          else
+            derex.builder resolve \$IMAGE_DIR -v DEBUG
+            buildah push \$IMAGE docker-daemon:\$IMAGE
+          fi"
+          docker push $(docker exec buildah derex.builder image derex/openedx/nostatic-dev) || true
+    displayName: 'Build nostatic-dev image and push it'
+
+  - script: |
+      docker exec buildah \
+        bash -c "
+          set -ex; cd ${PWD}
+          IMAGE_DIR=derex/openedx/dev
+          IMAGE=\$(derex.builder image \$IMAGE_DIR)
+          if curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo \$IMAGE |sed -e 's|:|/tags/|'); then
+            echo Image already present. Pulling.
+            buildah pull \$IMAGE
+          else
+            derex.builder resolve \$IMAGE_DIR -v DEBUG
+            buildah push \$IMAGE docker-daemon:\$IMAGE
+          fi"
+          docker push $(docker exec buildah derex.builder image derex/openedx/dev) || true
+    displayName: 'Build dev image and push it'
+
+  - script: |
+      docker exec buildah \
+        bash -c "
+          set -ex; cd ${PWD}
+          IMAGE_DIR=derex/openedx/ironwood
+          IMAGE=\$(derex.builder image \$IMAGE_DIR)
+          echo '#''#vso[task.setvariable variable=LATEST_IMAGE]'\$IMAGE
+          echo Made variable LATEST_IMAGE available for the following tasks. Value is \$IMAGE
+          if curl --silent -f -lSL https://index.docker.io/v1/repositories/\$(echo \$IMAGE |sed -e 's|:|/tags/|'); then
+            echo Image already present. Pulling.
+            docker pull \$IMAGE
+          else
+            derex.builder resolve \$IMAGE_DIR -v DEBUG
+            buildah push \$IMAGE docker-daemon:\$IMAGE
+            # DO not push the image yet: the next step is going to add an empty db dump
+          fi"
+    displayName: 'Build ironwood image'
 
   - script: |
       set -ex
@@ -118,7 +160,6 @@ steps:
       docker run --add-host=mysql:$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+') --rm ${LATEST_IMAGE} restore_dump.py
       # Make sure the fixtures ran and created test users
       mysql -h localhost --protocol tcp -u root -psecret derex -e "SELECT * from auth_user WHERE username='superuser'"|grep superuser
-      docker push ${LATEST_IMAGE}
     displayName: 'Test the users fixture'
 
   - script: |
@@ -133,16 +174,3 @@ steps:
       docker push "${IMAGE_TO_PUSH}"
     displayName: 'Also tag the image with the :latest tag and push it (only on master)'
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-
-  - script: |
-      BEFORE=$(docker run --rm derex/wheelhouse:latest du /wheelhouse -s|cut -f1)
-      AFTER=$(du .cache/wheels_cache -s|cut -f1)
-      echo Current wheel house image is ${BEFORE} bytes. Now we have ${AFTER} bytes in the wheel cache.
-      # Only act if we have at least one more Mb worth of wheels
-      if  [ "${AFTER}" -gt "$((${BEFORE}+1000))" ]; then
-        echo "${AFTER} is greater than ${BEFORE} plus one thousand";
-        docker build .cache -t derex/wheelhouse:latest
-        docker push derex/wheelhouse:latest
-      fi;
-    displayName: 'Build and push wheels image if necessary'
-    condition: always()

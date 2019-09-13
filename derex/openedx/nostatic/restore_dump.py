@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-import bz2
-import os
-
-import MySQLdb
 from django.conf import settings
 from path import Path as path
+
+import bz2
+import MySQLdb
+import os
+
 
 DUMP_FILE_PATH = "/openedx/empty_dump.sql.bz2"
 FIXTURES_DIR = "/openedx/fixtures/"

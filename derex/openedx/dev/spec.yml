@@ -1,0 +1,16 @@
+builder:
+  class: derex.builder.builders.BuildahBuilder
+
+source:
+  type: derex-relative
+  path: nostatic-dev
+
+copy:
+  base.py: /openedx/edx-platform/lms/envs/derex/
+
+
+scripts:
+  - compile_assets.sh
+  - install_dev_goodies.sh
+
+dest: derex/openedx-dev

@@ -1,5 +1,7 @@
+from openedx.core.djangoapps.plugins import constants as plugin_constants
+from openedx.core.djangoapps.plugins import plugin_settings
 from openedx.core.lib.derived import derive_settings
-from path import Path as path
+from path import Path
 from xmodule.modulestore.modulestore_settings import update_module_store_settings
 
 import os
@@ -90,7 +92,9 @@ CELERY_RESULT_DB_TABLENAMES = {"task": "celery_edx_task", "group": "celery_edx_g
 # the bookmarks app
 if "celery" in sys.argv and "worker" in sys.argv:
     INSTALLED_APPS = [
-        el if "bookmarks" not in el else "openedx.core.djangoapps.bookmarks"
+        el
+        if el == "openedx.core.djangoapps.bookmarks.apps.BookmarksConfig"
+        else "openedx.core.djangoapps.bookmarks"
         for el in INSTALLED_APPS
     ]
 
@@ -113,6 +117,19 @@ ECOMMERCE_PUBLIC_URL_ROOT = None
 
 SITE_NAME = os.environ.get("SITE_NAME", SITE_NAME)
 
-COMPREHENSIVE_THEME_DIRS.append("/openedx/themes")  # type: ignore
+STATIC_ROOT_BASE = "/openedx/staticfiles"
+
+MEDIA_ROOT = "/openedx/media"
+VIDEO_TRANSCRIPTS_SETTINGS["location"] = MEDIA_ROOT  # type: ignore  # noqa
+VIDEO_IMAGE_SETTINGS["STORAGE_KWARGS"]["location"] = MEDIA_ROOT  # type: ignore  # noqa
+PROFILE_IMAGE_BACKEND["options"]["location"] = MEDIA_ROOT  # type: ignore  # noqa
+COMPREHENSIVE_THEME_DIRS.append(Path("/openedx/themes"))  # type: ignore  # noqa
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+PROJECT_TYPE = getattr(plugin_constants.ProjectType, SERVICE_VARIANT.upper())
+
+plugin_settings.add_plugins(
+    __name__, PROJECT_TYPE, plugin_constants.SettingsType.PRODUCTION
+)
+
 
 derive_settings(__name__)
