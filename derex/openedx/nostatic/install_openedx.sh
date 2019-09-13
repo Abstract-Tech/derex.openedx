@@ -25,3 +25,10 @@ mv /tmp/wsgi.py /openedx/edx-platform/
 # We prefer to do all tasks required for execution in advance,
 # so we accept the additional 57 Mb this brings
 python -m compileall -q /openedx  # +57 Mb
+
+# Avoid dulicates: rmlint finds files with the same conents, keeps the oldest
+# and symlinks the other copies
+rmlint -o sh:rmlint.sh -c sh:symlink -g /openedx/
+# Do not remove empty files/directories
+sed "/# empty /d" -i rmlint.sh
+./rmlint.sh -d
