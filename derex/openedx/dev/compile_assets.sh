@@ -22,15 +22,12 @@ assets.process_npm_assets()
 webpack --config=webpack.prod.config.js
 echo Compiling default themes
 python -c "
-from pavelib import assets
-assets._compile_sass('lms', None, False, False, [])
-assets._compile_sass('cms', None, False, False, [])
-"
-python -c "
 from path import Path as path
 from pavelib import assets
 import os
 
+assets._compile_sass('lms', None, False, False, [])
+assets._compile_sass('cms', None, False, False, [])
 THEME_DIR = path(os.environ.get('THEME_DIR'))
 for theme in THEME_DIR.listdir():
     if theme.basename().startswith('.'):
