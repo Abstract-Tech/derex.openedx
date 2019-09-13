@@ -20,6 +20,7 @@ print('Processing npm assets')
 assets.process_npm_assets()
 "
 webpack --config=webpack.prod.config.js
+echo Compiling default themes
 python -c "
 from pavelib import assets
 assets._compile_sass('lms', None, False, False, [])
@@ -30,11 +31,13 @@ from path import Path as path
 from pavelib import assets
 import os
 
-THEME_DIR = os.environ.get('THEME_DIR')
-for theme in path(THEME_DIR).listdir():
+THEME_DIR = path(os.environ.get('THEME_DIR'))
+for theme in THEME_DIR.listdir():
     if theme.basename().startswith('.'):
         continue
     for system in ('lms', 'cms'):
+        if not (THEME_DIR / theme / system).isdir():
+            continue
         print('Compiling theme {} ({})'.format(theme.basename(), system))
         assets._compile_sass('lms', theme, False, False, [])
 "
