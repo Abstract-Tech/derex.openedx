@@ -12,7 +12,6 @@ cd /openedx/edx-platform
 # Use our updated requirements file
 cp /tmp/requirements.txt requirements/edx/requirements_derex.txt
 pip install --src /openedx/packages -r requirements/edx/requirements_derex.txt
-find /openedx/ -type d -name .git -exec rm -r {} +  # 70 Mb
 
 # Copy the assets.py config file in place
 mkdir /openedx/edx-platform/lms/envs/derex /openedx/edx-platform/cms/envs/derex
