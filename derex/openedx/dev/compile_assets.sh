@@ -3,10 +3,13 @@ set -ex
 
 export STATIC_ROOT_LMS="/openedx/staticfiles"
 export STATIC_ROOT_CMS=${STATIC_ROOT_LMS}/studio
-export THEME_DIR="/openedx/themes"
 export NODE_ENV=production
 
 cd /openedx/edx-platform
+rm themes/[!o]* -r
+if ls -1qA /openedx/themes|grep -q .; then
+    cp -a /openedx/themes/* themes/
+fi
 export PATH=/openedx/edx-platform/node_modules/.bin:/openedx/bin:${PATH}
 
 python -c "
@@ -22,13 +25,17 @@ assets.process_npm_assets()
 webpack --config=webpack.prod.config.js
 echo Compiling default themes
 python -c "
+from pavelib import assets
+assets._compile_sass('lms', None, False, False, [])
+assets._compile_sass('cms', None, False, False, [])
+"
+
+python -c "
 from path import Path as path
 from pavelib import assets
 import os
 
-assets._compile_sass('lms', None, False, False, [])
-assets._compile_sass('cms', None, False, False, [])
-THEME_DIR = path(os.environ.get('THEME_DIR'))
+THEME_DIR = path('/openedx/themes')
 for theme in THEME_DIR.listdir():
     if theme.basename().startswith('.'):
         continue
@@ -41,3 +48,7 @@ for theme in THEME_DIR.listdir():
 echo Collecting assets
 SERVICE_VARIANT=lms python manage.py lms --settings=derex.assets collectstatic --link --ignore "fixtures" --ignore "karma_*.js" --ignore "spec" --ignore "spec_helpers" --ignore "spec-helpers" --ignore "xmodule_js" --ignore "geoip" --ignore "sass" --noinput
 SERVICE_VARIANT=cms python manage.py cms --settings=derex.assets collectstatic --link --ignore "fixtures" --ignore "karma_*.js" --ignore "spec" --ignore "spec_helpers" --ignore "spec-helpers" --ignore "xmodule_js" --ignore "geoip" --ignore "sass" --noinput
+
+# Do not check them out: they would double the space they take in the image
+# They are anyway one command away if needed:
+# git checkout HEAD -- themes
