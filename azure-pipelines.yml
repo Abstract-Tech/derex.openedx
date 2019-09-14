@@ -35,6 +35,7 @@ steps:
         -e TRANSIFEX_USERNAME=$TRANSIFEX_USERNAME \
         -e TRANSIFEX_PASSWORD=$TRANSIFEX_PASSWORD \
         -e APK_CACHE=/var/cache/apk \
+        -e NPM_CACHE=/var/cache/npm \
         -e PIP_CACHE=/var/cache/pip-alpine \
         derex/buildah \
         sleep 86400
