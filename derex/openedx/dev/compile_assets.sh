@@ -39,5 +39,5 @@ for theme in THEME_DIR.listdir():
         assets._compile_sass('lms', theme, False, False, [])
 "
 echo Collecting assets
-SERVICE_VARIANT=lms python manage.py lms --settings=derex.assets collectstatic --ignore "fixtures" --ignore "karma_*.js" --ignore "spec" --ignore "spec_helpers" --ignore "spec-helpers" --ignore "xmodule_js" --ignore "geoip" --ignore "sass" --noinput
-SERVICE_VARIANT=cms python manage.py cms --settings=derex.assets collectstatic --ignore "fixtures" --ignore "karma_*.js" --ignore "spec" --ignore "spec_helpers" --ignore "spec-helpers" --ignore "xmodule_js" --ignore "geoip" --ignore "sass" --noinput
+SERVICE_VARIANT=lms python manage.py lms --settings=derex.assets collectstatic --link --ignore "fixtures" --ignore "karma_*.js" --ignore "spec" --ignore "spec_helpers" --ignore "spec-helpers" --ignore "xmodule_js" --ignore "geoip" --ignore "sass" --noinput
+SERVICE_VARIANT=cms python manage.py cms --settings=derex.assets collectstatic --link --ignore "fixtures" --ignore "karma_*.js" --ignore "spec" --ignore "spec_helpers" --ignore "spec-helpers" --ignore "xmodule_js" --ignore "geoip" --ignore "sass" --noinput
