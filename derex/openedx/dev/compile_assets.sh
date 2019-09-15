@@ -6,10 +6,6 @@ export STATIC_ROOT_CMS=${STATIC_ROOT_LMS}/studio
 export NODE_ENV=production
 
 cd /openedx/edx-platform
-rm themes/[!o]* -r
-if ls -1qA /openedx/themes|grep -q .; then
-    cp -a /openedx/themes/* themes/
-fi
 export PATH=/openedx/edx-platform/node_modules/.bin:/openedx/bin:${PATH}
 
 python -c "
@@ -48,7 +44,3 @@ for theme in THEME_DIR.listdir():
 echo Collecting assets
 SERVICE_VARIANT=lms python manage.py lms --settings=derex.assets collectstatic --link --ignore "fixtures" --ignore "karma_*.js" --ignore "spec" --ignore "spec_helpers" --ignore "spec-helpers" --ignore "xmodule_js" --ignore "geoip" --ignore "sass" --noinput
 SERVICE_VARIANT=cms python manage.py cms --settings=derex.assets collectstatic --link --ignore "fixtures" --ignore "karma_*.js" --ignore "spec" --ignore "spec_helpers" --ignore "spec-helpers" --ignore "xmodule_js" --ignore "geoip" --ignore "sass" --noinput
-
-# Do not check them out: they would double the space they take in the image
-# They are anyway one command away if needed:
-# git checkout HEAD -- themes
