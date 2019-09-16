@@ -8,6 +8,7 @@ source:
 copy:
   requirements.txt: /tmp
   assets.py: /tmp
+  base.py: /tmp
   entrypoint.sh: /entrypoint.sh
   wsgi.py: /tmp/
   restore_dump.py: /tmp/

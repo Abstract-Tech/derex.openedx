@@ -6,7 +6,6 @@ source:
   path: nostatic-dev
 
 copy:
-  base.py: /openedx/edx-platform/lms/envs/derex/
   derex-profile.sh: /etc/profile.d/
 
 scripts:

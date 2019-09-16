@@ -13,12 +13,14 @@ cd /openedx/edx-platform
 cp /tmp/requirements.txt requirements/edx/requirements_derex.txt
 pip install --src /openedx/packages -r requirements/edx/requirements_derex.txt
 
-# Copy the assets.py config file in place
+# Copy the base.py and assets.py config file in place
 mkdir /openedx/edx-platform/lms/envs/derex /openedx/edx-platform/cms/envs/derex
 cp /tmp/assets.py /openedx/edx-platform/lms/envs/derex
 echo > /openedx/edx-platform/lms/envs/derex/__init__.py
 mv /tmp/assets.py /openedx/edx-platform/cms/envs/derex
 echo > /openedx/edx-platform/cms/envs/derex/__init__.py
+cp /tmp/base.py /openedx/edx-platform/lms/envs/derex
+mv /tmp/base.py /openedx/edx-platform/cms/envs/derex
 
 mv /tmp/wsgi.py /openedx/edx-platform/
 
