@@ -119,6 +119,10 @@ PROJECT_TYPE = getattr(plugin_constants.ProjectType, SERVICE_VARIANT.upper())
 
 ####################### Plugin Settings ##########################
 
+# Adding plugins for AWS chokes if these are not defined
+ENV_TOKENS = {}
+AUTH_TOKENS = {}
+
 # This is at the bottom because it is going to load more settings after base settings are loaded
 
 # Load aws.py in plugins for reverse compatibility.  This can be removed after aws.py
