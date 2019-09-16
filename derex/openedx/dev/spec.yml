@@ -9,7 +9,6 @@ copy:
   derex-profile.sh: /etc/profile.d/
 
 scripts:
-  - install_dev_goodies.sh
   - compile_assets.sh
   - cleanup_assets.sh
 

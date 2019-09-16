@@ -6,3 +6,7 @@ set -ex
 apk add npm nodejs g++ make coreutils
 cd /openedx/edx-platform
 npm install
+
+# Also install dev utilities
+pip install pdbpp ipython ipdb
+apk add vim
