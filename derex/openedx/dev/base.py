@@ -116,8 +116,32 @@ COMPREHENSIVE_THEME_DIRS.append(Path("/openedx/themes"))  # type: ignore  # noqa
 # STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 PROJECT_TYPE = getattr(plugin_constants.ProjectType, SERVICE_VARIANT.upper())
 
+
+####################### Plugin Settings ##########################
+
+# This is at the bottom because it is going to load more settings after base settings are loaded
+
+# Load aws.py in plugins for reverse compatibility.  This can be removed after aws.py
+# is officially removed.
+plugin_settings.add_plugins(__name__, PROJECT_TYPE, plugin_constants.SettingsType.AWS)
+
+# We continue to load production.py over aws.py
 plugin_settings.add_plugins(
     __name__, PROJECT_TYPE, plugin_constants.SettingsType.PRODUCTION
 )
+
+####################### Celery fix ##########################
+# XXX for some reason celery is not able to load the bookmarks app
+# If we specify the plugin app celery is then not able to load the tasks.py file from
+# the bookmarks app
+if "celery" in sys.argv and "worker" in sys.argv:
+    INSTALLED_APPS = [
+        el
+        if el != "openedx.core.djangoapps.bookmarks.apps.BookmarksConfig"
+        else "openedx.core.djangoapps.bookmarks"
+        for el in INSTALLED_APPS
+    ]
+
+########################## Derive Any Derived Settings  #######################
 
 derive_settings(__name__)
