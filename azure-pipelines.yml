@@ -177,7 +177,7 @@ steps:
       docker exec buildah sh -c "buildah push $DEV_IMAGE docker-daemon:derex/openedx-dev:latest"
       docker push derex/openedx-dev:latest
       NOSTATIC_IMAGE=$(docker exec buildah sh -c "cd ${PWD} && derex.builder image derex/openedx/nostatic")
-      docker exec buildah sh -c "buildah push $NOSTATIC_IMAGE docker-daemon:derex/openedx-nostatic"
+      docker exec buildah sh -c "buildah push $NOSTATIC_IMAGE docker-daemon:derex/openedx-nostatic:latest"
       docker push derex/openedx-nostatic:latest
     displayName: 'Also tag the `-ironwood` and `-dev` images with the :latest tag and push them'
     # Only run on master
