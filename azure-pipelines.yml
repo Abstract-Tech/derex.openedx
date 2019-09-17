@@ -174,9 +174,11 @@ steps:
       docker tag "${LATEST_IMAGE}" derex/openedx-ironwood
       docker push derex/openedx-ironwood
       DEV_IMAGE=$(docker exec buildah sh -c "cd ${PWD} && derex.builder image derex/openedx/dev")
-      docker exec buildah sh -c "buildah push $DEV_IMAGE docker://docker.io/derex/openedx-dev"
+      docker exec buildah sh -c "buildah push $DEV_IMAGE docker-daemon:derex/openedx-dev:latest"
+      docker push derex/openedx-dev:latest
       NOSTATIC_IMAGE=$(docker exec buildah sh -c "cd ${PWD} && derex.builder image derex/openedx/nostatic")
-      docker exec buildah sh -c "buildah push $NOSTATIC_IMAGE docker://docker.io/derex/openedx-nostatic"
+      docker exec buildah sh -c "buildah push $NOSTATIC_IMAGE docker-daemon:derex/openedx-nostatic"
+      docker push derex/openedx-nostatic:latest
     displayName: 'Also tag the `-ironwood` and `-dev` images with the :latest tag and push them'
     # Only run on master
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
