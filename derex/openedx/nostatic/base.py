@@ -135,16 +135,9 @@ plugin_settings.add_plugins(
 )
 
 ####################### Celery fix ##########################
-# XXX for some reason celery is not able to load the bookmarks app
-# If we specify the plugin app celery is then not able to load the tasks.py file from
-# the bookmarks app
-if "celery" in sys.argv and "worker" in sys.argv:
-    INSTALLED_APPS = [
-        el
-        if el != "openedx.core.djangoapps.bookmarks.apps.BookmarksConfig"
-        else "openedx.core.djangoapps.bookmarks"
-        for el in INSTALLED_APPS
-    ]
+# XXX for some reason celery is not registering the bookmarks app
+CELERY_IMPORTS = list(locals().get("CELERY_IMPORTS", []))
+CELERY_IMPORTS.append("openedx.core.djangoapps.bookmarks.tasks")
 
 ########################## Derive Any Derived Settings  #######################
 
