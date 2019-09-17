@@ -1,3 +1,7 @@
 #!/bin/sh
 
-ln -sf /openedx/edx-platform/lms/envs/derex/base.py /openedx/edx-platform/cms/envs/derex/
+# This image is temporary.
+# It should be generated from openedx-ironwood-nostatic and openedx-ironwood-dev
+# but we'll do it in a second step
+
+true
