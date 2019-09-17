@@ -107,6 +107,16 @@ ECOMMERCE_PUBLIC_URL_ROOT = None
 SITE_NAME = os.environ.get("SITE_NAME", SITE_NAME)
 
 STATIC_ROOT_BASE = "/openedx/staticfiles"
+COMPREHENSIVE_THEME_DIRS.append("/openedx/themes")  # type: ignore
+STATIC_ROOT_BASE = os.environ.get("STATIC_ROOT_LMS", "/openedx/staticfiles")
+STATIC_ROOT = {  # type: ignore
+    "lms": path(STATIC_ROOT_BASE),
+    "cms": path(STATIC_ROOT_BASE) / "studio",
+}[os.environ.get("SERVICE_VARIANT")]
+WEBPACK_LOADER["DEFAULT"]["STATS_FILE"] = (  # type: ignore
+    STATIC_ROOT / "webpack-stats.json"
+)
+
 
 MEDIA_ROOT = "/openedx/media"
 VIDEO_TRANSCRIPTS_SETTINGS["location"] = MEDIA_ROOT  # type: ignore  # noqa
@@ -130,6 +140,7 @@ AUTH_TOKENS = {}
 plugin_settings.add_plugins(__name__, PROJECT_TYPE, plugin_constants.SettingsType.AWS)
 
 # We continue to load production.py over aws.py
+
 plugin_settings.add_plugins(
     __name__, PROJECT_TYPE, plugin_constants.SettingsType.PRODUCTION
 )
