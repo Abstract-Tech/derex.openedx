@@ -8,6 +8,7 @@ repos:
   - id: end-of-file-fixer
   - id: check-yaml
   - id: flake8
+    exclude: "(edx_celery|base).py"
 
 -   repo: https://github.com/ambv/black
     rev: 19.3b0
@@ -18,7 +19,8 @@ repos:
 -   repo: https://github.com/pre-commit/mirrors-isort
     rev: v4.3.21
     hooks:
-    -   id: isort
+    - id: isort
+      exclude: "(edx_celery|base).py"
 
 -   repo: git://github.com/detailyang/pre-commit-shell
     rev: 1.0.5
