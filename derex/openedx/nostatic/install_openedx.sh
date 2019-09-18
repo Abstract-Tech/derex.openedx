@@ -21,6 +21,7 @@ echo > /openedx/edx-platform/lms/envs/derex/__init__.py
 ln -s /openedx/edx-platform/lms/envs/derex/*.py /openedx/edx-platform/cms/envs/derex
 
 mv /tmp/wsgi.py /openedx/edx-platform/
+mv /tmp/edx_celery.py /openedx/edx-platform/
 
 # We prefer to do all tasks required for execution in advance,
 # so we accept the additional 57 Mb this brings

@@ -11,6 +11,7 @@ copy:
   base.py: /tmp
   entrypoint.sh: /entrypoint.sh
   wsgi.py: /tmp/
+  edx_celery.py: /tmp/
   restore_dump.py: /tmp/
   fixtures: /tmp/fixtures
   translations.sh: /openedx/bin/
