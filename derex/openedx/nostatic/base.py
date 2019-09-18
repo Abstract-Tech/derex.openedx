@@ -147,8 +147,12 @@ plugin_settings.add_plugins(
 
 ####################### Celery fix ##########################
 # XXX for some reason celery is not registering the bookmarks app
-CELERY_IMPORTS = list(locals().get("CELERY_IMPORTS", []))
-CELERY_IMPORTS.append("openedx.core.djangoapps.bookmarks.tasks")
+from kombu.utils.functional import maybe_list
+
+CELERY_IMPORTS = locals().get("CELERY_IMPORTS", [])
+CELERY_IMPORTS = list(maybe_list(CELERY_IMPORTS)) + [
+    "openedx.core.djangoapps.bookmarks.tasks"
+]
 
 ########################## Derive Any Derived Settings  #######################
 
