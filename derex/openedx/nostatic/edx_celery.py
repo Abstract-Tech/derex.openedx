@@ -19,8 +19,6 @@ import cms.envs.common
 for attr in dir(cms.envs.common):
     if not hasattr(settings, attr):
         setattr(settings, attr, getattr(cms.envs.common, attr))
-del settings.CELERY_QUEUES
-
 
 # These guys break celery. Only entitlements defines tasks.
 BLACKLIST = ["completion", "microsite_configuration", "entitlements"]
