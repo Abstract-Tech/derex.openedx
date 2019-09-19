@@ -2,8 +2,8 @@
 set -e
 
 if [ -z "$TRANSIFEX_USERNAME" ] || [ -z "$TRANSIFEX_PASSWORD" ]; then
-        echo "Transifex credentials unset. Building without translations."
-        exit 0
+    echo "Transifex credentials unset. Building without translations."
+    exit 0
 fi
 
 printf '[https://www.transifex.com]\nhostname=https://www.transifex.com\nusername=%s\npassword=%s\n' "$TRANSIFEX_USERNAME" "$TRANSIFEX_PASSWORD" > ~/.transifexrc
@@ -17,7 +17,7 @@ pip install transifex-client
 # Comment out broken languages (Chinese and Russian as of 11-06-2019)
 for lang in "zh_CN" "ru"
 do
-        sed -i -e "s/    - $lang/    # - $lang/" "conf/locale/config.yaml"
+    sed -i -e "s/    - $lang/    # - $lang/" "conf/locale/config.yaml"
 done
 
 i18n_tool transifex pull
@@ -26,8 +26,8 @@ i18n_tool extract
 # Fix broken plural expression header
 for file in "django-partial.po" "django-studio.po" "djangojs-partial.po" "djangojs-studio.po"
 do
-        sed -i -e "s/nplurals=INTEGER/nplurals=2/" "conf/locale/en/LC_MESSAGES/$file"
-        sed -i -e 's/plural=EXPRESSION/plural=\(n != 1\)/' "conf/locale/en/LC_MESSAGES/$file"
+    sed -i -e "s/nplurals=INTEGER/nplurals=2/" "conf/locale/en/LC_MESSAGES/$file"
+    sed -i -e 's/plural=EXPRESSION/plural=\(n != 1\)/' "conf/locale/en/LC_MESSAGES/$file"
 done
 
 i18n_tool generate
