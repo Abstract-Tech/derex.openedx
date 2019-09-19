@@ -32,6 +32,8 @@ config:
     DEBUG: "True"
     DUMMY_INCR: "5"  # Increment to refresh image generation
     ENV: /etc/profile
+    NO_PREREQ_INSTALL: "True"    # we want to use paver
+    NO_PYTHON_UNINSTALL: "True"  # without remembering to specify these
 build_env:
   - TRANSIFEX_USERNAME
   - TRANSIFEX_PASSWORD
