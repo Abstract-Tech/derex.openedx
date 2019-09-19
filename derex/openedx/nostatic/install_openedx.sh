@@ -26,3 +26,9 @@ mv /tmp/edx_celery.py /openedx/edx-platform/
 # We prefer to do all tasks required for execution in advance,
 # so we accept the additional 57 Mb this brings
 python -m compileall -q /openedx  # +57 Mb
+
+# Download updated translations from transifex
+# Include German and Italian
+sed -i '/de_DE/s/# //' /openedx/edx-platform/conf/locale/config.yaml
+sed -i '/it_IT/s/# //' /openedx/edx-platform/conf/locale/config.yaml
+/openedx/bin/translations.sh
