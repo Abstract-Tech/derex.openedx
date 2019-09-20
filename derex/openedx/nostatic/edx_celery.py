@@ -7,7 +7,12 @@ from celery import Celery
 from django.conf import settings
 
 
-INSTALLED_APPS = settings.INSTALLED_APPS
+BLACKLIST = [
+    "completion",
+    "microsite_configuration",
+    "entitlements.apps.EntitlementsConfig",
+]
+INSTALLED_APPS = [el for el in settings.INSTALLED_APPS if el not in BLACKLIST]
 # Only after we materialize `settings` can we import these
 from cms.envs.common import INSTALLED_APPS as CMS_INSTALLED_APPS
 from lms.envs.common import INSTALLED_APPS as LMS_INSTALLED_APPS
@@ -21,13 +26,12 @@ for attr in dir(cms.envs.common):
         setattr(settings, attr, getattr(cms.envs.common, attr))
 
 # These guys break celery. Only entitlements defines tasks.
-BLACKLIST = ["completion", "microsite_configuration", "entitlements"]
-INSTALLED_APPS += [el for el in LMS_INSTALLED_APPS if el not in INSTALLED_APPS]
+INSTALLED_APPS += [
+    el for el in LMS_INSTALLED_APPS if el not in INSTALLED_APPS and el not in BLACKLIST
+]
 INSTALLED_APPS += [
     el for el in CMS_INSTALLED_APPS if el not in INSTALLED_APPS and el not in BLACKLIST
 ]
-if "common.djangoapps.entitlements.tasks" not in settings.CELERY_IMPORTS:
-    settings.CELERY_IMPORTS.append("common.djangoapps.entitlements.tasks")
 
 
 # Put our updated list of installed apps back in place:
