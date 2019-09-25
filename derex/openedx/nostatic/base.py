@@ -41,6 +41,8 @@ update_module_store_settings(MODULESTORE, doc_store_settings=DOC_STORE_CONFIG)
 XQUEUE_INTERFACE = {"url": None, "django_auth": None}
 ALLOWED_HOSTS = ["*"]
 
+# Default value
+CELERY_BROKER_VHOST = "/"
 
 # Per-project db separation
 DEREX_PROJECT = os.environ.get("DEREX_PROJECT")
