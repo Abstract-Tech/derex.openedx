@@ -169,6 +169,9 @@ CELERY_IMPORTS = list(maybe_list(CELERY_IMPORTS)) + [
     "openedx.core.djangoapps.bookmarks.tasks"
 ]
 
+########################## This container should never be exposed directly  #######################
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 ########################## Derive Any Derived Settings  #######################
 
 derive_settings(__name__)
