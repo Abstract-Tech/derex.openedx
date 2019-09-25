@@ -56,6 +56,7 @@ if DEREX_PROJECT:
     for store in MODULESTORE["default"]["OPTIONS"]["stores"]:
         store["DOC_STORE_CONFIG"]["db"] = MONGODB_DB
 
+    CELERY_BROKER_VHOST = "{}_edxqueue".format(project.name)
 
 if "runserver" in sys.argv:
     DEBUG = True
@@ -84,7 +85,6 @@ CELERY_BROKER_TRANSPORT = os.environ.get("CELERY_BROKER_TRANSPORT", "amqp")
 CELERY_BROKER_HOSTNAME = os.environ.get("CELERY_BROKER_HOSTNAME", "rabbitmq")
 CELERY_BROKER_USER = os.environ.get("CELERY_BROKER_USER", "guest")
 CELERY_BROKER_PASSWORD = os.environ.get("CELERY_BROKER_PASSWORD", "guest")
-CELERY_BROKER_VHOST = os.environ.get("CELERY_BROKER_VHOST", "/")
 BROKER_URL = "{0}://{1}:{2}@{3}/{4}".format(
     CELERY_BROKER_TRANSPORT,
     CELERY_BROKER_USER,
