@@ -92,9 +92,6 @@ BROKER_URL = "{0}://{1}:{2}@{3}/{4}".format(
     CELERY_BROKER_HOSTNAME,
     CELERY_BROKER_VHOST,
 )
-CELERY_RESULT_BACKEND = "db+mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}".format(
-    **locals()
-)
 CELERY_RESULT_BACKEND = "mongodb://{MONGODB_HOST}/".format(**locals())
 CELERY_MONGODB_BACKEND_SETTINGS = {
     "database": MONGODB_DB,
