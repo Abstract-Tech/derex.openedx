@@ -41,6 +41,25 @@ update_module_store_settings(MODULESTORE, doc_store_settings=DOC_STORE_CONFIG)
 XQUEUE_INTERFACE = {"url": None, "django_auth": None}
 ALLOWED_HOSTS = ["*"]
 
+# Default value
+CELERY_BROKER_VHOST = "/"
+
+# Per-project db separation
+DEREX_PROJECT = os.environ.get("DEREX_PROJECT")
+if DEREX_PROJECT:
+    # Setup mysql database
+    MYSQL_DB = "{}_myedx".format(DEREX_PROJECT)
+    DATABASES["default"]["NAME"] = MYSQL_DB
+
+    # Mongodb
+    MONGODB_DB = "{}_mongoedx".format(DEREX_PROJECT)
+    DOC_STORE_CONFIG["db"] = MONGODB_DB
+    CONTENTSTORE["DOC_STORE_CONFIG"] = DOC_STORE_CONFIG
+    for store in MODULESTORE["default"]["OPTIONS"]["stores"]:
+        store["DOC_STORE_CONFIG"]["db"] = MONGODB_DB
+
+    CELERY_BROKER_VHOST = "{}_edxqueue".format(project.name)
+
 if "runserver" in sys.argv:
     DEBUG = True
     PIPELINE_ENABLED = False
@@ -68,16 +87,12 @@ CELERY_BROKER_TRANSPORT = os.environ.get("CELERY_BROKER_TRANSPORT", "amqp")
 CELERY_BROKER_HOSTNAME = os.environ.get("CELERY_BROKER_HOSTNAME", "rabbitmq")
 CELERY_BROKER_USER = os.environ.get("CELERY_BROKER_USER", "guest")
 CELERY_BROKER_PASSWORD = os.environ.get("CELERY_BROKER_PASSWORD", "guest")
-CELERY_BROKER_VHOST = os.environ.get("CELERY_BROKER_VHOST", "/")
 BROKER_URL = "{0}://{1}:{2}@{3}/{4}".format(
     CELERY_BROKER_TRANSPORT,
     CELERY_BROKER_USER,
     CELERY_BROKER_PASSWORD,
     CELERY_BROKER_HOSTNAME,
     CELERY_BROKER_VHOST,
-)
-CELERY_RESULT_BACKEND = "db+mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}".format(
-    **locals()
 )
 CELERY_RESULT_BACKEND = "mongodb://{MONGODB_HOST}/".format(**locals())
 CELERY_MONGODB_BACKEND_SETTINGS = {
@@ -153,6 +168,9 @@ CELERY_IMPORTS = locals().get("CELERY_IMPORTS", [])
 CELERY_IMPORTS = list(maybe_list(CELERY_IMPORTS)) + [
     "openedx.core.djangoapps.bookmarks.tasks"
 ]
+
+########################## This container should never be exposed directly  #######################
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 ########################## Derive Any Derived Settings  #######################
 
