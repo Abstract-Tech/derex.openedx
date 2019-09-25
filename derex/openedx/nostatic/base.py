@@ -41,6 +41,22 @@ update_module_store_settings(MODULESTORE, doc_store_settings=DOC_STORE_CONFIG)
 XQUEUE_INTERFACE = {"url": None, "django_auth": None}
 ALLOWED_HOSTS = ["*"]
 
+
+# Per-project db separation
+DEREX_PROJECT = os.environ.get("DEREX_PROJECT")
+if DEREX_PROJECT:
+    # Setup mysql database
+    MYSQL_DB = "{}_myedx".format(DEREX_PROJECT)
+    DATABASES["default"]["NAME"] = MYSQL_DB
+
+    # Mongodb
+    MONGODB_DB = "{}_mongoedx".format(DEREX_PROJECT)
+    DOC_STORE_CONFIG["db"] = MONGODB_DB
+    CONTENTSTORE["DOC_STORE_CONFIG"] = DOC_STORE_CONFIG
+    for store in MODULESTORE["default"]["OPTIONS"]["stores"]:
+        store["DOC_STORE_CONFIG"]["db"] = MONGODB_DB
+
+
 if "runserver" in sys.argv:
     DEBUG = True
     PIPELINE_ENABLED = False
