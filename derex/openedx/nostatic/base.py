@@ -58,7 +58,7 @@ if DEREX_PROJECT:
     for store in MODULESTORE["default"]["OPTIONS"]["stores"]:
         store["DOC_STORE_CONFIG"]["db"] = MONGODB_DB
 
-    CELERY_BROKER_VHOST = "{}_edxqueue".format(project.name)
+    CELERY_BROKER_VHOST = "{}_edxqueue".format(DEREX_PROJECT)
 
 if "runserver" in sys.argv:
     DEBUG = True
