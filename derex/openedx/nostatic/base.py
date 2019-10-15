@@ -102,6 +102,10 @@ CELERY_MONGODB_BACKEND_SETTINGS = {
 
 CELERY_RESULT_DB_TABLENAMES = {"task": "celery_edx_task", "group": "celery_edx_group"}
 
+CELERY_QUEUES = {"lms.default": {}, "cms.default": {}}
+CELERY_ROUTES = "{}.celery.Router".format(SERVICE_VARIANT)
+CELERY_DEFAULT_QUEUE = "{}.default".format(SERVICE_VARIANT)
+
 ##################### CMS Settings ###################
 
 LMS_BASE = "http://localhost:4700"
