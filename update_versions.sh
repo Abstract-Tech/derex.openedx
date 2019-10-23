@@ -33,6 +33,7 @@ sed -i 's/gunicorn.*/gunicorn/' requirements/edx/base.in
 # fix ImportError: Module 'xmodule.modulestore.django' does not define a 'COURSE_PUBLISHED' attribute/class
 sed -i 's/edx-when.*/edx-when<0.1.1/' requirements/edx/base.in
 grep -q edx-when requirements/edx/base.in || echo 'edx-when<0.1.1' >> requirements/edx/base.in
+sed -i 's/pdfminer.*/pdfminer.six==20191020/' requirements/edx/base.in
 sed -i 's/edx-proctoring>=1.5.3.*/edx-proctoring>=1.5.3,<=1.6.2/' requirements/edx/base.in
 
 
