@@ -41,6 +41,10 @@ update_module_store_settings(MODULESTORE, doc_store_settings=DOC_STORE_CONFIG)
 XQUEUE_INTERFACE = {"url": None, "django_auth": None}
 ALLOWED_HOSTS = ["*"]
 
+FEATURES.update({
+    "ENABLE_COMBINED_LOGIN_REGISTRATION": True,
+})
+
 # Default value
 CELERY_BROKER_VHOST = "/"
 
