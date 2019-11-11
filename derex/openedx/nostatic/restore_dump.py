@@ -48,7 +48,9 @@ def run_fixtures():
         variant_dir = fixtures_dir / variant
         if not variant_dir.exists():
             continue
-        for file in variant_dir.listdir():
+        # We sort lexicographically by file name
+        # to make predictable ordering possible
+        for file in sorted(variant_dir.listdir()):
             path("/openedx/edx-platform").chdir()
             os.system("./manage.py {} loaddata {}".format(variant, file))
 
