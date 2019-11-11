@@ -181,5 +181,8 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 ########################## Features #########################
 FEATURES = locals().get("FEATURES", {})
-FEATURES["ENABLE_DISCUSSION_SERVICE"] = False
+FEATURES.update({
+    "ENABLE_COMBINED_LOGIN_REGISTRATION": True,
+    "ENABLE_DISCUSSION_SERVICE": False
+})
 derive_settings(__name__)
