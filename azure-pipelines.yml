@@ -2,7 +2,7 @@ jobs:
 - job: RunPytests
   timeoutInMinutes: 120
   pool:
-    vmImage: 'ubuntu-latest'
+    vmImage: 'ubuntu-18.04'
 
   variables:
     - group: Docker credentials
