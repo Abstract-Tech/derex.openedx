@@ -1,5 +1,5 @@
 jobs:
-- job: RunPytests
+- job: Build_image
   timeoutInMinutes: 120
   pool:
     vmImage: 'ubuntu-18.04'
