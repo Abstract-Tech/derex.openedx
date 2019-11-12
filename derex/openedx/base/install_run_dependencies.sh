@@ -20,3 +20,7 @@ apk add \
     mariadb-connector-c \
     sqlite \
     xmlsec
+
+# To force a rebuild of the image change the following
+# Last edited: 2019-11-12
+date > /etc/base_image_build_time
