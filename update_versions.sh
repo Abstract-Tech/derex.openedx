@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 EDX_PLATFORM_REPOSITORY=https://github.com/edx/edx-platform.git
 EDX_PLATFORM_VERSION=open-release/ironwood.master
 
@@ -23,6 +25,9 @@ sed -i 's/edx-opaque-keys.*/edx-opaque-keys<1.0.0/' requirements/edx/base.in
 sed -i 's/edx-opaque-keys.*/edx-opaque-keys<1.0.0/' requirements/edx/paver.in
 sed -i 's/edx-milestones.*/edx-milestones<0.2.3/' requirements/edx/base.in
 sed -i 's/edx-organizations.*/edx-organizations<2.1.0/' requirements/edx/base.in
+
+# Solve ImportError: cannot import name LearningContextKeyField
+sed -i 's/edx-completion.*/edx-completion<3.0.0/' requirements/edx/base.in
 
 # Unpin urllib3: we don't use transifex client here
 sed -i '/urllib3/d' requirements/constraints.txt
