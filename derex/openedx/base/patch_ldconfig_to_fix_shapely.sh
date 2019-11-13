@@ -25,6 +25,7 @@ my_echo() (  # Lifted from https://unix.stackexchange.com/tags/echo/info to sile
 if [ "$1" = "-p" ]; then
     # Hack to mimic GNU ldconfig s -p option, needed by ctypes, used by shapely
     echo "    libc.musl-x86_64.so.1 (libc6,x86-64) => /lib/libc.musl-x86_64.so.1"
+    echo "    libgeos_c.so (libc6,x86-64) => /usr/lib/libgeos_c.so"
     exit 0
 fi
 ' ; tail -n +2 /sbin/ldconfig.orig) > /sbin/ldconfig
