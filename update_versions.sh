@@ -29,6 +29,9 @@ sed -i 's/edx-organizations.*/edx-organizations<2.1.0/' requirements/edx/base.in
 # Solve ImportError: cannot import name LearningContextKeyField
 sed -i 's/edx-completion.*/edx-completion<3.0.0/' requirements/edx/base.in
 
+# Pin edx-drf-extensions to 2.4.2: newer version are incompatible with ironwood
+sed -i 's/edx-drf-extensions.*/edx-drf-extensions==2.4.2/' requirements/edx/base.in
+
 # Unpin urllib3: we don't use transifex client here
 sed -i '/urllib3/d' requirements/constraints.txt
 
