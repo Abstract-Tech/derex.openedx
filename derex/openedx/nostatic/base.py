@@ -114,7 +114,8 @@ if SERVICE_VARIANT == "cms":
     CMS_SEGMENT_KEY = "foobar"
     LOGIN_URL = "/signin"
     FRONTEND_LOGIN_URL = LOGIN_URL
-
+    LOGOUT_URL = "/logout"
+    FRONTEND_LOGOUT_URL = LOGOUT_URL
 
 # Prevent KeyError: u'cornerstone' error in simple_history/models:212
 # https://github.com/treyhunner/django-simple-history/blob/b1d9adbd838836246b052b4c9c4598e02f6471c5/simple_history/models.py#L213
@@ -183,6 +184,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 FEATURES = locals().get("FEATURES", {})
 FEATURES.update({
     "ENABLE_COMBINED_LOGIN_REGISTRATION": True,
-    "ENABLE_DISCUSSION_SERVICE": False
+    "ENABLE_DISCUSSION_SERVICE": False,
+    "DISABLE_STUDIO_SSO_OVER_LMS": True
 })
 derive_settings(__name__)
