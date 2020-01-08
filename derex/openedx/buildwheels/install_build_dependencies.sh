@@ -24,6 +24,7 @@ apk add \
     make \
     mariadb-connector-c-dev \
     mariadb-dev \
+    openblas-dev \
     pkgconfig \
     python-dev \
     sqlite-dev \

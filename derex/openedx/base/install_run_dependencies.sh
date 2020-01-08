@@ -11,6 +11,7 @@ apk add \
     graphviz \
     freetype \
     graphviz \
+    openblas \
     lapack \
     libstdc++ \
     libjpeg \
