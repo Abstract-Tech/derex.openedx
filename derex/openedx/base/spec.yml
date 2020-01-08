@@ -1,7 +1,7 @@
 builder:
   class: derex.builder.builders.BuildahBuilder
 
-source: docker.io/python:2.7.16-alpine3.10
+source: docker.io/python:3.8-alpine3.11
 
 scripts:
   - install_run_dependencies.sh

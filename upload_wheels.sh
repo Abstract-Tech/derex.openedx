@@ -7,7 +7,7 @@ fi
 
 DNS_NAME=http://pypi.abzt.de/
 CONTAINER_NAME=pypi
-BASE_DIR=alpine-3.10
+BASE_DIR=alpine-3.11
 wheel_files=$(find /var/cache/pip-alpine|grep whl$)
 for filepath in $wheel_files; do
     filename=$(basename "$filepath")

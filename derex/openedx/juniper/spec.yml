@@ -6,9 +6,9 @@ source:
   path: dev
 
 # This image is temporary.
-# It should be generated from openedx-ironwood-nostatic and openedx-ironwood-dev
+# It should be generated from openedx-juniper-nostatic and openedx-juniper-dev
 # but we'll do it in a second step
 scripts:
-  - install_ironwood.sh
+  - install_juniper.sh
 
-dest: derex/openedx-ironwood
+dest: derex/openedx-juniper

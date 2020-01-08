@@ -125,7 +125,7 @@ jobs:
         docker exec buildah \
           bash -c "
             set -ex; cd ${PWD}
-            IMAGE_DIR=derex/openedx/ironwood
+            IMAGE_DIR=derex/openedx/juniper
             IMAGE=\$(derex.builder image \$IMAGE_DIR)
             echo '#''#vso[task.setvariable variable=LATEST_IMAGE]'\$IMAGE
             echo Made variable LATEST_IMAGE available for the following tasks. Value is \$IMAGE
@@ -137,7 +137,7 @@ jobs:
               buildah push \$IMAGE docker-daemon:\$IMAGE
               # DO not push the image yet: the next step is going to add an empty db dump
             fi"
-      displayName: 'Build ironwood image'
+      displayName: 'Build juniper image'
 
     - script: |
         set -ex
@@ -174,14 +174,18 @@ jobs:
     - script: |
         set -ex
         export LATEST_IMAGE="$(echo "$LATEST_IMAGE" | sed -e "s/'//g")"
-        docker tag "${LATEST_IMAGE}" derex/openedx-ironwood
-        docker push derex/openedx-ironwood
+        docker tag "${LATEST_IMAGE}" derex/openedx-juniper
+        docker push derex/openedx-juniper
         DEV_IMAGE=$(docker exec buildah sh -c "cd ${PWD} && derex.builder image derex/openedx/dev")
         docker exec buildah sh -c "buildah push $DEV_IMAGE docker-daemon:derex/openedx-dev:latest"
         docker push derex/openedx-dev:latest
         NOSTATIC_IMAGE=$(docker exec buildah sh -c "cd ${PWD} && derex.builder image derex/openedx/nostatic")
         docker exec buildah sh -c "buildah push $NOSTATIC_IMAGE docker-daemon:derex/openedx-nostatic:latest"
         docker push derex/openedx-nostatic:latest
-      displayName: 'Also tag the `-ironwood` and `-dev` images with the :latest tag and push them'
-      # Only run on master
-      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+      displayName: 'Also tag the `-juniper` and `-dev` images with the :latest tag and push them'
+      # Only run on master or juniper branches
+      condition: |
+        and(succeeded(),
+          or(
+            eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+            eq(variables['Build.SourceBranch'], 'refs/heads/juniper')))

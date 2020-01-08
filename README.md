@@ -30,13 +30,13 @@ The last image bundles edx-platform.
 
 These are the image names:
 
-* `openedx-ironwood-buildwheels`: build dependencies included
-* `openedx-ironwood-base`: just runtime dependencies
-* `openedx-ironwood-wheels`: wheels preinstalled for a specific edx-platform version, but no python code from edx-platform
-* `openedx-ironwood-nostatic`: everything to run openedx, except javascript/css tools and staticfiles
-* `openedx-ironwood-nostatic-dev`: like nostatic, but includes also all dev tools to generate static files
-* `openedx-ironwood-dev`: all edx code and static assets, with javascript dev tools installed
-* `openedx-ironwood`: all edx code and static assets, with no dev tools
+* `openedx-<VERSION>-buildwheels`: build dependencies included
+* `openedx-<VERSION>-base`: just runtime dependencies
+* `openedx-<VERSION>-wheels`: wheels preinstalled for a specific edx-platform version, but no python code from edx-platform
+* `openedx-<VERSION>-nostatic`: everything to run openedx, except javascript/css tools and staticfiles
+* `openedx-<VERSION>-nostatic-dev`: like nostatic, but includes also all dev tools to generate static files
+* `openedx-<VERSION>-dev`: all edx code and static assets, with javascript dev tools installed
+* `openedx-<VERSION>`: all edx code and static assets, with no dev tools
 
 
 ### Build with translations
