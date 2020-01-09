@@ -149,13 +149,6 @@ ENV_TOKENS = {}
 AUTH_TOKENS = {}
 
 # This is at the bottom because it is going to load more settings after base settings are loaded
-
-# Load aws.py in plugins for reverse compatibility.  This can be removed after aws.py
-# is officially removed.
-plugin_settings.add_plugins(__name__, PROJECT_TYPE, plugin_constants.SettingsType.AWS)
-
-# We continue to load production.py over aws.py
-
 plugin_settings.add_plugins(
     __name__, PROJECT_TYPE, plugin_constants.SettingsType.PRODUCTION
 )
@@ -177,8 +170,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 ########################## Features #########################
 FEATURES = locals().get("FEATURES", {})
-FEATURES.update({
-    "ENABLE_COMBINED_LOGIN_REGISTRATION": True,
-    "ENABLE_DISCUSSION_SERVICE": False
-})
+FEATURES.update(
+    {"ENABLE_COMBINED_LOGIN_REGISTRATION": True, "ENABLE_DISCUSSION_SERVICE": False}
+)
 derive_settings(__name__)
