@@ -9,7 +9,7 @@ docker run -v "${PIP_CACHE}:/root/.cache/pip" -d --name derex.wheel.compiler --r
 
 docker exec derex.wheel.compiler git clone "$EDX_PLATFORM_REPOSITORY" --branch "${EDX_PLATFORM_VERSION}" --depth 1
 docker exec derex.wheel.compiler pip install wheel
-edx-platform/requirements/edx/base.txt
+
 docker exec derex.wheel.compiler sh -c "
 egrep -v '^-e|^git' edx-platform/requirements/edx/base.txt > base_external.txt
 echo '--find-links http://pypi.abzt.de/alpine-3.10' >> base_external.txt
