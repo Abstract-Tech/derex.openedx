@@ -13,8 +13,10 @@ docker exec derex.wheel.compiler pip install wheel
 docker exec derex.wheel.compiler sh -c "
 egrep -v '^-e|^git' edx-platform/requirements/edx/base.txt > base_external.txt
 echo '--find-links http://pypi.abzt.de/alpine-3.10' >> base_external.txt
+echo '--trusted-host pypi.abzt.de' >> base_external.txt
 mkdir /wheelhouse
-pip wheel --wheel-dir=/wheelhouse -r base_external.txt
+pip install numpy -c base_external.txt --find-links http://pypi.abzt.de/alpine-3.10
+pip wheel --wheel-dir=/wheelhouse -r base_external.txt --find-links http://pypi.abzt.de/alpine-3.10
 "
 
 #docker kill derex.wheel.compiler
