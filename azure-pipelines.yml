@@ -7,6 +7,21 @@ schedules:
   always: true
 
 jobs:
+- job: Compile_Wheels
+  timeoutInMinutes: 120
+  pool:
+    vmImage: 'ubuntu-18.04'
+
+  steps:
+    - script: |
+        python3 -m pip install --upgrade pip
+        pip3 install -r requirements.txt
+        pip3 install .
+      displayName: 'Install derex.builder'
+
+    - script: ci/compile_wheels.sh
+      displayName: Compile wheels
+
 - job: Build_image
   timeoutInMinutes: 120
   pool:
