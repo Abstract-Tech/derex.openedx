@@ -1,1 +1,1 @@
-git+https://github.com/Abstract-tech/derex.builder.git
+git+https://github.com/Abstract-tech/derex.builder.git#egg=derex.builder
