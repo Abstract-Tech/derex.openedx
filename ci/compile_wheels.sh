@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -ex
+
 EDX_PLATFORM_REPOSITORY=${EDX_PLATFORM_REPOSITORY-https://github.com/edx/edx-platform.git}
 IMAGE=$(derex.builder image derex/openedx/buildwheels)
 

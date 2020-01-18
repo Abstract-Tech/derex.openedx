@@ -7,10 +7,15 @@ schedules:
   always: true
 
 jobs:
-- job: Compile_Wheels
+- job: Compile_Wheels_ironwood
   timeoutInMinutes: 120
   pool:
     vmImage: 'ubuntu-18.04'
+  variables:
+    - name: EDX_PLATFORM_VERSION
+      value: open-release/ironwood.master
+    - name: EDX_PLATFORM_VERSION_NAME
+      value: ironwood.master
 
   steps:
     - script: |
