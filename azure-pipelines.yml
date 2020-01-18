@@ -25,6 +25,9 @@ jobs:
         which derex.builder
       displayName: 'Install derex.builder'
 
+    - script: derex.builder resolve derex/openedx/buildwheels
+      displayName: Build buildwheels image
+
     - script: ci/compile_wheels.sh
       displayName: Compile wheels
 
