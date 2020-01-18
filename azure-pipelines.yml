@@ -1,5 +1,5 @@
 schedules:
-- cron: "30 15 * * *"
+- cron: "10 02 * * *"
   displayName: Daily build
   branches:
     include:
