@@ -1,9 +1,8 @@
 #!/bin/sh
 
 EDX_PLATFORM_REPOSITORY=${EDX_PLATFORM_REPOSITORY-https://github.com/edx/edx-platform.git}
-IMAGE=$(derex.builder image derex/openedx/buildwheels)
 
-docker run -v "${PIP_CACHE}:/root/.cache/pip" -d --name derex.wheel.compiler --rm "$IMAGE" sleep 86400
+docker run -v "${PIP_CACHE}:/root/.cache/pip" -d --name derex.wheel.compiler --rm derex/openedx-alpine-buildwheels sleep 86400
 
 docker exec derex.wheel.compiler git clone "$EDX_PLATFORM_REPOSITORY" --branch "${EDX_PLATFORM_VERSION}" --depth 1
 docker exec derex.wheel.compiler pip install wheel
