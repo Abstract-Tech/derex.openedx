@@ -18,8 +18,8 @@ jobs:
         # pip has a problem for now: upgrading it causes
         # ImportError: cannot import name 'main'
         # python3 -m pip install --upgrade pip
-        python3 -m pip install setuptools wheel pip
-        python3 -m pip install -r requirements.txt .
+        sudo python3 -m pip install setuptools wheel pip
+        sudo python3 -m pip install -r requirements.txt .
         which pip3
         ls $(dirname $(which pip3))
         which derex.builder
