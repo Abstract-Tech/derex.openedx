@@ -20,6 +20,9 @@ jobs:
         # python3 -m pip install --upgrade pip
         pip3 install setuptools wheel
         pip3 install -r requirements.txt .
+        which pip3
+        ls $(dirname $(which pip3))
+        which derex.builder
       displayName: 'Install derex.builder'
 
     - script: ci/compile_wheels.sh
@@ -41,6 +44,7 @@ jobs:
   steps:
     - script: |
         set -ex
+        false # REMOVEME
         sudo systemctl stop mysql
         docker run -d -p 3306:3306 --name mysql --rm -e MYSQL_ROOT_PASSWORD=secret mysql:5.6.44 mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
       displayName: Setup Mysql server
