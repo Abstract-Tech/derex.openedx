@@ -38,6 +38,10 @@ jobs:
         derex.builder resolve derex/openedx/buildwheels
         docker images
         sudo buildah images
+        IMAGE=$(derex.builder image derex/openedx/buildwheels)
+        sudo buildah push "$IMAGE" docker-daemon:"$IMAGE"
+        docker images
+        sudo buildah images
       displayName: Build buildwheels image
 
     - script: ci/compile_wheels.sh
