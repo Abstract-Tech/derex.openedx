@@ -37,6 +37,7 @@ config:
 build_env:
   - TRANSIFEX_USERNAME
   - TRANSIFEX_PASSWORD
+  - EDX_PLATFORM_VERSION
 
 scripts:
   - install_openedx.sh

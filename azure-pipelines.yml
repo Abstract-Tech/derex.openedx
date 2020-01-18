@@ -15,6 +15,10 @@ jobs:
   variables:
     - group: Docker credentials
     - group: Transifex credentials
+    - name: EDX_PLATFORM_VERSION
+      value: open-release/ironwood.master
+    - name: EDX_PLATFORM_VERSION_NAME
+      value: ironwood.master
 
   steps:
     - script: |
@@ -43,6 +47,7 @@ jobs:
           -v /var/run/docker.sock:/var/run/docker.sock \
           --mount type=bind,source=${HOME}/.docker,target=/root/.docker \
           --mount type=bind,source=${PWD},target=${PWD} \
+          -e EDX_PLATFORM_VERSION=$EDX_PLATFORM_VERSION \
           -e TRANSIFEX_USERNAME=$TRANSIFEX_USERNAME \
           -e TRANSIFEX_PASSWORD=$TRANSIFEX_PASSWORD \
           -e APK_CACHE=/var/cache/apk \

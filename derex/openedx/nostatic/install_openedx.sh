@@ -1,12 +1,11 @@
 #!/bin/sh
 set -ex
 
-EDX_PLATFORM_REPOSITORY=https://github.com/edx/edx-platform.git
-EDX_PLATFORM_VERSION=open-release/ironwood.master
+EDX_PLATFORM_REPOSITORY=${EDX_PLATFORM_REPOSITORY-https://github.com/edx/edx-platform.git}
 
 mkdir -p /openedx/themes /openedx/locale /openedx/bin/
 
-git clone ${EDX_PLATFORM_REPOSITORY} --branch ${EDX_PLATFORM_VERSION} --depth 1 /openedx/edx-platform
+git clone "${EDX_PLATFORM_REPOSITORY}" --branch "${EDX_PLATFORM_VERSION}" --depth 1 /openedx/edx-platform
 cd /openedx/edx-platform
 
 # Use our updated requirements file
