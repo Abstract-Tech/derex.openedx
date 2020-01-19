@@ -12,6 +12,7 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   variables:
+    - group: Swift credentials
     - name: EDX_PLATFORM_VERSION
       value: open-release/ironwood.master
     - name: EDX_PLATFORM_VERSION_NAME
@@ -51,6 +52,12 @@ jobs:
 
     - script: ci/compile_wheels.sh
       displayName: Compile wheels
+
+    - script: ci/upload_wheels.sh
+      displayName: Upload wheels
+      env:
+        OS_USERNAME: $(OS_USERNAME)
+        OS_PASSWORD: $(OS_PASSWORD)
 
 - job: Build_image
   timeoutInMinutes: 120
