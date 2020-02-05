@@ -9,6 +9,10 @@ mkdir -p /openedx/themes /openedx/locale /openedx/bin/
 git clone ${EDX_PLATFORM_REPOSITORY} --branch ${EDX_PLATFORM_VERSION} --depth 1 /openedx/edx-platform
 cd /openedx/edx-platform
 
+# Fix alleged edx-platform bug. Without this we get:
+# "WebpackBundleLookupError: Cannot resolve bundle NonStaffErrorModule"
+grep NonStaffErrorDescriptor common/lib/xmodule/setup.py || sed -i -E 's/(    "error =.*)/\1\n    "nonstaff_error = xmodule.error_module:NonStaffErrorDescriptor",/' common/lib/xmodule/setup.py
+
 # Use our updated requirements file
 cp /tmp/requirements.txt requirements/edx/requirements_derex.txt
 pip install --src /openedx/packages -r requirements/edx/requirements_derex.txt
