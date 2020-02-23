@@ -1,4 +1,18 @@
 # syntax = docker/dockerfile:experimental
+FROM docker.io/python:3.6-alpine3.11 as libgeos
+
+RUN --mount=type=cache,target=/var/cache/apk apk add \
+    alpine-sdk
+ENV GEOS_VERSION=3.8.0
+
+RUN wget -c http://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2 -O - | tar xjf - --directory /usr/local
+WORKDIR /usr/local/geos-${GEOS_VERSION}
+RUN ./configure && make
+RUN sh -c "CAPI_VERSION=$(grep CAPI_VERSION\ = Makefile|sed 's/.*= //') \
+    LIBPATH=${WORKDIR}/geos-${VERSION}/capi/.libs/libgeos_c.so.${CAPI_VERSION} \
+    cp ${LIBPATH} /libgeos_c.so \
+    "
+
 FROM docker.io/python:3.6-alpine3.11 as base
 
 RUN wget -q -O - "https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz" | tar xzf - --directory /usr/local/bin
@@ -18,17 +32,12 @@ RUN --mount=type=cache,target=/var/cache/apk apk add \
     sqlite \
     xmlsec
 
-# Libgeos compiled with the command `compile_geos.sh`
-RUN wget http://pypi.abzt.de/alpine-3.10/libgeos_c/libgeos_c.so.1.13.1 -O /usr/lib/libgeos_c.so.1.13.1 &&\
-    ln -s libgeos_c.so.1.13.1 /usr/lib/libgeos_c.so &&\
-    wget http://pypi.abzt.de/alpine-3.10/libs/libgeos-3.8.0.so -O /usr/lib/libgeos-3.8.0.so
-
+COPY --from=libgeos /libgeos_c.so /usr/lib/libgeos_c.so
 RUN date > /etc/base_image_build_time
 
 COPY patch_ldconfig_to_fix_shapely.sh /tmp/patch_ldconfig_to_fix_shapely.sh
 
 RUN /tmp/patch_ldconfig_to_fix_shapely.sh
-
 
 FROM base as builder
 
