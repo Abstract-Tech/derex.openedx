@@ -14,7 +14,7 @@ FROM docker.io/python:3.6-alpine3.11 as base
 ENV GEOS_VERSION=3.8.0
 
 RUN wget -q -O - "https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz" | tar xzf - --directory /usr/local/bin
-RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+
 RUN --mount=type=cache,target=/var/cache/apk apk add \
     gettext \
     git \
