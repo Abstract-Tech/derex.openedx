@@ -99,7 +99,7 @@ RUN --mount=type=cache,target=/root/.npm npm install
 # Also install dev utilities
 RUN --mount=type=cache,target=/root/.cache/pip pip install pdbpp ipython ipdb
 
-FROM nostatic-dev as dev
+FROM nostatic-dev as dev-nodump
 RUN mkdir -p /openedx/edx-platform/lms/envs/derex /openedx/edx-platform/cms/envs/derex && \
     touch /openedx/edx-platform/lms/envs/derex/__init__.py /openedx/edx-platform/cms/envs/derex/__init__.py
 
@@ -108,3 +108,14 @@ COPY compile_assets.sh /usr/local/bin
 COPY assets.py /openedx/edx-platform/lms/envs/derex
 COPY assets.py /openedx/edx-platform/cms/envs/derex
 RUN /usr/local/bin/compile_assets.sh
+
+FROM dev-nodump as dev
+RUN --mount=type=cache,target=/var/cache/apk apk add mariadb mariadb-client
+RUN mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql --defaults-file=/etc/my.cnf && \
+    /usr/bin/mysqld --defaults-file=/etc/my.cnf --user=mysql & \
+    sed -i /^DATABASES/d lms/envs/derex/assets.py && \
+    mysqladmin create edxapp && \
+    mysqladmin create edxapp_csmh && \
+    mysql -e "CREATE USER edxapp001@localhost IDENTIFIED BY 'password';GRANT ALL PRIVILEGES ON *.* TO edxapp001@localhost WITH GRANT OPTION;" && \
+    ./manage.py lms --settings=derex.assets migrate --run-syncdb && \
+    echo Here we should dump the just filled database
