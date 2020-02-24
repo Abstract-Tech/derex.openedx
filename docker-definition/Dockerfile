@@ -32,7 +32,7 @@ RUN --mount=type=cache,target=/var/cache/apk apk add \
 
 COPY --from=libgeos /usr/local/lib/libgeos* /usr/lib/
 # Test that it works
-RUN python -c "from ctypes import CDLL; CDLL('$(echo /usr/lib/libgeos_c.so)').GEOSversion"
+RUN python -c "from  ctypes import CDLL; CDLL('$(echo /usr/lib/libgeos_c.so)').GEOSversion"
 RUN date > /etc/base_image_build_time
 
 COPY patch_ldconfig_to_fix_shapely.sh /tmp/patch_ldconfig_to_fix_shapely.sh

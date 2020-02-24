@@ -20,13 +20,15 @@ jobs:
         DOCKER_USERNAME: $(DOCKER_USERNAME)
         DOCKER_PASSWORD: $(DOCKER_PASSWORD)
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-libgeos --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-libgeos --target libgeos docker-definition/
-      displayName: Build libgeos image
+    # These libgeos steps are commented out because they take 30 seconds to run in the warm case,
+    # and they'll be seldom needed. Uncomment and let run once to re-prime the cache, if needed
+    #- script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-libgeos --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-libgeos --target libgeos docker-definition/
+    #  displayName: Build libgeos image
 
-    - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-libgeos
-      displayName: Push libgeos
+    #- script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-libgeos
+    #  displayName: Push libgeos
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-base --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-base --target base docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-base --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-libgeos --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-base --target base docker-definition/
       displayName: Build base image
 
     - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-base
