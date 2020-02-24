@@ -1,5 +1,6 @@
 # syntax = docker/dockerfile:experimental
-FROM docker.io/python:3.6-alpine3.11 as libgeos
+ARG PYTHON_VERSION=3.6
+FROM docker.io/python:${PYTHON_VERSION}-alpine3.11 as libgeos
 
 RUN --mount=type=cache,target=/var/cache/apk apk add \
     alpine-sdk
@@ -10,7 +11,7 @@ WORKDIR /usr/local/geos-${GEOS_VERSION}
 RUN ./configure && make -j 4
 RUN make install
 
-FROM docker.io/python:3.6-alpine3.11 as base
+FROM docker.io/python:${PYTHON_VERSION}-alpine3.11 as base
 ENV GEOS_VERSION=3.8.0
 
 RUN wget -q -O - "https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz" | tar xzf - --directory /usr/local/bin
@@ -69,9 +70,9 @@ RUN --mount=type=cache,target=/var/cache/apk apk add \
 RUN sed '/st_mysql_options options;/a unsigned int reconnect;' /usr/include/mysql/mysql.h -i
 
 FROM base as sourceonly
+ARG EDX_PLATFORM_VERSION=open-release/juniper.alpha1
 
 ENV EDX_PLATFORM_REPOSITORY=https://github.com/edx/edx-platform.git
-ENV EDX_PLATFORM_VERSION=open-release/juniper.alpha1
 
 RUN mkdir -p /openedx/themes /openedx/locale /openedx/bin/ && \
     git clone ${EDX_PLATFORM_REPOSITORY} --branch ${EDX_PLATFORM_VERSION} --depth 1 /openedx/edx-platform
