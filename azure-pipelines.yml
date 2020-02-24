@@ -9,5 +9,26 @@ jobs:
     - group: Transifex credentials
 
   steps:
-    - script: DOCKER_BUILDKIT=1 docker build docker-definition/
-      displayName: Build docker image
+    - script: DOCKER_BUILDKIT=1 docker build --target libgeos docker-definition/
+      displayName: Build libgeos image
+
+    - script: DOCKER_BUILDKIT=1 docker build --target base docker-definition/
+      displayName: Build base image
+
+    - script: DOCKER_BUILDKIT=1 docker build --target builder docker-definition/
+      displayName: Build builder image
+
+    - script: DOCKER_BUILDKIT=1 docker build --target sourceonly docker-definition/
+      displayName: Build sourceonly image
+
+    - script: DOCKER_BUILDKIT=1 docker build --target wheels docker-definition/
+      displayName: Build wheels image
+
+    - script: DOCKER_BUILDKIT=1 docker build --target nostatic docker-definition/
+      displayName: Build nostatic image
+
+    - script: DOCKER_BUILDKIT=1 docker build --target nostatic-dev docker-definition/
+      displayName: Build nostatic-dev image
+
+    - script: DOCKER_BUILDKIT=1 docker build --target dev docker-definition/
+      displayName: Build dev image
