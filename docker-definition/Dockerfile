@@ -8,9 +8,10 @@ ENV GEOS_VERSION=3.8.0
 RUN wget -c http://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2 -O - | tar xjf - --directory /usr/local
 WORKDIR /usr/local/geos-${GEOS_VERSION}
 RUN ./configure && make -j 4
-RUN sh -c "cp capi/.libs/libgeos_c.so.$(grep CAPI_VERSION\ = Makefile|sed 's/.*= //') /libgeos_c.so"
+RUN make install
 
 FROM docker.io/python:3.6-alpine3.11 as base
+ENV GEOS_VERSION=3.8.0
 
 RUN wget -q -O - "https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz" | tar xzf - --directory /usr/local/bin
 RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
@@ -29,7 +30,10 @@ RUN --mount=type=cache,target=/var/cache/apk apk add \
     sqlite \
     xmlsec
 
-COPY --from=libgeos /libgeos_c.so /usr/lib/libgeos_c.so
+COPY --from=libgeos /usr/local/lib/ /usr/local/lib/
+RUN cp -a /usr/local/lib/*geos* /usr/lib
+# Test that it works
+RUN python -c "from ctypes import CDLL; CDLL('$(echo /usr/lib/libgeos_c.so)').GEOSversion"
 RUN date > /etc/base_image_build_time
 
 COPY patch_ldconfig_to_fix_shapely.sh /tmp/patch_ldconfig_to_fix_shapely.sh
