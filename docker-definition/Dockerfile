@@ -109,9 +109,9 @@ COPY assets.py /openedx/edx-platform/lms/envs/derex
 COPY assets.py /openedx/edx-platform/cms/envs/derex
 RUN /usr/local/bin/compile_assets.sh
 
-FROM dev-nodump as dev
+FROM dev-nodump as dev-migrate-and-dump
 RUN --mount=type=cache,target=/var/cache/apk apk add mariadb mariadb-client
-RUN set -ex; \
+RUN --mount=type=tmpfs,target=/var/lib/mysql set -ex; \
     mkdir -p /run/mysqld && \
     chown mysql:mysql /run/mysqld && \
     mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql --defaults-file=/etc/my.cnf ; \
@@ -121,10 +121,9 @@ RUN set -ex; \
     mysqladmin create edxapp_csmh && \
     sed -i /^DATABASES/d lms/envs/derex/assets.py && \
     mysql -e "CREATE USER edxapp001@localhost IDENTIFIED BY 'password';GRANT ALL PRIVILEGES ON *.* TO edxapp001@localhost WITH GRANT OPTION;" && \
-    ./manage.py lms --settings=derex.assets migrate --run-syncdb
+    ./manage.py lms --settings=derex.assets migrate --run-syncdb && \
+    mysqldump edxapp > /openedx/empty_dump.sql
 
-RUN set -ex; \
-    rm -f /run/mysqld/mysqld.sock &&\
-    /usr/bin/mysqld --defaults-file=/etc/my.cnf --user=mysql & \
-    until ls /run/mysqld/mysqld.sock ; do sleep 0.3; done; \
-    mysqldump edxapp > /sqldump
+FROM dev-nodump as dev
+
+COPY --from=dev-migrate-and-dump /openedx/empty_dump.sql /openedx/empty_dump.sql
