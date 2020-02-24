@@ -18,49 +18,49 @@ jobs:
         DOCKER_USERNAME: $(DOCKER_USERNAME)
         DOCKER_PASSWORD: $(DOCKER_PASSWORD)
 
-    - script: docker build -t derex/edx-juniper-libgeos --cache-from derex/edx-juniper-libgeos --target libgeos docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-libgeos --cache-from derex/edx-juniper-libgeos --target libgeos docker-definition/
       displayName: Build libgeos image
 
     - script: docker push derex/edx-juniper-libgeos
       displayName: Push libgeos
 
-    - script: docker build -t derex/edx-juniper-base --cache-from derex/edx-juniper-base --target base docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-base --cache-from derex/edx-juniper-base --target base docker-definition/
       displayName: Build base image
 
     - script: docker push derex/edx-juniper-base
       displayName: Push base
 
-    - script: docker build -t derex/edx-juniper-builder --cache-from derex/edx-juniper-builder --target builder docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-builder --cache-from derex/edx-juniper-builder --target builder docker-definition/
       displayName: Build builder image
 
     - script: docker push derex/edx-juniper-builder
       displayName: Push builder
 
-    - script: docker build -t derex/edx-juniper-sourceonly --cache-from derex/edx-juniper-sourceonly --target sourceonly docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-sourceonly --cache-from derex/edx-juniper-sourceonly --target sourceonly docker-definition/
       displayName: Build sourceonly image
 
     - script: docker push derex/edx-juniper-sourceonly
       displayName: Push sourceonly
 
-    - script: docker build -t derex/edx-juniper-wheels --cache-from derex/edx-juniper-wheels --target wheels docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-wheels --cache-from derex/edx-juniper-wheels --target wheels docker-definition/
       displayName: Build wheels image
 
     - script: docker push derex/edx-juniper-wheels
       displayName: Push wheels
 
-    - script: docker build -t derex/edx-juniper-nostatic --cache-from derex/edx-juniper-nostatic --target nostatic docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-nostatic --cache-from derex/edx-juniper-nostatic --target nostatic docker-definition/
       displayName: Build nostatic image
 
     - script: docker push derex/edx-juniper-nostatic
       displayName: Push nostatic
 
-    - script: docker build -t derex/edx-juniper-nostatic --cache-from derex/edx-juniper-nostatic --target nostatic-dev docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-nostatic --cache-from derex/edx-juniper-nostatic --target nostatic-dev docker-definition/
       displayName: Build nostatic-dev image
 
     - script: docker push derex/edx-juniper-nostatic
       displayName: Push nostatic
 
-    - script: docker build -t derex/edx-juniper-dev --cache-from derex/edx-juniper-dev --target dev docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-dev --cache-from derex/edx-juniper-dev --target dev docker-definition/
       displayName: Build dev image
 
     - script: docker push derex/edx-juniper-dev
