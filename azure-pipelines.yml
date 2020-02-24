@@ -9,6 +9,8 @@ jobs:
     - group: Transifex credentials
     - name: DOCKER_BUILDKIT
       value: '1'
+    - name: DOCKER_IMAGES_SLUG
+      value: juniper
 
   steps:
     - script: |
@@ -18,50 +20,50 @@ jobs:
         DOCKER_USERNAME: $(DOCKER_USERNAME)
         DOCKER_PASSWORD: $(DOCKER_PASSWORD)
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-libgeos --cache-from derex/edx-juniper-libgeos --target libgeos docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-libgeos --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-libgeos --target libgeos docker-definition/
       displayName: Build libgeos image
 
-    - script: docker push derex/edx-juniper-libgeos
+    - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-libgeos
       displayName: Push libgeos
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-base --cache-from derex/edx-juniper-base --target base docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-base --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-base --target base docker-definition/
       displayName: Build base image
 
-    - script: docker push derex/edx-juniper-base
+    - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-base
       displayName: Push base
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-builder --cache-from derex/edx-juniper-builder --target builder docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-builder --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-builder --target builder docker-definition/
       displayName: Build builder image
 
-    - script: docker push derex/edx-juniper-builder
+    - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-builder
       displayName: Push builder
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-sourceonly --cache-from derex/edx-juniper-sourceonly --target sourceonly docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-sourceonly --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-sourceonly --target sourceonly docker-definition/
       displayName: Build sourceonly image
 
-    - script: docker push derex/edx-juniper-sourceonly
+    - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-sourceonly
       displayName: Push sourceonly
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-wheels --cache-from derex/edx-juniper-wheels --target wheels docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-wheels --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-wheels --target wheels docker-definition/
       displayName: Build wheels image
 
-    - script: docker push derex/edx-juniper-wheels
+    - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-wheels
       displayName: Push wheels
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-nostatic --cache-from derex/edx-juniper-nostatic --target nostatic docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-nostatic --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-nostatic --target nostatic docker-definition/
       displayName: Build nostatic image
 
-    - script: docker push derex/edx-juniper-nostatic
+    - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-nostatic
       displayName: Push nostatic
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-nostatic --cache-from derex/edx-juniper-nostatic --target nostatic-dev docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-nostatic --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-nostatic --target nostatic-dev docker-definition/
       displayName: Build nostatic-dev image
 
-    - script: docker push derex/edx-juniper-nostatic
+    - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-nostatic
       displayName: Push nostatic
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-juniper-dev --cache-from derex/edx-juniper-dev --target dev docker-definition/
+    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-dev --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-dev --target dev docker-definition/
       displayName: Build dev image
 
-    - script: docker push derex/edx-juniper-dev
+    - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-dev
       displayName: Push dev
