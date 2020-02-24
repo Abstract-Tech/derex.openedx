@@ -111,11 +111,20 @@ RUN /usr/local/bin/compile_assets.sh
 
 FROM dev-nodump as dev
 RUN --mount=type=cache,target=/var/cache/apk apk add mariadb mariadb-client
-RUN mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql --defaults-file=/etc/my.cnf && \
+RUN set -ex; \
+    mkdir -p /run/mysqld && \
+    chown mysql:mysql /run/mysqld && \
+    mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql --defaults-file=/etc/my.cnf ; \
     /usr/bin/mysqld --defaults-file=/etc/my.cnf --user=mysql & \
-    sed -i /^DATABASES/d lms/envs/derex/assets.py && \
+    until ls /run/mysqld/mysqld.sock ; do sleep 0.3; done; \
     mysqladmin create edxapp && \
     mysqladmin create edxapp_csmh && \
+    sed -i /^DATABASES/d lms/envs/derex/assets.py && \
     mysql -e "CREATE USER edxapp001@localhost IDENTIFIED BY 'password';GRANT ALL PRIVILEGES ON *.* TO edxapp001@localhost WITH GRANT OPTION;" && \
-    ./manage.py lms --settings=derex.assets migrate --run-syncdb && \
-    echo Here we should dump the just filled database
+    ./manage.py lms --settings=derex.assets migrate --run-syncdb
+
+RUN set -ex; \
+    rm -f /run/mysqld/mysqld.sock &&\
+    /usr/bin/mysqld --defaults-file=/etc/my.cnf --user=mysql & \
+    until ls /run/mysqld/mysqld.sock ; do sleep 0.3; done; \
+    mysqldump edxapp > /sqldump
