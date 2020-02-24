@@ -97,6 +97,11 @@ RUN --mount=type=cache,target=/root/.npm npm install
 RUN --mount=type=cache,target=/root/.cache/pip pip install pdbpp ipython ipdb
 
 FROM nostatic-dev as dev
-COPY compile_assets.sh /usr/local/bin
+RUN mkdir -p /openedx/edx-platform/lms/envs/derex /openedx/edx-platform/cms/envs/derex && \
+    touch /openedx/edx-platform/lms/envs/derex/__init__.py /openedx/edx-platform/cms/envs/derex/__init__.py
 
+
+COPY compile_assets.sh /usr/local/bin
+COPY assets.py /openedx/edx-platform/lms/envs/derex
+COPY assets.py /openedx/edx-platform/cms/envs/derex
 RUN /usr/local/bin/compile_assets.sh
