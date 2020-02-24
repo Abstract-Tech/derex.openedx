@@ -2,7 +2,7 @@ jobs:
 - job: Build_image
   timeoutInMinutes: 120
   pool:
-    vmImage: 'ubuntu-16.04'
+    vmImage: 'ubuntu-18.04'
 
   variables:
     - group: Docker credentials
@@ -11,7 +11,8 @@ jobs:
       value: '1'
     - name: DOCKER_IMAGES_SLUG
       value: juniper
-
+    - name: DOCKER_OPTS
+      value: --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from derex/edx-$(DOCKER_IMAGES_SLUG)-libgeos,derex/edx-$(DOCKER_IMAGES_SLUG)-libgeos,derex/edx-$(DOCKER_IMAGES_SLUG)-base,derex/edx-$(DOCKER_IMAGES_SLUG)-builder,derex/edx-$(DOCKER_IMAGES_SLUG)-sourceonly,derex/edx-$(DOCKER_IMAGES_SLUG)-wheels,derex/edx-$(DOCKER_IMAGES_SLUG)-nostatic,derex/edx-$(DOCKER_IMAGES_SLUG)-nostatic,derex/edx-$(DOCKER_IMAGES_SLUG)-dev,derex/edx-$(DOCKER_IMAGES_SLUG)-dump,derex/edx-$(DOCKER_IMAGES_SLUG)-dev-nodump
   steps:
     - script: |
         docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
@@ -22,49 +23,61 @@ jobs:
 
     # These libgeos steps are commented out because they take 30 seconds to run in the warm case,
     # and they'll be seldom needed. Uncomment and let run once to re-prime the cache, if needed
-    #- script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-libgeos --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-libgeos --target libgeos docker-definition/
+    #- script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-libgeos --target libgeos docker-definition/
     #  displayName: Build libgeos image
 
     #- script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-libgeos
     #  displayName: Push libgeos
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-base --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-libgeos --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-base --target base docker-definition/
+    - script: docker build ${DOCKER_OPTS} -t derex/edx-${DOCKER_IMAGES_SLUG}-base --target base docker-definition/
       displayName: Build base image
 
     - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-base
       displayName: Push base
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-builder --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-builder --target builder docker-definition/
+    - script: docker build ${DOCKER_OPTS} -t derex/edx-${DOCKER_IMAGES_SLUG}-builder --target builder docker-definition/
       displayName: Build builder image
 
     - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-builder
       displayName: Push builder
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-sourceonly --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-sourceonly --target sourceonly docker-definition/
+    - script: docker build ${DOCKER_OPTS} -t derex/edx-${DOCKER_IMAGES_SLUG}-sourceonly --target sourceonly docker-definition/
       displayName: Build sourceonly image
 
     - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-sourceonly
       displayName: Push sourceonly
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-wheels --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-wheels --target wheels docker-definition/
+    - script: docker build ${DOCKER_OPTS} -t derex/edx-${DOCKER_IMAGES_SLUG}-wheels --target wheels docker-definition/
       displayName: Build wheels image
 
     - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-wheels
       displayName: Push wheels
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-nostatic --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-nostatic --target nostatic docker-definition/
+    - script: docker build ${DOCKER_OPTS} -t derex/edx-${DOCKER_IMAGES_SLUG}-nostatic --target nostatic docker-definition/
       displayName: Build nostatic image
 
     - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-nostatic
       displayName: Push nostatic
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-nostatic --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-nostatic --target nostatic-dev docker-definition/
+    - script: docker build ${DOCKER_OPTS} -t derex/edx-${DOCKER_IMAGES_SLUG}-nostatic --target nostatic-dev docker-definition/
       displayName: Build nostatic-dev image
 
     - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-nostatic
       displayName: Push nostatic
 
-    - script: docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-dev --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-dev --target dev docker-definition/
+    - script: docker build ${DOCKER_OPTS} -t derex/edx-${DOCKER_IMAGES_SLUG}-dev-nodump --target dev-nodump docker-definition/
+      displayName: Build dev-nodump image
+
+    - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-dev-nodump
+      displayName: Push dev-nodump
+
+    - script: docker build ${DOCKER_OPTS} -t derex/edx-${DOCKER_IMAGES_SLUG}-dump --target dump docker-definition/
+      displayName: Build dump image
+
+    - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-dump
+      displayName: Push dump
+
+    - script: docker build ${DOCKER_OPTS} -t derex/edx-${DOCKER_IMAGES_SLUG}-dev --target dev docker-definition/
       displayName: Build dev image
 
     - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-dev

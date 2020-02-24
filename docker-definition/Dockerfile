@@ -109,7 +109,7 @@ COPY assets.py /openedx/edx-platform/lms/envs/derex
 COPY assets.py /openedx/edx-platform/cms/envs/derex
 RUN /usr/local/bin/compile_assets.sh
 
-FROM dev-nodump as dev-migrate-and-dump
+FROM dev-nodump as dump
 RUN --mount=type=cache,target=/var/cache/apk apk add mariadb mariadb-client
 RUN --mount=type=tmpfs,target=/var/lib/mysql set -ex; \
     mkdir -p /run/mysqld && \
@@ -126,4 +126,4 @@ RUN --mount=type=tmpfs,target=/var/lib/mysql set -ex; \
 
 FROM dev-nodump as dev
 
-COPY --from=dev-migrate-and-dump /openedx/empty_dump.sql /openedx/empty_dump.sql
+COPY --from=dump /openedx/empty_dump.sql /openedx/empty_dump.sql
