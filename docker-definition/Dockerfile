@@ -99,7 +99,7 @@ ENV NODE_URL=https://unofficial-builds.nodejs.org/download/release/v10.19.0/node
 RUN --mount=type=cache,target=/var/cache/apk apk add g++ make coreutils vim
 RUN wget ${NODE_URL} -O - | tar --directory / -xJf - && ln -s /node-*/bin/* /usr/local/bin/
 WORKDIR /openedx/edx-platform
-RUN --mount=type=cache,target=/root/.npm npm install -g yarn@latest && ln -sf /node-*/bin/* /usr/local/bin/ && yarn install
+RUN --mount=type=cache,target=/root/.npm --mount=type=cache,target=/usr/local/share/.cache/ npm install -g yarn@latest && ln -sf /node-*/bin/* /usr/local/bin/ && yarn install
 
 # Also install dev utilities
 RUN --mount=type=cache,target=/root/.cache/pip pip install pdbpp ipython ipdb
@@ -116,6 +116,8 @@ RUN /usr/local/bin/compile_assets.sh
 
 FROM dev-nodump as dump
 RUN --mount=type=cache,target=/var/cache/apk apk add mariadb mariadb-client
+COPY migration.py /openedx/edx-platform/lms/envs/derex/
+COPY migration.py /openedx/edx-platform/cms/envs/derex/
 RUN --mount=type=tmpfs,target=/var/lib/mysql set -ex; \
     mkdir -p /run/mysqld && \
     chown mysql:mysql /run/mysqld && \
@@ -123,10 +125,8 @@ RUN --mount=type=tmpfs,target=/var/lib/mysql set -ex; \
     /usr/bin/mysqld --defaults-file=/etc/my.cnf --user=mysql & \
     until ls /run/mysqld/mysqld.sock ; do sleep 0.3; done; \
     mysqladmin create edxapp && \
-    mysqladmin create edxapp_csmh && \
-    sed -i /^DATABASES/d lms/envs/derex/assets.py && \
-    mysql -e "CREATE USER edxapp001@localhost IDENTIFIED BY 'password';GRANT ALL PRIVILEGES ON *.* TO edxapp001@localhost WITH GRANT OPTION;" && \
-    ./manage.py lms --settings=derex.assets migrate --run-syncdb && \
+    ./manage.py lms --settings=derex.migration migrate --run-syncdb && \
+    ./manage.py cms --settings=derex.migration migrate --run-syncdb && \
     mysqldump edxapp > /openedx/empty_dump.sql
 
 FROM dev-nodump as dev
