@@ -40,7 +40,17 @@ COPY patch_ldconfig_to_fix_shapely.sh /tmp/patch_ldconfig_to_fix_shapely.sh
 
 RUN /tmp/patch_ldconfig_to_fix_shapely.sh
 
-FROM base as builder
+FROM base as sourceonly
+ARG EDX_PLATFORM_VERSION=open-release/juniper.alpha1
+
+ENV EDX_PLATFORM_REPOSITORY=https://github.com/edx/edx-platform.git
+
+RUN mkdir -p /openedx/themes /openedx/locale /openedx/bin/ && \
+    git clone ${EDX_PLATFORM_REPOSITORY} --branch ${EDX_PLATFORM_VERSION} --depth 1 /openedx/edx-platform
+
+WORKDIR /openedx/edx-platform
+
+FROM base as wheels
 
 RUN --mount=type=cache,target=/var/cache/apk apk add \
     freetype-dev \
@@ -69,7 +79,11 @@ RUN --mount=type=cache,target=/var/cache/apk apk add \
 # From https://github.com/jfloff/alpine-python/issues/32
 RUN sed '/st_mysql_options options;/a unsigned int reconnect;' /usr/include/mysql/mysql.h -i
 
-FROM builder as rmlint
+RUN --mount=type=cache,target=/root/.cache/pip --mount=type=bind,source=/openedx,from=sourceonly,target=/openedx \
+    cat /openedx/edx-platform/requirements/edx/base.txt | grep -v github | grep -v ^-e > /tmp/requirements_derex.txt && \
+    pip wheel --find-links http://pypi.abzt.de/alpine-3.11 --trusted-host pypi.abzt.de --wheel-dir=/wheelhouse -r /tmp/requirements_derex.txt
+
+FROM wheels as rmlint
 RUN pip install scons && \
     apk add \
     glib-dev \
@@ -79,22 +93,6 @@ RUN wget -q https://github.com/sahib/rmlint/tarball/e56626d39134b7ac6317c19940c4
     cd sahib-rmlint* && \
     scons && \
     mv rmlint /usr/local/bin/
-
-FROM base as sourceonly
-ARG EDX_PLATFORM_VERSION=open-release/juniper.alpha1
-
-ENV EDX_PLATFORM_REPOSITORY=https://github.com/edx/edx-platform.git
-
-RUN mkdir -p /openedx/themes /openedx/locale /openedx/bin/ && \
-    git clone ${EDX_PLATFORM_REPOSITORY} --branch ${EDX_PLATFORM_VERSION} --depth 1 /openedx/edx-platform
-
-WORKDIR /openedx/edx-platform
-
-FROM builder as wheels
-
-RUN --mount=type=cache,target=/root/.cache/pip --mount=type=bind,source=/openedx,from=sourceonly,target=/openedx \
-    cat /openedx/edx-platform/requirements/edx/base.txt | grep -v github | grep -v ^-e > /tmp/requirements_derex.txt && \
-    pip wheel --find-links http://pypi.abzt.de/alpine-3.11 --trusted-host pypi.abzt.de --wheel-dir=/wheelhouse -r /tmp/requirements_derex.txt
 
 FROM sourceonly as nostatic
 
