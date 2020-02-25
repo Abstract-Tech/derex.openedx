@@ -27,7 +27,6 @@ jobs:
     - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-wheels
       displayName: Push wheels
 
-
     - script: docker build ${DOCKER_OPTS} -t derex/edx-${DOCKER_IMAGES_SLUG}-dev --target dev docker-definition/
       displayName: Build dev image
 
@@ -48,7 +47,7 @@ jobs:
     - name: DOCKER_IMAGES_SLUG
       value: juniper
     - name: DOCKER_OPTS
-      value: --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from derex/edx-$(DOCKER_IMAGES_SLUG)-libgeos,derex/edx-$(DOCKER_IMAGES_SLUG)-libgeos,derex/edx-$(DOCKER_IMAGES_SLUG)-base,derex/edx-$(DOCKER_IMAGES_SLUG)-builder,derex/edx-$(DOCKER_IMAGES_SLUG)-sourceonly,derex/edx-$(DOCKER_IMAGES_SLUG)-wheels,derex/edx-$(DOCKER_IMAGES_SLUG)-nostatic,derex/edx-$(DOCKER_IMAGES_SLUG)-nostatic,derex/edx-$(DOCKER_IMAGES_SLUG)-dev,derex/edx-$(DOCKER_IMAGES_SLUG)-dump,derex/edx-$(DOCKER_IMAGES_SLUG)-dev-nodump
+      value: --build-arg BUILDKIT_INLINE_CACHE=1
   steps:
     - script: |
         docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
