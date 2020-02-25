@@ -79,9 +79,10 @@ RUN --mount=type=cache,target=/var/cache/apk apk add \
 # From https://github.com/jfloff/alpine-python/issues/32
 RUN sed '/st_mysql_options options;/a unsigned int reconnect;' /usr/include/mysql/mysql.h -i
 
-RUN --mount=type=cache,target=/root/.cache/pip --mount=type=bind,source=/openedx,from=sourceonly,target=/openedx \
-    cat /openedx/edx-platform/requirements/edx/base.txt | grep -v github | grep -v ^-e > /tmp/requirements_derex.txt && \
-    pip wheel --find-links http://pypi.abzt.de/alpine-3.11 --trusted-host pypi.abzt.de --wheel-dir=/wheelhouse -r /tmp/requirements_derex.txt
+RUN --mount=type=cache,target=/root/.cache/pip --mount=type=bind,source=/openedx,from=sourceonly,target=/openedx,rw=true \
+    cat /openedx/edx-platform/requirements/edx/base.txt | grep -v github | grep -v ^-e > /openedx/edx-platform/requirements/edx/derex.txt && \
+    grep pip== /openedx/edx-platform/requirements/edx/base.txt && pip install $(grep pip== /openedx/edx-platform/requirements/edx/base.txt); \
+    pip wheel --find-links http://pypi.abzt.de/alpine-3.11 --trusted-host pypi.abzt.de --wheel-dir=/wheelhouse -r /openedx/edx-platform/requirements/edx/derex.txt
 
 FROM wheels as rmlint
 RUN pip install scons && \
@@ -96,13 +97,15 @@ RUN wget -q https://github.com/sahib/rmlint/tarball/e56626d39134b7ac6317c19940c4
 
 FROM sourceonly as nostatic
 
-# TODO: extract these package list and put it in a file external to the Dockerfile
-RUN --mount=type=cache,target=/root/.cache/pip pip install whitenoise==4.1.3 flower==0.9.3 tornado==5.1.1 backports_abc==0.5 -c /openedx/edx-platform/requirements/edx/base.txt
 RUN --mount=type=cache,target=/root/.cache/pip --mount=type=bind,source=/wheelhouse,from=wheels,target=/wheelhouse \
     `# Make sure pip is at the version expected by edx _before_ installing base.txt` \
     `# but only if there is a version specified there` \
-    set -ex; \
-    (grep pip== /openedx/edx-platform/requirements/edx/base.txt && pip install $(grep pip== /openedx/edx-platform/requirements/edx/base.txt) || true ) && \
+    set -x; \
+    grep pip /openedx/edx-platform/requirements/edx/base.txt; \
+    grep pip== /openedx/edx-platform/requirements/edx/base.txt && pip install $(grep pip== /openedx/edx-platform/requirements/edx/base.txt);
+# TODO: extract these package list and put it in a file external to the Dockerfile
+RUN --mount=type=cache,target=/root/.cache/pip pip install whitenoise==4.1.3 flower==0.9.3 tornado==5.1.1 backports_abc==0.5 -c /openedx/edx-platform/requirements/edx/base.txt
+RUN --mount=type=cache,target=/root/.cache/pip --mount=type=bind,source=/wheelhouse,from=wheels,target=/wheelhouse \
     pip install --trusted-host pypi.abzt.de --find-links http://pypi.abzt.de/alpine-3.11 --find-links /wheelhouse -r /openedx/edx-platform/requirements/edx/base.txt
 
 FROM nostatic as nostatic-dev
