@@ -13,4 +13,3 @@ rmlint -o sh:rmlint.sh -c sh:symlink -o json:stderr -g \
 # Do not remove empty files/directories
 sed "/# empty /d" -i rmlint.sh
 ./rmlint.sh -d -q > /dev/null
-rm rmlint.sh
