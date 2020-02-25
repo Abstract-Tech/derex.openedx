@@ -92,10 +92,14 @@ RUN --mount=type=cache,target=/root/.cache/pip --mount=type=bind,source=/wheelho
     pip install --trusted-host pypi.abzt.de --find-links http://pypi.abzt.de/alpine-3.11 --find-links /wheelhouse -r /openedx/edx-platform/requirements/edx/base.txt
 
 FROM nostatic as nostatic-dev
+ENV NODE_URL=https://unofficial-builds.nodejs.org/download/release/v10.19.0/node-v10.19.0-linux-x64-musl.tar.xz
+# The latest node release does not work on ironwood: its node-sass version fails to compile
+# ENV NODE_URL=https://unofficial-builds.nodejs.org/download/release/v12.16.1/node-v12.16.1-linux-x64-musl.tar.xz
 
-RUN --mount=type=cache,target=/var/cache/apk apk add npm nodejs g++ make coreutils vim
+RUN --mount=type=cache,target=/var/cache/apk apk add g++ make coreutils vim
+RUN wget ${NODE_URL} -O - | tar --directory / -xJf - && ln -s /node-*/bin/* /usr/local/bin/
 WORKDIR /openedx/edx-platform
-RUN --mount=type=cache,target=/root/.npm npm install
+RUN --mount=type=cache,target=/root/.npm npm install -g yarn@latest && ln -sf /node-*/bin/* /usr/local/bin/ && yarn install
 
 # Also install dev utilities
 RUN --mount=type=cache,target=/root/.cache/pip pip install pdbpp ipython ipdb
