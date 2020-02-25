@@ -120,13 +120,12 @@ FROM nostatic-dev as dev-nodump
 COPY --from=rmlint /usr/local/bin/rmlint /usr/local/bin/rmlint
 COPY cleanup_assets.sh /usr/local/bin/
 RUN mkdir -p /openedx/edx-platform/lms/envs/derex /openedx/edx-platform/cms/envs/derex && \
-    touch /openedx/edx-platform/lms/envs/derex/__init__.py /openedx/edx-platform/cms/envs/derex/__init__.py && \
-    cleanup_assets.sh
-
+    touch /openedx/edx-platform/lms/envs/derex/__init__.py /openedx/edx-platform/cms/envs/derex/__init__.py
 COPY compile_assets.sh /usr/local/bin
 COPY assets.py /openedx/edx-platform/lms/envs/derex
 COPY assets.py /openedx/edx-platform/cms/envs/derex
-RUN /usr/local/bin/compile_assets.sh
+RUN /usr/local/bin/compile_assets.sh && \
+    cleanup_assets.sh
 
 FROM dev-nodump as dump
 RUN --mount=type=cache,target=/var/cache/apk apk add mariadb mariadb-client
