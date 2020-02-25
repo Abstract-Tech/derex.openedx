@@ -69,6 +69,17 @@ RUN --mount=type=cache,target=/var/cache/apk apk add \
 # From https://github.com/jfloff/alpine-python/issues/32
 RUN sed '/st_mysql_options options;/a unsigned int reconnect;' /usr/include/mysql/mysql.h -i
 
+FROM builder as rmlint
+RUN pip install scons && \
+    apk add \
+    glib-dev \
+    json-glib
+
+RUN wget -q https://github.com/sahib/rmlint/tarball/e56626d39134b7ac6317c19940c446eace01d7ad -O - | tar xvzf - && \
+    cd sahib-rmlint* && \
+    scons && \
+    mv rmlint /usr/local/bin/
+
 FROM base as sourceonly
 ARG EDX_PLATFORM_VERSION=open-release/juniper.alpha1
 
@@ -106,9 +117,11 @@ RUN --mount=type=cache,target=/root/.npm --mount=type=cache,target=/usr/local/sh
 RUN --mount=type=cache,target=/root/.cache/pip pip install pdbpp ipython ipdb
 
 FROM nostatic-dev as dev-nodump
+COPY --from=rmlint /usr/local/bin/rmlint /usr/local/bin/rmlint
+COPY cleanup_assets.sh /usr/local/bin/
 RUN mkdir -p /openedx/edx-platform/lms/envs/derex /openedx/edx-platform/cms/envs/derex && \
-    touch /openedx/edx-platform/lms/envs/derex/__init__.py /openedx/edx-platform/cms/envs/derex/__init__.py
-
+    touch /openedx/edx-platform/lms/envs/derex/__init__.py /openedx/edx-platform/cms/envs/derex/__init__.py && \
+    cleanup_assets.sh
 
 COPY compile_assets.sh /usr/local/bin
 COPY assets.py /openedx/edx-platform/lms/envs/derex
