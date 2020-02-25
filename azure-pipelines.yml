@@ -1,4 +1,21 @@
 jobs:
+- job: Build_ginkgo_image
+  timeoutInMinutes: 180
+  pool:
+    vmImage: 'ubuntu-18.04'
+
+  variables:
+    - group: Docker credentials
+    - group: Transifex credentials
+    - name: DOCKER_BUILDKIT
+      value: '1'
+    - name: DOCKER_IMAGES_SLUG
+      value: ginkgo
+    - name: DOCKER_OPTS
+      value: --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg PYTHON_VERSION=2.7 --build-arg EDX_PLATFORM_VERSION=open-release/ginkgo.master
+  steps:
+    - template: build-and-push-images.yml
+
 - job: Build_hawthorn_image
   timeoutInMinutes: 180
   pool:
