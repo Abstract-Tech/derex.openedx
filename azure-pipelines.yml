@@ -12,7 +12,7 @@ jobs:
     - name: DOCKER_IMAGES_SLUG
       value: ironwood
     - name: DOCKER_OPTS
-      value: --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg PYTHON_VERSION=2.7 --build-arg EDX_PLATFORM_VERSION=open-release/ironwood.master --cache-from derex/edx-$(DOCKER_IMAGES_SLUG)-libgeos,derex/edx-$(DOCKER_IMAGES_SLUG)-libgeos,derex/edx-$(DOCKER_IMAGES_SLUG)-base,derex/edx-$(DOCKER_IMAGES_SLUG)-builder,derex/edx-$(DOCKER_IMAGES_SLUG)-sourceonly,derex/edx-$(DOCKER_IMAGES_SLUG)-wheels,derex/edx-$(DOCKER_IMAGES_SLUG)-nostatic,derex/edx-$(DOCKER_IMAGES_SLUG)-nostatic,derex/edx-$(DOCKER_IMAGES_SLUG)-dev,derex/edx-$(DOCKER_IMAGES_SLUG)-dump,derex/edx-$(DOCKER_IMAGES_SLUG)-dev-nodump
+      value: --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg PYTHON_VERSION=2.7 --build-arg EDX_PLATFORM_VERSION=open-release/ironwood.master --cache-from derex/edx-$(DOCKER_IMAGES_SLUG)-libgeos,derex/edx-$(DOCKER_IMAGES_SLUG)-libgeos,derex/edx-$(DOCKER_IMAGES_SLUG)-base,derex/edx-$(DOCKER_IMAGES_SLUG)-builder,derex/edx-$(DOCKER_IMAGES_SLUG)-wheels,derex/edx-$(DOCKER_IMAGES_SLUG)-dev,derex/edx-$(DOCKER_IMAGES_SLUG)-dump
   steps:
     - template: build-and-push-images.yml
 
@@ -30,6 +30,6 @@ jobs:
     - name: DOCKER_IMAGES_SLUG
       value: juniper
     - name: DOCKER_OPTS
-      value: --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from derex/edx-$(DOCKER_IMAGES_SLUG)-libgeos,derex/edx-$(DOCKER_IMAGES_SLUG)-libgeos,derex/edx-$(DOCKER_IMAGES_SLUG)-base,derex/edx-$(DOCKER_IMAGES_SLUG)-builder,derex/edx-$(DOCKER_IMAGES_SLUG)-sourceonly,derex/edx-$(DOCKER_IMAGES_SLUG)-wheels,derex/edx-$(DOCKER_IMAGES_SLUG)-nostatic,derex/edx-$(DOCKER_IMAGES_SLUG)-nostatic,derex/edx-$(DOCKER_IMAGES_SLUG)-dev,derex/edx-$(DOCKER_IMAGES_SLUG)-dump,derex/edx-$(DOCKER_IMAGES_SLUG)-dev-nodump
+      value: --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from derex/edx-$(DOCKER_IMAGES_SLUG)-libgeos,derex/edx-$(DOCKER_IMAGES_SLUG)-libgeos,derex/edx-$(DOCKER_IMAGES_SLUG)-base,derex/edx-$(DOCKER_IMAGES_SLUG)-builder,derex/edx-$(DOCKER_IMAGES_SLUG)-wheels,derex/edx-$(DOCKER_IMAGES_SLUG)-dev,derex/edx-$(DOCKER_IMAGES_SLUG)-dump
   steps:
     - template: build-and-push-images.yml
