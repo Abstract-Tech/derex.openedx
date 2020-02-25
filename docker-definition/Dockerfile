@@ -99,7 +99,7 @@ ENV NODE_URL=https://unofficial-builds.nodejs.org/download/release/v10.19.0/node
 RUN --mount=type=cache,target=/var/cache/apk apk add g++ make coreutils vim
 RUN wget ${NODE_URL} -O - | tar --directory / -xJf - && ln -s /node-*/bin/* /usr/local/bin/
 WORKDIR /openedx/edx-platform
-RUN --mount=type=cache,target=/root/.npm --mount=type=cache,target=/usr/local/share/.cache/ npm install -g yarn@latest && ln -sf /node-*/bin/* /usr/local/bin/ && yarn install
+RUN --mount=type=cache,target=/root/.npm --mount=type=cache,target=/usr/local/share/.cache/yarn --mount=type=cache,target=/usr/local/share/.cache/ npm install -g yarn@latest && ln -sf /node-*/bin/* /usr/local/bin/ && yarn install
 
 # Also install dev utilities
 RUN --mount=type=cache,target=/root/.cache/pip pip install pdbpp ipython ipdb
