@@ -12,7 +12,7 @@ jobs:
     - name: DOCKER_IMAGES_SLUG
       value: ginkgo
     - name: DOCKER_OPTS
-      value: --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg PYTHON_VERSION=2.7 --build-arg EDX_PLATFORM_VERSION=open-release/ginkgo.master
+      value: --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg PYTHON_VERSION=2.7 --build-arg EDX_PLATFORM_VERSION=open-release/ginkgo.master --build-arg EDX_PLATFORM_REPOSITORY=https://github.com/Abstract-Tech/edx-platform.git
   steps:
     - template: build-and-push-images.yml
 
