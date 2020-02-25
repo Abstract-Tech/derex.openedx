@@ -43,7 +43,7 @@ RUN /tmp/patch_ldconfig_to_fix_shapely.sh
 FROM base as sourceonly
 ARG EDX_PLATFORM_VERSION=open-release/juniper.alpha1
 
-ENV EDX_PLATFORM_REPOSITORY=https://github.com/edx/edx-platform.git
+ARG EDX_PLATFORM_REPOSITORY=https://github.com/edx/edx-platform.git
 
 RUN mkdir -p /openedx/themes /openedx/locale /openedx/bin/ && \
     git clone ${EDX_PLATFORM_REPOSITORY} --branch ${EDX_PLATFORM_VERSION} --depth 1 /openedx/edx-platform
