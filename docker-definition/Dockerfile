@@ -87,7 +87,8 @@ RUN --mount=type=cache,target=/root/.cache/pip --mount=type=bind,source=/openedx
 
 FROM sourceonly as nostatic
 
-RUN --mount=type=cache,target=/root/.cache/pip pip install whitenoise==4.1.3 flower==0.9.3 tornado==5.1.1 backports_abc==0.5
+# TODO: extract these package list and put it in a file external to the Dockerfile
+RUN --mount=type=cache,target=/root/.cache/pip pip install whitenoise==4.1.3 flower==0.9.3 tornado==5.1.1 backports_abc==0.5 -c /openedx/edx-platform/requirements/edx/base.txt
 RUN --mount=type=cache,target=/root/.cache/pip --mount=type=bind,source=/wheelhouse,from=wheels,target=/wheelhouse \
     pip install --trusted-host pypi.abzt.de --find-links http://pypi.abzt.de/alpine-3.11 --find-links /wheelhouse -r /openedx/edx-platform/requirements/edx/base.txt
 
