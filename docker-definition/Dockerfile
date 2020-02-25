@@ -101,7 +101,8 @@ RUN --mount=type=cache,target=/root/.cache/pip pip install whitenoise==4.1.3 flo
 RUN --mount=type=cache,target=/root/.cache/pip --mount=type=bind,source=/wheelhouse,from=wheels,target=/wheelhouse \
     `# Make sure pip is at the version expected by edx _before_ installing base.txt` \
     `# but only if there is a version specified there` \
-    (grep pip== /openedx/edx-platform/requirements/edx/base.txt && pip install $(grep pip== /openedx/edx-platform/requirements/edx/base.txt) || true )&& \
+    set -ex; \
+    (grep pip== /openedx/edx-platform/requirements/edx/base.txt && pip install $(grep pip== /openedx/edx-platform/requirements/edx/base.txt) || true ) && \
     pip install --trusted-host pypi.abzt.de --find-links http://pypi.abzt.de/alpine-3.11 --find-links /wheelhouse -r /openedx/edx-platform/requirements/edx/base.txt
 
 FROM nostatic as nostatic-dev
