@@ -43,11 +43,11 @@ steps:
   - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-nostatic
     displayName: Push nostatic
 
-  - script: docker build ${DOCKER_OPTS} --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-nostatic -t derex/edx-${DOCKER_IMAGES_SLUG}-nostatic --target nostatic-dev docker-definition/
+  - script: docker build ${DOCKER_OPTS} --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-nostatic-dev -t derex/edx-${DOCKER_IMAGES_SLUG}-nostatic-dev --target nostatic-dev docker-definition/
     displayName: Build nostatic-dev image
 
-  - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-nostatic
-    displayName: Push nostatic
+  - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-nostatic-dev
+    displayName: Push nostatic-dev
 
   - script: docker build ${DOCKER_OPTS} --cache-from derex/edx-${DOCKER_IMAGES_SLUG}-dev-nodump -t derex/edx-${DOCKER_IMAGES_SLUG}-dev-nodump --target dev-nodump docker-definition/
     displayName: Build dev-nodump image
