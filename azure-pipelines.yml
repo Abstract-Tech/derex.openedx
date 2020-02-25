@@ -1,5 +1,41 @@
 jobs:
-- job: Build_image
+- job: Build_ironwood_image
+  timeoutInMinutes: 120
+  pool:
+    vmImage: 'ubuntu-18.04'
+
+  variables:
+    - group: Docker credentials
+    - group: Transifex credentials
+    - name: DOCKER_BUILDKIT
+      value: '1'
+    - name: DOCKER_IMAGES_SLUG
+      value: juniper
+    - name: DOCKER_OPTS
+      value: --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg PYTHON_VERSION=2.7 --build-arg EDX_PLATFORM_VERSION=open-release/ironwood.master
+  steps:
+    - script: |
+        docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+      displayName: 'Log into docker registry'
+      env:
+        DOCKER_USERNAME: $(DOCKER_USERNAME)
+        DOCKER_PASSWORD: $(DOCKER_PASSWORD)
+
+    - script: docker build ${DOCKER_OPTS} -t derex/edx-${DOCKER_IMAGES_SLUG}-wheels --target wheels docker-definition/
+      displayName: Build wheels image
+
+    - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-wheels
+      displayName: Push wheels
+
+
+    - script: docker build ${DOCKER_OPTS} -t derex/edx-${DOCKER_IMAGES_SLUG}-dev --target dev docker-definition/
+      displayName: Build dev image
+
+    - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-dev
+      displayName: Push dev
+
+
+- job: Build_juniper_image
   timeoutInMinutes: 120
   pool:
     vmImage: 'ubuntu-18.04'
