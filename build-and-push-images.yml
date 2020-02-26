@@ -9,6 +9,7 @@ steps:
     displayName: 'cache docker layers'
 
   - script: |
+      which buildkit
       if [ -d "$(BUILD_KIT_CACHE)" ]; then
         echo "Will use cached layers from $(BUILD_KIT_CACHE)"
         find $(BUILD_KIT_CACHE)
