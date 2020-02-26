@@ -20,7 +20,7 @@ steps:
       which buildctl
       which buildkitd
       set -e -x
-      sudo buildkitd --debug --root /var/lib/buildkit &
+      sudo nohup buildkitd --debug --root /var/lib/buildkit &
       sudo chown -R ${USER} /run/buildkit/ || true
       until sudo buildctl du -v
       do
