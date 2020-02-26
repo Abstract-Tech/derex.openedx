@@ -34,7 +34,7 @@ jobs:
     - name: DOCKER_IMAGES_SLUG
       value: hawthorn
     - name: DOCKER_OPTS
-      value: --build-arg PYTHON_VERSION=2.7 --build-arg EDX_PLATFORM_VERSION=open-release/hawthorn.master
+      value: --opt build-arg:PYTHON_VERSION=2.7 --opt build-arg:EDX_PLATFORM_VERSION=open-release/hawthorn.master
   steps:
     - template: build-and-push-images.yml
 
@@ -47,7 +47,7 @@ jobs:
     - name: DOCKER_IMAGES_SLUG
       value: ironwood
     - name: DOCKER_OPTS
-      value: --build-arg PYTHON_VERSION=2.7 --build-arg EDX_PLATFORM_VERSION=open-release/ironwood.master
+      value: --opt build-arg:PYTHON_VERSION=2.7 --opt build-arg:EDX_PLATFORM_VERSION=open-release/ironwood.master
   steps:
     - template: build-and-push-images.yml
 
