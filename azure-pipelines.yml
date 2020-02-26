@@ -5,6 +5,16 @@ variables:
     value: '1'
   - name: DOCKER_COMMAND
     value: 'docker build --build-arg BUILDKIT_INLINE_CACHE=1'
+  - name: CACHE_KEY_SALT
+    value: 1
+  - name: BUILD_KIT_CACHE
+    value: '$(Pipeline.Workspace)/buildkitcache'
+  - name: CACHE_KEY_BUILDKIT
+    value: '"DOCKER_BUILDKIT=$(DOCKER_BUILDKIT)"'
+  - name: CACHE_KEY_FALLBACK
+    value: '"CACHE_KEY_SALT=$(CACHE_KEY_SALT)" | "$(Agent.OS) $(Agent.JobName)" | $(CACHE_KEY_BUILDKIT) | "$(DOCKER_COMMAND)"'
+  - name: CACHE_KEY_EXACT
+    value: '$(CACHE_KEY_FALLBACK) | $(System.DefaultWorkingDirectory)/docker-definition/*'
 
 
 jobs:
