@@ -10,7 +10,9 @@ WORKDIR /usr/local/geos-${GEOS_VERSION}
 RUN ./configure && make -j 4
 RUN make install
 
-FROM docker.io/python:${PYTHON_VERSION}-alpine3.11 as base
+FROM docker.io/python:${PYTHON_VERSION}-alpine3.11 as basebase
+# This image will be used to build all other images in this Dockerfile
+# The base image is defined later, and it has rmlint added to this base
 ENV GEOS_VERSION=3.8.0
 
 RUN wget -q -O - "https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz" | tar xzf - --directory /usr/local/bin
@@ -42,7 +44,7 @@ RUN /tmp/patch_ldconfig_to_fix_shapely.sh
 ENV NO_PREREQ_INSTALL=True
 ENV NO_PYTHON_UNINSTALL=True
 
-FROM base as sourceonly
+FROM basebase as sourceonly
 ARG EDX_PLATFORM_VERSION=open-release/juniper.alpha1
 
 ARG EDX_PLATFORM_REPOSITORY=https://github.com/edx/edx-platform.git
@@ -52,7 +54,7 @@ RUN mkdir -p /openedx/themes /openedx/locale /openedx/bin/ && \
 
 WORKDIR /openedx/edx-platform
 
-FROM base as wheels
+FROM basebase as wheels
 
 RUN --mount=type=cache,target=/var/cache/apk apk add \
     alpine-sdk \
@@ -93,6 +95,10 @@ RUN wget -q https://github.com/sahib/rmlint/tarball/e56626d39134b7ac6317c19940c4
     cd sahib-rmlint* && \
     scons && \
     mv rmlint /usr/local/bin/
+
+FROM basebase as base
+# This image will be used as base for final images: it includes rmlint
+COPY --from=rmlint /usr/local/bin/rmlint /usr/local/bin/rmlint
 
 FROM sourceonly as nostatic
 
