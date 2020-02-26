@@ -61,56 +61,29 @@ steps:
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
 
   - script: set -ex; ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-libgeos,push=true --opt target=libgeos
-    displayName: Build libgeos image
-
-  - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-libgeos
-    displayName: Push libgeos
+    displayName: Build/push libgeos image
 
   - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-base,push=true --opt target=base
-    displayName: Build base image
-
-  - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-base
-    displayName: Push base
+    displayName: Build/push base image
 
   - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-sourceonly,push=true --opt target=sourceonly
-    displayName: Build sourceonly image
-
-  - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-sourceonly
-    displayName: Push sourceonly
+    displayName: Build/push sourceonly image
 
   - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-wheels,push=true --opt target=wheels
-    displayName: Build wheels image
-
-  - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-wheels
-    displayName: Push wheels
+    displayName: Build/push wheels image
 
   - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-nostatic,push=true --opt target=nostatic
-    displayName: Build nostatic image
-
-  - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-nostatic
-    displayName: Push nostatic
+    displayName: Build/push nostatic image
 
   - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-nostatic-dev,push=true --opt target=nostatic-dev
-    displayName: Build nostatic-dev image
-
-  - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-nostatic-dev
-    displayName: Push nostatic-dev
+    displayName: Build/push nostatic-dev image
 
   - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-dev-nodump,push=true --opt target=dev-nodump
-    displayName: Build dev-nodump image
-
-  - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-dev-nodump
-    displayName: Push dev-nodump
+    displayName: Build/push dev-nodump image
 
   - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-dump,push=true --opt target=dump
-    displayName: Build dump image
-
-  - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-dump
-    displayName: Push dump
+    displayName: Build/push dump image
 
   # No caching here: the previous one is enough, and it seems to stall for some reason
   - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-dev,push=true --opt target=dev
-    displayName: Build dev image
-
-  - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-dev
-    displayName: Push dev
+    displayName: Build/push dev image
