@@ -1,14 +1,15 @@
+variables:
+  - group: Docker credentials
+  - group: Transifex credentials
+  - name: DOCKER_BUILDKIT
+    value: '1'
+
 jobs:
 - job: Build_hawthorn_image
   timeoutInMinutes: 180
   pool:
     vmImage: 'ubuntu-18.04'
-
   variables:
-    - group: Docker credentials
-    - group: Transifex credentials
-    - name: DOCKER_BUILDKIT
-      value: '1'
     - name: DOCKER_IMAGES_SLUG
       value: hawthorn
     - name: DOCKER_OPTS
@@ -22,10 +23,6 @@ jobs:
     vmImage: 'ubuntu-18.04'
 
   variables:
-    - group: Docker credentials
-    - group: Transifex credentials
-    - name: DOCKER_BUILDKIT
-      value: '1'
     - name: DOCKER_IMAGES_SLUG
       value: ironwood
     - name: DOCKER_OPTS
@@ -40,10 +37,6 @@ jobs:
     vmImage: 'ubuntu-18.04'
 
   variables:
-    - group: Docker credentials
-    - group: Transifex credentials
-    - name: DOCKER_BUILDKIT
-      value: '1'
     - name: DOCKER_IMAGES_SLUG
       value: juniper
     - name: DOCKER_OPTS
