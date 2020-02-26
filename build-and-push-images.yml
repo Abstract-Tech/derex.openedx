@@ -39,10 +39,9 @@ steps:
       path: '$(LAYERS_CACHE_DIR)'
       cacheHitVar: 'BuildKitLayersHit'
       restoreKeys: $(CACHE_KEY_FALLBACK)
-    displayName: 'cache docker layers'
+    displayName: 'Docker layers cache'
 
   - script: |
-      which buildkit
       if [ -d "$(LAYERS_CACHE_DIR)" ]; then
         echo "Will use cached layers from $(LAYERS_CACHE_DIR)"
         find $(LAYERS_CACHE_DIR)
@@ -53,7 +52,7 @@ steps:
         DOCKER_COMMAND="$DOCKER_COMMAND --export-cache mode=max,type=local,dest=$(LAYERS_CACHE_DIR)"
       fi
       echo  "##vso[task.setvariable variable=DOCKER_COMMAND]${DOCKER_COMMAND}"
-    displayName: 'cache docker layers'
+    displayName: 'Setup docker layers cache'
 
   - script: docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
     displayName: 'Log into docker registry'
@@ -61,7 +60,7 @@ steps:
       DOCKER_USERNAME: $(DOCKER_USERNAME)
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
 
-  - script: ${DOCKER_COMMAND} --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-libgeos --target libgeos docker-definition/
+  - script: set -ex; ${DOCKER_COMMAND} --build-arg BUILDKIT_INLINE_CACHE=1 -t derex/edx-${DOCKER_IMAGES_SLUG}-libgeos --target libgeos docker-definition/
     displayName: Build libgeos image
 
   - script: docker push derex/edx-${DOCKER_IMAGES_SLUG}-libgeos
