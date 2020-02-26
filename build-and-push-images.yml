@@ -21,13 +21,12 @@ steps:
       which buildkitd
       set -e -x
       sudo nohup buildkitd --debug --root /var/lib/buildkit &
-      sudo chown -R ${USER} /run/buildkit/ || true
       until sudo buildctl du -v
       do
-        sudo chown -R ${USER} /run/buildkit/ || true
         echo "Waiting for daemon to load"
         sleep 1
       done
+      sudo chown -R ${USER} /run/buildkit/ || true
     displayName: "Install and start buildkit"
 
 
