@@ -3,6 +3,9 @@ variables:
   - group: Transifex credentials
   - name: DOCKER_BUILDKIT
     value: '1'
+  - name: DOCKER_COMMAND
+    value: 'docker build --build-arg BUILDKIT_INLINE_CACHE=1'
+
 
 jobs:
 - job: Build_hawthorn_image
@@ -13,7 +16,7 @@ jobs:
     - name: DOCKER_IMAGES_SLUG
       value: hawthorn
     - name: DOCKER_OPTS
-      value: --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg PYTHON_VERSION=2.7 --build-arg EDX_PLATFORM_VERSION=open-release/hawthorn.master
+      value: --build-arg PYTHON_VERSION=2.7 --build-arg EDX_PLATFORM_VERSION=open-release/hawthorn.master
   steps:
     - template: build-and-push-images.yml
 
@@ -26,7 +29,7 @@ jobs:
     - name: DOCKER_IMAGES_SLUG
       value: ironwood
     - name: DOCKER_OPTS
-      value: --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg PYTHON_VERSION=2.7 --build-arg EDX_PLATFORM_VERSION=open-release/ironwood.master
+      value: --build-arg PYTHON_VERSION=2.7 --build-arg EDX_PLATFORM_VERSION=open-release/ironwood.master
   steps:
     - template: build-and-push-images.yml
 
@@ -40,6 +43,6 @@ jobs:
     - name: DOCKER_IMAGES_SLUG
       value: juniper
     - name: DOCKER_OPTS
-      value: --build-arg BUILDKIT_INLINE_CACHE=1
+      value:
   steps:
     - template: build-and-push-images.yml
