@@ -12,7 +12,7 @@ variables:
   - name: CACHE_KEY_BUILDKIT
     value: '"DOCKER_BUILDKIT=$(DOCKER_BUILDKIT)"'
   - name: CACHE_KEY_FALLBACK
-    value: '"CACHE_KEY_SALT=$(CACHE_KEY_SALT)" | "$(Agent.OS) $(Agent.JobName)" | $(CACHE_KEY_BUILDKIT) | "$(DOCKER_COMMAND)"'
+    value: '"CACHE_KEY_SALT=$(CACHE_KEY_SALT)" | "$(Agent.OS) $(Agent.JobName)" | $(CACHE_KEY_BUILDKIT)'
   - name: CACHE_KEY_EXACT
     value: '$(CACHE_KEY_FALLBACK) | $(System.DefaultWorkingDirectory)/docker-definition/*'
 
