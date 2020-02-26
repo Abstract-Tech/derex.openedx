@@ -8,7 +8,7 @@ variables:
   - name: CACHE_KEY_SALT
     value: 1
   - name: LAYERS_CACHE_DIR
-    value: '$(Pipeline.Workspace)/buildkitcache'
+    value: '$(Pipeline.Workspace)/layers_cache'
   - name: CACHE_KEY_BUILDKIT
     value: '"DOCKER_BUILDKIT=$(DOCKER_BUILDKIT)"'
   - name: CACHE_KEY_FALLBACK
