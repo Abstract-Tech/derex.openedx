@@ -136,17 +136,21 @@ RUN /usr/local/bin/compile_assets.sh && \
 FROM dev-nodump as dump
 COPY migration.py /openedx/edx-platform/lms/envs/derex/
 COPY migration.py /openedx/edx-platform/cms/envs/derex/
-RUN --mount=type=cache,target=/var/cache/apk --mount=type=tmpfs,target=/var/lib/mysql set -ex; \
-    apk add mariadb mariadb-client; \
+RUN --mount=type=cache,target=/var/cache/apk \
+    --mount=type=tmpfs,target=/mysql/var/lib/mysql \
+    --mount=type=bind,from=docker.io/mysql:5.6.36,target=/mysql,rw=true \
+    set -ex; \
+    cp -a /dev/ /mysql; \
     mkdir -p /run/mysqld; \
-    chown mysql:mysql /run/mysqld; \
-    mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql --defaults-file=/etc/my.cnf ; \
-    /usr/bin/mysqld --defaults-file=/etc/my.cnf --user=mysql & \
-    until ls /run/mysqld/mysqld.sock ; do sleep 0.3; done; \
-    mysqladmin create edxapp; \
+    ln -s /mysql/run/mysqld/mysqld.sock /run/mysqld/mysqld.sock; \
+    export MYSQL_ALLOW_EMPTY_PASSWORD=True; \
+    chroot /mysql/ /usr/local/bin/docker-entrypoint.sh mysqld |tee /mysql/mysqld.out & \
+    until grep "MySQL init process done. Ready for start up" /mysql/mysqld.out ; do sleep 0.3; done; \
+    sleep 2; \
+    chroot /mysql/ mysqladmin create edxapp; \
     ./manage.py lms --settings=derex.migration migrate --run-syncdb; \
     ./manage.py cms --settings=derex.migration migrate --run-syncdb; \
-    mysqldump edxapp | bzip2 -9 - > /openedx/empty_dump.sql.bz2; \
+    chroot /mysql/ mysqldump edxapp | bzip2 -9 - > /openedx/empty_dump.sql.bz2; \
     apk del mariadb mariadb-client;
 
 FROM dev-nodump as dev
