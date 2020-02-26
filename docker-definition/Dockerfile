@@ -117,7 +117,7 @@ RUN --mount=type=cache,target=/root/.npm \
     --mount=type=cache,target=/usr/local/share/.cache \
     --mount=type=cache,target=/var/cache/apk \
     --mount=type=cache,target=/root/.cache/pip \
-    apk add g++ make coreutils vim && \
+    apk add g++ make coreutils vim mariadb-client && \
     wget ${NODE_URL} -O - | tar --directory / -xJf - && ln -s /node-*/bin/* /usr/local/bin/ && \
     npm install -g yarn@latest && ln -sf /node-*/bin/* /usr/local/bin/ && yarn install && \
     pip install pdbpp ipython ipdb
