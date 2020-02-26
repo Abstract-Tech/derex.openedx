@@ -21,13 +21,14 @@ steps:
       which buildkitd
       set -e -x
       sudo buildkitd --debug --root /var/lib/buildkit &
-
+      sudo chown -R ${USER} /run/buildkit/ || true
       until sudo buildctl du -v
       do
+        sudo chown -R ${USER} /run/buildkit/ || true
         echo "Waiting for daemon to load"
         sleep 1
       done
-      DOCKER_COMMAND="$(DOCKER_COMMAND)"
+      mkdir ${LAYERS_CACHE_DIR}
     displayName: "Install and start buildkit"
 
 
@@ -35,21 +36,21 @@ steps:
   - task: Cache@2
     inputs:
       key: $(CACHE_KEY_EXACT)
-      path: '$(BUILD_KIT_CACHE)'
+      path: '$(LAYERS_CACHE_DIR)'
       cacheHitVar: 'BuildKitLayersHit'
       restoreKeys: $(CACHE_KEY_FALLBACK)
     displayName: 'cache docker layers'
 
   - script: |
       which buildkit
-      if [ -d "$(BUILD_KIT_CACHE)" ]; then
-        echo "Will use cached layers from $(BUILD_KIT_CACHE)"
-        find $(BUILD_KIT_CACHE)
-        DOCKER_COMMAND="$DOCKER_COMMAND --import-cache type=local,src=$(BUILD_KIT_CACHE)"
+      if [ -d "$(LAYERS_CACHE_DIR)" ]; then
+        echo "Will use cached layers from $(LAYERS_CACHE_DIR)"
+        find $(LAYERS_CACHE_DIR)
+        DOCKER_COMMAND="$DOCKER_COMMAND --import-cache type=local,src=$(LAYERS_CACHE_DIR)"
       fi
       if [ "$(BuildKitLayersHit)" != "true" ]; then
-        echo "Will store cached layers to $(BUILD_KIT_CACHE)"
-        DOCKER_COMMAND="$DOCKER_COMMAND --export-cache mode=max,type=local,dest=$(BUILD_KIT_CACHE)"
+        echo "Will store cached layers to $(LAYERS_CACHE_DIR)"
+        DOCKER_COMMAND="$DOCKER_COMMAND --export-cache mode=max,type=local,dest=$(LAYERS_CACHE_DIR)"
       fi
       echo  "##vso[task.setvariable variable=DOCKER_COMMAND]${DOCKER_COMMAND}"
     displayName: 'cache docker layers'
