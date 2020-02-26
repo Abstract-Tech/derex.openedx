@@ -59,29 +59,8 @@ steps:
       DOCKER_USERNAME: $(DOCKER_USERNAME)
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
 
-  - script: set -ex; ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-libgeos,push=true --opt target=libgeos
-    displayName: Build/push libgeos image
-
-  - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-base,push=true --opt target=base
-    displayName: Build/push base image
-
-  - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-sourceonly,push=true --opt target=sourceonly
-    displayName: Build/push sourceonly image
-
-  - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-wheels,push=true --opt target=wheels
-    displayName: Build/push wheels image
-
   - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-nostatic,push=true --opt target=nostatic
     displayName: Build/push nostatic image
-
-  - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-nostatic-dev,push=true --opt target=nostatic-dev
-    displayName: Build/push nostatic-dev image
-
-  - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-dev-nodump,push=true --opt target=dev-nodump
-    displayName: Build/push dev-nodump image
-
-  - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-dump,push=true --opt target=dump
-    displayName: Build/push dump image
 
   - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-dev,push=true --opt target=dev
     displayName: Build/push dev image
