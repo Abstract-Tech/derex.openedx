@@ -146,8 +146,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     export MYSQL_ALLOW_EMPTY_PASSWORD=True; \
     chroot /mysql/ /usr/local/bin/docker-entrypoint.sh mysqld |tee /mysql/mysqld.out & \
     until grep "MySQL init process done. Ready for start up" /mysql/mysqld.out ; do sleep 0.3; done; \
-    sleep 2; \
-    chroot /mysql/ mysqladmin create edxapp; \
+    until chroot /mysql/ mysqladmin -h localhost create edxapp ; do sleep 2; done; \
     ./manage.py lms --settings=derex.migration migrate --run-syncdb; \
     ./manage.py cms --settings=derex.migration migrate --run-syncdb; \
     chroot /mysql/ mysqldump edxapp | bzip2 -9 - > /openedx/empty_dump.sql.bz2; \
