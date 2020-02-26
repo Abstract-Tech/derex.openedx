@@ -1,4 +1,27 @@
 steps:
+  # Build/restore the BuildKit tool
+  - task: Cache@2
+    inputs:
+      key: $(CACHE_KEY_BUILDKIT)
+      path: '$(System.DefaultWorkingDirectory)/buildkit'
+      cacheHitVar: 'BuildKitToolHit'
+    displayName: 'cache buildkit tool'
+
+  - script: |
+      git clone https://github.com/moby/buildkit.git  --branch $(BUILDKIT_COMMIT) --depth 1
+      cd buildkit
+      make
+    displayName: "Build BuildKit on cache miss"
+    condition: and(succeeded(), ne(variables['BuildKitToolHit'], 'true'))
+
+  - script: |
+      cd buildkit
+      sudo make install
+      which buildctl
+      which buildkitd
+    displayName: "Install buildkit"
+
+
   # restore the BuildKit cache based on the Dockerfile ...
   - task: Cache@2
     inputs:

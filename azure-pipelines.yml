@@ -4,7 +4,7 @@ variables:
   - name: DOCKER_BUILDKIT
     value: '1'
   - name: DOCKER_COMMAND
-    value: 'docker build --build-arg BUILDKIT_INLINE_CACHE=1'
+    value: 'buildctl build --frontend=dockerfile.v0 --local context=docker-definition/ --local dockerfile=docker-definition/ docker build --build-arg BUILDKIT_INLINE_CACHE=1'
   - name: CACHE_KEY_SALT
     value: 1
   - name: BUILD_KIT_CACHE
@@ -15,6 +15,16 @@ variables:
     value: '"CACHE_KEY_SALT=$(CACHE_KEY_SALT)" | "$(Agent.OS) $(Agent.JobName)" | $(CACHE_KEY_BUILDKIT) | "$(DOCKER_COMMAND)"'
   - name: CACHE_KEY_EXACT
     value: '$(CACHE_KEY_FALLBACK) | $(System.DefaultWorkingDirectory)/docker-definition/*'
+
+  # buildkit tool itself
+  - name: BUILD_KIT_CACHE
+    value: '$(Pipeline.Workspace)/buildkitcache'
+  - name: BUILDKIT_COMMIT
+    value: v0.6.4
+  - name: BUILDKIT_CACHE_KEY
+    value: GOOFS=0 | buildkit | $(BUILDKIT_COMMIT)
+  - name: CACHE_KEY_BUILDKIT
+    value: '"DOCKER_BUILDKIT=$(DOCKER_BUILDKIT)" | "BUILDKIT_COMMIT=$(BUILDKIT_COMMIT)"'
 
 
 jobs:
