@@ -132,19 +132,20 @@ RUN /usr/local/bin/compile_assets.sh && \
     cleanup_assets.sh
 
 FROM dev-nodump as dump
-RUN --mount=type=cache,target=/var/cache/apk apk add mariadb mariadb-client
 COPY migration.py /openedx/edx-platform/lms/envs/derex/
 COPY migration.py /openedx/edx-platform/cms/envs/derex/
-RUN --mount=type=tmpfs,target=/var/lib/mysql set -ex; \
-    mkdir -p /run/mysqld && \
-    chown mysql:mysql /run/mysqld && \
+RUN --mount=type=cache,target=/var/cache/apk --mount=type=tmpfs,target=/var/lib/mysql set -ex; \
+    apk add mariadb mariadb-client; \
+    mkdir -p /run/mysqld; \
+    chown mysql:mysql /run/mysqld; \
     mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql --defaults-file=/etc/my.cnf ; \
     /usr/bin/mysqld --defaults-file=/etc/my.cnf --user=mysql & \
     until ls /run/mysqld/mysqld.sock ; do sleep 0.3; done; \
-    mysqladmin create edxapp && \
-    ./manage.py lms --settings=derex.migration migrate --run-syncdb && \
-    ./manage.py cms --settings=derex.migration migrate --run-syncdb && \
-    mysqldump edxapp | bzip2 -9 - > /openedx/empty_dump.sql.bz2
+    mysqladmin create edxapp; \
+    ./manage.py lms --settings=derex.migration migrate --run-syncdb; \
+    ./manage.py cms --settings=derex.migration migrate --run-syncdb; \
+    mysqldump edxapp | bzip2 -9 - > /openedx/empty_dump.sql.bz2; \
+    apk del mariadb mariadb-client;
 
 FROM dev-nodump as dev
 
