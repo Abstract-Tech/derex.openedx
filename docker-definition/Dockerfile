@@ -2,8 +2,7 @@
 ARG PYTHON_VERSION=3.6
 FROM docker.io/python:${PYTHON_VERSION}-alpine3.11 as libgeos
 
-RUN --mount=type=cache,target=/var/cache/apk apk add \
-    alpine-sdk
+RUN --mount=type=cache,target=/var/cache/apk apk add alpine-sdk
 ENV GEOS_VERSION=3.8.0
 
 RUN wget -c http://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2 -O - | tar xjf - --directory /usr/local
@@ -53,9 +52,8 @@ WORKDIR /openedx/edx-platform
 FROM base as wheels
 
 RUN --mount=type=cache,target=/var/cache/apk apk add \
+    alpine-sdk \
     freetype-dev \
-    g++ \
-    gcc \
     gettext \
     gfortran \
     graphviz-dev \
@@ -66,7 +64,6 @@ RUN --mount=type=cache,target=/var/cache/apk apk add \
     libxml2-dev \
     libxslt-dev \
     linux-headers \
-    make \
     mariadb-connector-c-dev \
     mariadb-dev \
     openblas-dev \
