@@ -135,8 +135,8 @@ RUN --mount=type=tmpfs,target=/var/lib/mysql set -ex; \
     mysqladmin create edxapp && \
     ./manage.py lms --settings=derex.migration migrate --run-syncdb && \
     ./manage.py cms --settings=derex.migration migrate --run-syncdb && \
-    mysqldump edxapp > /openedx/empty_dump.sql
+    mysqldump edxapp | bzip2 -9 - > /openedx/empty_dump.sql.bz2
 
 FROM dev-nodump as dev
 
-COPY --from=dump /openedx/empty_dump.sql /openedx/empty_dump.sql
+COPY --from=dump /openedx/empty_dump.sql.bz2 /openedx/empty_dump.sql.bz2
