@@ -143,3 +143,4 @@ RUN --mount=type=tmpfs,target=/var/lib/mysql set -ex; \
 FROM dev-nodump as dev
 
 COPY --from=dump /openedx/empty_dump.sql.bz2 /openedx/empty_dump.sql.bz2
+COPY fixtures /openedx/fixtures/
