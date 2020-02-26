@@ -29,8 +29,7 @@ steps:
       sudo chown -R ${USER} /run/buildkit/ || true
     displayName: "Install and start buildkit"
 
-
-  # restore the BuildKit cache based on the Dockerfile ...
+  # restore the BuildKit cache based on the Dockerfile
   - task: Cache@2
     inputs:
       key: $(CACHE_KEY_EXACT)
@@ -84,6 +83,5 @@ steps:
   - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-dump,push=true --opt target=dump
     displayName: Build/push dump image
 
-  # No caching here: the previous one is enough, and it seems to stall for some reason
   - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-dev,push=true --opt target=dev
     displayName: Build/push dev image
