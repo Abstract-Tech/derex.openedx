@@ -62,5 +62,5 @@ steps:
   - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-nostatic,push=true --opt target=nostatic
     displayName: Build/push nostatic image
 
-  - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-dev,push=true --opt target=dev-nodump
+  - script: ${DOCKER_COMMAND} ${DOCKER_OPTS} --output type=image,name=docker.io/derex/edx-${DOCKER_IMAGES_SLUG}-dev,push=true --opt target=dev
     displayName: Build/push dev image
