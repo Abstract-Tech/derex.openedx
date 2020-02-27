@@ -141,16 +141,16 @@ RUN --mount=type=cache,target=/var/cache/apk \
     --mount=type=bind,from=docker.io/mysql:5.6.36,target=/mysql,rw=true \
     set -ex; \
     cp -a /dev/ /mysql; \
-    mkdir -p /run/mysqld; \
-    ln -s /mysql/run/mysqld/mysqld.sock /run/mysqld/mysqld.sock; \
-    export MYSQL_ALLOW_EMPTY_PASSWORD=True; \
-    chroot /mysql/ /usr/local/bin/docker-entrypoint.sh mysqld |tee /mysql/mysqld.out & \
-    until grep "MySQL init process done. Ready for start up" /mysql/mysqld.out ; do sleep 0.3; done; \
-    until chroot /mysql/ mysqladmin -h 127.0.0.1 create edxapp ; do sleep 2; done; \
+    touch /openedx/edx-platform/lms/envs/derex/__init__.py; \
+    touch /openedx/edx-platform/cms/envs/derex/__init__.py; \
+    export MYSQL_ALLOW_EMPTY_PASSWORD=1; \
+    echo -e '[mysqld]\n'port=3399 >> /mysql/etc/mysql/conf.d/custom_port.cnf; \
+    chroot /mysql/ /usr/local/bin/docker-entrypoint.sh mysqld > /mysql/mysqld.out & \
+    until grep "MySQL init process done. Ready for start up" /mysql/mysqld.out ; do sleep 1; done; \
+    until chroot /mysql/ mysqladmin -P 3399 create edxapp ; do sleep 1; done; \
     ./manage.py lms --settings=derex.migration migrate --run-syncdb; \
     ./manage.py cms --settings=derex.migration migrate --run-syncdb; \
-    chroot /mysql/ mysqldump edxapp | bzip2 -9 - > /openedx/empty_dump.sql.bz2; \
-    apk del mariadb mariadb-client;
+    chroot /mysql/ mysqldump edxapp | bzip2 -9 - > /openedx/empty_dump.sql.bz2;
 
 FROM dev-nodump as dev
 
