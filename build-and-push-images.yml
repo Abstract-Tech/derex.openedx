@@ -20,7 +20,7 @@ steps:
       which buildctl
       which buildkitd
       set -e -x
-      sudo nohup buildkitd --debug --root /var/lib/buildkit &
+      echo | sudo nohup sh -c "buildkitd --debug --root /var/lib/buildkit > /buildkit.log 2> /buildkit_err.log &"
       until sudo buildctl du -v
       do
         echo "Waiting for daemon to load"
