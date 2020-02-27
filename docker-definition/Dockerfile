@@ -133,7 +133,7 @@ COPY assets.py /openedx/edx-platform/cms/envs/derex
 RUN /usr/local/bin/compile_assets.sh && \
     cleanup_assets.sh
 
-FROM dev-nodump as dump
+FROM nostatic as dump
 COPY migration.py /openedx/edx-platform/lms/envs/derex/
 COPY migration.py /openedx/edx-platform/cms/envs/derex/
 RUN --mount=type=cache,target=/var/cache/apk \
