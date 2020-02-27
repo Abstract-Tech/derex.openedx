@@ -5,14 +5,14 @@ variables:
     value: '1'
   - name: DOCKER_COMMAND
     value: 'buildctl build --frontend=dockerfile.v0 --local context=docker-definition/ --local dockerfile=docker-definition/'
-  - name: CACHE_KEY_SALT
-    value: 2
+  - name: CACHE_KEY_BASE  # Increment this value to reset the layers cache
+    value: 3
   - name: LAYERS_CACHE_DIR
     value: '$(Pipeline.Workspace)/layers_cache'
   - name: CACHE_KEY_BUILDKIT
     value: '"DOCKER_BUILDKIT=$(DOCKER_BUILDKIT)"'
   - name: CACHE_KEY_FALLBACK
-    value: '"CACHE_KEY_SALT=$(CACHE_KEY_SALT)" | "$(Agent.OS) $(Agent.JobName)" | $(CACHE_KEY_BUILDKIT)'
+    value: '"CACHE_KEY_BASE=$(CACHE_KEY_BASE)" | "$(Agent.OS) $(Agent.JobName)" | $(CACHE_KEY_BUILDKIT)'
   - name: CACHE_KEY_EXACT
     value: '$(CACHE_KEY_FALLBACK) | $(System.DefaultWorkingDirectory)/docker-definition/*'
 
