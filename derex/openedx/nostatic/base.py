@@ -78,9 +78,7 @@ if "runserver" in sys.argv:
     # Load development webpack donfiguration
     WEBPACK_CONFIG_PATH = "webpack.dev.config.js"
 
-EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp")
-EMAIL_PORT = os.environ.get("EMAIL_PORT", "25")
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ##################### Celery #######################
 CELERY_BROKER_TRANSPORT = os.environ.get("CELERY_BROKER_TRANSPORT", "amqp")
